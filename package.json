@@ -49,6 +49,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",
     "cookies-next": "^4.3.0",
+    "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.5.1",
     "file-saver": "^2.0.5",
     "immer": "^10.1.1",

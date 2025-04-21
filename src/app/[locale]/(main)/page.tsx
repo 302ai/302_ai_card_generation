@@ -31,7 +31,7 @@ export default function Home() {
 
   return (
     <div className="grid flex-1">
-      <div className="container relative mx-auto flex h-full w-full max-w-[1440px] flex-row items-start rounded-lg border bg-background px-6 py-4 shadow-sm">
+      <div className="container relative mx-auto flex h-full w-full max-w-[1550px] flex-row items-start rounded-lg border bg-background px-6 py-4 shadow-sm">
         {isMobile ? (
           <>
             <LeftPanel />
