@@ -35,6 +35,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ModelId } from "@/constants/models";
+import { appConfigAtom } from "@/stores";
+import { store } from "@/stores";
+import { generatePrompt } from "@/services/gen-prompt";
+import { historyStoreAtom } from "@/stores/slices/history_store";
 
 const formSchema = z.object({
   model: z.string(),
@@ -51,6 +55,7 @@ const LeftPanel = () => {
   const [uiStore, setUiStore] = useAtom(uiStoreAtom);
   const [showQrCode, setShowQrCode] = useState(false);
   const [formStore, setFormStore] = useAtom(formStoreAtom);
+  const [historyStore, setHistoryStore] = useAtom(historyStoreAtom);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -59,6 +64,8 @@ const LeftPanel = () => {
       model: "claude-3-7-sonnet-20250219",
     },
   });
+
+  const { apiKey } = store.get(appConfigAtom);
 
   // Remove local state for textarea content as we'll use the store
   // Add refs for the textareas to access them for filling with content
@@ -150,10 +157,23 @@ const LeftPanel = () => {
     { id: 6, type: "宣传海报", content: "夏日促销活动", date: "2023-05-10" },
     { id: 7, type: "哲理卡片", content: "成长的烦恼", date: "2023-05-09" },
   ];
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    // console.log(values);
+    const res = await generatePrompt({
+      apiKey,
+      model: values.model,
+      lang: "cn",
+      date: values.date,
+      topic: values.content,
+      style: values.style,
+      qrCode: values.qrCode,
+    });
+    setHistoryStore((prev) => ({
+      ...prev,
+      htmls: [...prev.htmls, res.html],
+    }));
   }
 
   return (
@@ -370,13 +390,13 @@ const LeftPanel = () => {
               />
               <div className="flex items-center">
                 <span className="flex-1">风格设置</span>
-                <FormField
-                  control={form.control}
-                  name="style"
-                  render={({ field }) => <StyleTab field={field} />}
-                />
+                <StyleTab />
               </div>
-              <StyleContent />
+              <FormField
+                control={form.control}
+                name="style"
+                render={({ field }) => <StyleContent field={field} />}
+              />
             </div>
           </div>
         </div>

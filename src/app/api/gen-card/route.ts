@@ -2,21 +2,30 @@ import { APICallError, generateText } from "ai";
 import { createAI302 } from "@302ai/ai-sdk";
 import { createScopedLogger } from "@/utils";
 import { env } from "@/env";
+import { systemPrompt, userPrompt } from "@/constants/prompt";
 
 const logger = createScopedLogger("gen-prompt");
 
 export async function POST(request: Request) {
   try {
     const {
-      prompt,
       apiKey,
       model,
+      lang,
+      date,
+      topic,
+      style,
+      qrCode,
     }: {
-      prompt: string;
       apiKey: string;
       model: string;
+      lang: "cn" | "en" | "jp";
+      date: string;
+      topic: string;
+      style: string;
+      qrCode: string;
     } = await request.json();
-
+    console.log(apiKey, model, lang, date, topic, style, qrCode);
     const ai302 = createAI302({
       apiKey,
       baseURL: `${env.NEXT_PUBLIC_API_URL}/v1/chat/completions`,
@@ -24,57 +33,46 @@ export async function POST(request: Request) {
 
     const result = await generateText({
       model: ai302(model),
-      system: `
-You are an AI that analyzes images and creates comprehensive art prompts.
-
-When given an image, you will generate:
-1. A detailed paragraph description (naturalLanguage)
-2. A comma-separated list of keywords (keywords)
-
-You must format your entire response as a valid JSON object with exactly this structure:
-{
-  "naturalLanguage": "your detailed paragraph here",
-  "keywords": "keyword1, keyword2, keyword3, etc"
-}
-
-Only output the JSON object. Do not include any explanations, markdown formatting, or any text outside the JSON structure.
-      `,
+      system: systemPrompt({ lang }),
       messages: [
         {
           role: "user",
-          content: [
-            {
-              type: "image",
-              image: prompt,
-            },
-          ],
+          content: userPrompt({ date, topic, style, qrCode })[lang],
         },
       ],
     });
 
-    logger.info("Generated prompt text successfully");
+    const stringHTML = result.text;
+    let html;
 
-    // Parse the text response as JSON
     try {
-      const jsonResult = JSON.parse(result.text);
-      console.log("jsonResult", jsonResult);
+      // First, check if response contains markdown code blocks
+      if (stringHTML.includes("```")) {
+        const cleanedHTML = stringHTML
+          .replace(/```html/g, "")
+          .replace(/```/g, "")
+          .trim();
 
-      return Response.json({
-        naturalLanguage: jsonResult.naturalLanguage,
-        keywords: jsonResult.keywords,
-      });
+        html = JSON.parse(cleanedHTML);
+      }
+      // Check if it's directly HTML content
+      else if (
+        stringHTML.trim().startsWith("<!DOCTYPE") ||
+        stringHTML.trim().startsWith("<html")
+      ) {
+        html = stringHTML;
+      }
+      // If it's a JSON string
+      else {
+        html = JSON.parse(stringHTML);
+      }
     } catch (parseError) {
-      logger.error("Failed to parse model output as JSON", parseError);
-      const { naturalLanguage, keywords } = JSON.parse(
-        result.text.replace(/```json\n/, "").replace(/\n```/, "")
-      );
+      logger.error("Failed to parse AI response:", parseError);
       // Return the raw text if parsing fails
-      return Response.json({
-        naturalLanguage,
-        keywords,
-        error: "Failed to parse as JSON, returning raw text",
-      });
+      html = stringHTML;
     }
+
+    return Response.json({ html });
   } catch (error) {
     logger.error(error);
     if (error instanceof APICallError) {

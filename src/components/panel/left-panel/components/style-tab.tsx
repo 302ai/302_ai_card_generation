@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import { cn } from "@/lib/utils";
 import { ControllerRenderProps } from "react-hook-form";
 
-const StyleTab = ({ field }: { field: ControllerRenderProps<any, any> }) => {
+const StyleTab = () => {
   const [formStore, setFormStore] = useAtom(formStoreAtom);
 
   return (

@@ -4,8 +4,13 @@ import { useAtom } from "jotai";
 import React from "react";
 import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
+import { ControllerRenderProps } from "react-hook-form";
 
-const StyleContent = () => {
+const StyleContent = ({
+  field,
+}: {
+  field: ControllerRenderProps<any, any>;
+}) => {
   const [formStore, setFormStore] = useAtom(formStoreAtom);
   return (
     <div>
@@ -27,7 +32,10 @@ const StyleContent = () => {
       )}
       {formStore.style === "custom" && (
         <div className="mt-2">
-          <Textarea placeholder="请输入卡片风格 e.g. 简约现代风格，文字排版简洁，有简单的图形元素或线条" />
+          <Textarea
+            {...field}
+            placeholder="请输入卡片风格 e.g. 简约现代风格，文字排版简洁，有简单的图形元素或线条"
+          />
         </div>
       )}
     </div>
