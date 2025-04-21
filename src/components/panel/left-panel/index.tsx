@@ -370,7 +370,11 @@ const LeftPanel = () => {
               />
               <div className="flex items-center">
                 <span className="flex-1">风格设置</span>
-                <StyleTab />
+                <FormField
+                  control={form.control}
+                  name="style"
+                  render={({ field }) => <StyleTab field={field} />}
+                />
               </div>
               <StyleContent />
             </div>
