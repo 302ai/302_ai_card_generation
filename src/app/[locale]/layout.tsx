@@ -103,7 +103,7 @@ export default async function RootLayout({
               <AppClient>
                 <AppTooltip>
                   <AppHeader />
-                  <main className="flex grow">{children}</main>
+                  <main>{children}</main>
                   <AppFooter />
                 </AppTooltip>
                 <AppAuth />
