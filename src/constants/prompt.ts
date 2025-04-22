@@ -771,9 +771,121 @@ ${content}
 //   return prompts[lang];
 // };
 
+const philosophicalCardPrompt = ({
+  content,
+  style,
+  cardFont,
+  lang = "cn",
+}: {
+  content: string;
+  style: string;
+  lang?: "cn" | "en" | "jp";
+  cardFont: string;
+}) => {
+  const prompts = {
+    cn: `根据用户输入将主题翻译成英文，然后使用100字以内的简洁语言来分解其深层含义。然后使用HTML创建一个优雅的文本卡来表示这个主题。
+
+设计要求：
+1.必须使用${cardFont}，不允许加粗。
+2.主题的字体应该特别大。
+3.卡片大小约为350px宽，450px高，有适当的边距。
+4.必须使用提供的卡片背景风格
+
+卡片结构：
+1.顶级用户输入的中文主题
+2.中级用户输入的主题的英文翻译
+3.主要内容是主题深层含义的中文细分（100字以内）
+4.在底部写一个简短的签名302.AI，注意不要使用斜体
+ 
+输入格式：
+主题：${content}
+卡片风格：${style}
+
+直接输出完整的HTML文件。`,
+    en: `Translate the theme into Chinese based on user input, and then use concise language within 70 words to break down its deeper meaning. Then create an elegant text card using HTML to represent this theme.
+
+Design requirements:
+1. The provided font must be used and bolding is not allowed.
+The font of the theme should be particularly large.
+3. The card size is approximately 350px wide and 450px high, with appropriate margins.
+4. The provided card background style must be used
+
+Card structure:
+1. English themes inputted by top users
+2. Chinese translation of themes entered by intermediate users
+3. The main content is an English breakdown of the deep meaning of the theme (within 70 words)
+4. Write a brief signature 302.AI at the bottom, be careful not to use italics
+ 
+Input format:
+Topic: ${content}
+Card Style: ${style}
+
+Directly output the complete HTML file.`,
+    jp: `ユーザー入力に基づいてトピックを英語に翻訳し、100ワード以内の簡潔な言語を使用して深い意味を分解します。次にHTMLを使用して、このトピックを表す優雅なテキストカードを作成します。
+
+設計要件：
+1.指定されたフォントを使用する必要があります。太字は許可されていません。
+2.テーマのフォントは特に大きいはずです。
+3.カードの大きさは幅約350 px、高さ450 pxで、適切なマージンがある。
+4.提供されたカード背景スタイルを使用しなければならない
+
+カード構造：
+1.トップユーザーが入力した日本語トピック
+2.中級ユーザーが入力したトピックの中国語翻訳
+3.主な内容は主題の深い意味の日本語細分化（100字以内）である
+4.下部に短い署名302.AIを書いて、斜体を使わないように注意する
+ 
+入力形式：
+件名：${content}
+カードスタイル：${style}
+
+完全なHTMLファイルを直接出力します。
+`,
+  };
+  return prompts[lang];
+};
+
+const quoteReferenceCardPrompt = ({
+  content,
+  author,
+  location,
+  style,
+}: {
+  content: string;
+  style: string;
+  author: string;
+  location: string;
+}) => {
+  return `
+  Create an elegant text card using HTML based on user input to display the motto and creator.
+
+Design requirements:
+1. The provided font must be used and bolding is not allowed
+The font of the motto should be particularly large
+3. The card size is approximately 350px wide and 350px high, with appropriate margins
+4. The provided card background style must be used
+5. The display position of the motto and creator on the card must be adjusted according to the provided location, including left alignment, center alignment, and right alignment
+
+Card structure:
+1. Display the creator on the next line of the motto, and add the symbol "-" before the creator
+2. The font size of the creator is smaller than that of the motto
+3. Write a brief signature 302.AI at the bottom, be careful not to use italics
+ 
+Input format:
+Motto(The motto that the user wishes to display, without modification): ${content}
+Creator(The creator of the motto that the user wishes to display, without modification): ${author}
+Location(Position where the user wishes the motto and creator to be displayed on the card): ${location}
+Card Style(Required Card Background Style): ${style}
+
+Directly output the complete HTML file.
+  `;
+};
+
 export {
   systemPrompt,
   userPrompt,
   posterPromptForRandom,
   posterPromptForCustomAndTemplate,
+  philosophicalCardPrompt,
+  quoteReferenceCardPrompt,
 };

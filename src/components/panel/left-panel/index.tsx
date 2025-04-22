@@ -47,10 +47,11 @@ import { useHistory } from "@/hooks/db/use-gen-history";
 import { STYLES_LIST } from "@/constants/random-styles";
 import { generateSVG } from "@/services/generate-svg";
 import { usePosterHistory } from "@/hooks/db/use-poster-history";
-
+import { genPhilosophicalCard } from "@/services/gen-philosophical-card";
+import { usePhilosophicalHistory } from "@/hooks/db/use-philosophical-history";
 const formSchema = z.object({
   "knowledge-card": z.object({
-    model: z.string(),
+    model: z.string().optional(),
     content: z.string().optional(),
     // 添加一个新字段用于 "提取金句" 的 textarea
     extractKeyContent: z.string().optional(),
@@ -59,23 +60,23 @@ const formSchema = z.object({
     style: z.string().optional(),
   }),
   "promotional-poster": z.object({
-    model: z.string(),
+    model: z.string().optional(),
     content: z.string().optional(),
-    style: z.string(),
+    style: z.string().optional(),
   }),
   "quote-reference": z.object({
-    model: z.string(),
-    author: z.string(),
-    cardFont: z.string(),
-    textPosition: z.string(),
+    model: z.string().optional(),
+    author: z.string().optional(),
+    cardFont: z.string().optional(),
+    textPosition: z.string().optional(),
     content: z.string().optional(),
-    style: z.string(),
+    style: z.string().optional(),
   }),
   "philosophical-card": z.object({
-    model: z.string(),
+    model: z.string().optional(),
     content: z.string().optional(),
-    style: z.string(),
-    cardFont: z.string(),
+    style: z.string().optional(),
+    cardFont: z.string().optional(),
   }),
 });
 
@@ -96,6 +97,12 @@ const LeftPanel = () => {
     updatePosterHistorySvg,
     updatePosterHistoryStatus,
   } = usePosterHistory();
+
+  const {
+    addPhilosophicalHistory,
+    updatePhilosophicalHistoryHtml,
+    updatePhilosophicalHistoryStatus,
+  } = usePhilosophicalHistory();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -188,21 +195,9 @@ const LeftPanel = () => {
     }));
   };
 
-  const historyItems = [
-    {
-      id: 1,
-      type: "知识卡片",
-      content: "人工智能的发展历程",
-      date: "2023-05-15",
-    },
-    { id: 2, type: "宣传海报", content: "春季新品发布会", date: "2023-05-14" },
-    { id: 3, type: "哲理卡片", content: "坚持的力量", date: "2023-05-13" },
-    { id: 4, type: "语录引用", content: "生活中的小确幸", date: "2023-05-12" },
-    { id: 5, type: "知识卡片", content: "量子计算基础", date: "2023-05-11" },
-    { id: 6, type: "宣传海报", content: "夏日促销活动", date: "2023-05-10" },
-    { id: 7, type: "哲理卡片", content: "成长的烦恼", date: "2023-05-09" },
-  ];
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(12312312222222222);
+
     if (uiStore.activeCard === "knowledge-card") {
       const historyId = crypto.randomUUID();
       const { "knowledge-card": knowledgeCard } = values;
@@ -220,7 +215,7 @@ const LeftPanel = () => {
       try {
         const res = await generateHTML({
           apiKey: apiKey as string,
-          model: knowledgeCard.model,
+          model: knowledgeCard.model as string,
           lang: "cn",
           date: knowledgeCard.date as string,
           topic: knowledgeCard.content as string,
@@ -241,16 +236,41 @@ const LeftPanel = () => {
       try {
         const res = await generateSVG({
           apiKey: apiKey as string,
-          model: promotionalPoster.model,
+          model: promotionalPoster.model as string,
           lang: "cn",
           content: promotionalPoster.content as string,
           style: formStore.style,
-          theme: promotionalPoster.style,
+          theme: promotionalPoster.style as string,
         });
         await addPosterHistory({
           svg: res.stringSVG,
           status: "success",
         });
+      } catch (error) {
+        // await updateHistoryStatus(historyId, "failed");
+      }
+    }
+    console.log(uiStore.activeCard);
+
+    if (uiStore.activeCard === "philosophical-card") {
+      const { "philosophical-card": philosophicalCard } = values;
+      try {
+        const res = await genPhilosophicalCard({
+          apiKey: apiKey as string,
+          model: philosophicalCard.model as string,
+          lang: "cn",
+          content: philosophicalCard.content as string,
+          style: formStore.style,
+          cardFont: philosophicalCard.cardFont as string,
+        });
+        await addPhilosophicalHistory({
+          html: res.html,
+          status: "success",
+        });
+        // await addPosterHistory({
+        //   html: res.html,
+        //   status: "success",
+        // });
       } catch (error) {
         // await updateHistoryStatus(historyId, "failed");
       }
@@ -440,6 +460,26 @@ const LeftPanel = () => {
                         <FormControl>
                           <Textarea
                             placeholder="请输入语录或名言..."
+                            className="min-h-[200px] w-full"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
+              {uiStore.activeCard === "philosophical-card" && (
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="philosophical-card.content"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Textarea
+                            placeholder="请输入哲学主题..."
                             className="min-h-[200px] w-full"
                             {...field}
                           />

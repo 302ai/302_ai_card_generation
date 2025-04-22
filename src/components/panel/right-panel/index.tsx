@@ -5,15 +5,16 @@ import PosterHistory from "./poster-history";
 import { useAtom } from "jotai";
 import { formStoreAtom } from "@/stores/slices/form_store";
 import { uiStoreAtom } from "@/stores/slices/ui_store";
+import PhilosophicalCardHistory from "./philosophical-history";
 
 const RightPanel = () => {
   const [uiStore, setUiStore] = useAtom(uiStoreAtom);
   return (
     <div className="h-full w-full">
-      {uiStore.activeCard === "knowledge-card" ? (
-        <KnowledgeHistory />
-      ) : (
-        <PosterHistory />
+      {uiStore.activeCard === "knowledge-card" && <KnowledgeHistory />}
+      {uiStore.activeCard === "promotional-poster" && <PosterHistory />}
+      {uiStore.activeCard === "philosophical-card" && (
+        <PhilosophicalCardHistory />
       )}
     </div>
   );
