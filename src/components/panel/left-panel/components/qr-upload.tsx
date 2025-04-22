@@ -3,20 +3,45 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { Upload } from "lucide-react";
 import { ControllerRenderProps } from "react-hook-form";
+import ky from "ky";
+import { env } from "@/env";
 
 const QrUpload = ({ field }: { field: ControllerRenderProps<any, any> }) => {
   const [image, setImage] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => {
-        setImage(event.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+      const formData = new FormData();
+      formData.append("file", file);
+      // Upload the image
+      try {
+        const response = await ky
+          .post(`${env.NEXT_PUBLIC_AUTH_API_URL}/gpt/api/upload/gpt/image`, {
+            body: formData,
+          })
+          .json<{
+            code: number;
+            msg: string;
+            data: {
+              url: string;
+            };
+          }>();
+        if (response.code === 0) {
+          field.onChange(response.data.url);
+          reader.onload = (event) => {
+            setImage(event.target?.result as string);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          console.error("Upload failed:", response.msg);
+        }
+      } catch (error) {
+        console.error("Upload failed:", error);
+      }
     }
   };
 

@@ -9,19 +9,23 @@ import {
 import QrUpload from "./qr-upload";
 import { useAtom } from "jotai";
 import { formStoreAtom } from "@/stores/slices/form_store";
-
+import { useFormContext } from "react-hook-form";
 const QrSelect = () => {
   const [formStore, setFormStore] = useAtom(formStoreAtom);
+  const form = useFormContext();
   return (
     <div className="flex flex-col gap-4">
       <Select
         value={formStore.qrType}
-        onValueChange={(value) =>
+        onValueChange={(value) => {
           setFormStore((prev) => ({
             ...prev,
             qrType: value as "none" | "upload" | "genrate",
-          }))
-        }
+          }));
+          if (value === "none") {
+            form.setValue("qrCode", "");
+          }
+        }}
       >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Theme" />

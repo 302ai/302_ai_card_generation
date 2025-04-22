@@ -16,6 +16,7 @@ export async function POST(request: Request) {
       topic,
       style,
       qrCode,
+      type,
     }: {
       apiKey: string;
       model: string;
@@ -24,8 +25,8 @@ export async function POST(request: Request) {
       topic: string;
       style: string;
       qrCode: string;
+      type: "input-based" | "extract-key";
     } = await request.json();
-    console.log(apiKey, model, lang, date, topic, style, qrCode);
     const ai302 = createAI302({
       apiKey,
       baseURL: `${env.NEXT_PUBLIC_API_URL}/v1/chat/completions`,
@@ -33,7 +34,7 @@ export async function POST(request: Request) {
 
     const result = await generateText({
       model: ai302(model),
-      system: systemPrompt({ lang }),
+      system: systemPrompt({ lang, type }),
       messages: [
         {
           role: "user",
@@ -49,8 +50,8 @@ export async function POST(request: Request) {
       // First, check if response contains markdown code blocks
       if (stringHTML.includes("```")) {
         const cleanedHTML = stringHTML
-          .replace(/```html/g, "")
-          .replace(/```/g, "")
+          .replace(/```+html/g, "") // Handle any number of backticks followed by html
+          .replace(/```+/g, "") // Handle any number of backticks
           .trim();
 
         html = JSON.parse(cleanedHTML);

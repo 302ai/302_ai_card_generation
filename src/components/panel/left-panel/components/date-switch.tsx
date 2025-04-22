@@ -49,9 +49,12 @@ const DateSwitch = ({ field }: { field: ControllerRenderProps<any, any> }) => {
       )}
       <Switch
         checked={formStore.showDate}
-        onCheckedChange={(checked) =>
-          setFormStore((prev) => ({ ...prev, showDate: checked }))
-        }
+        onCheckedChange={(checked) => {
+          setFormStore((prev) => ({ ...prev, showDate: checked }));
+          if (!checked) {
+            field.onChange("");
+          }
+        }}
       />
     </div>
   );

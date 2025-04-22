@@ -37,8 +37,9 @@ import { Input } from "@/components/ui/input";
 import { ModelId } from "@/constants/models";
 import { appConfigAtom } from "@/stores";
 import { store } from "@/stores";
-import { generatePrompt } from "@/services/gen-prompt";
+import { generateHTML } from "@/services/gen-html";
 import { historyStoreAtom } from "@/stores/slices/history_store";
+import { useHistory } from "@/hooks/db/use-gen-history";
 
 const formSchema = z.object({
   model: z.string(),
@@ -56,6 +57,7 @@ const LeftPanel = () => {
   const [showQrCode, setShowQrCode] = useState(false);
   const [formStore, setFormStore] = useAtom(formStoreAtom);
   const [historyStore, setHistoryStore] = useAtom(historyStoreAtom);
+  const { addHistory, updateHistoryHtml, updateHistoryStatus } = useHistory();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -97,24 +99,20 @@ const LeftPanel = () => {
   const fillWithExample = useCallback(
     (content: string) => {
       if (uiStore.activeTab === "input-based") {
-        setUiStore((prev) => ({
-          ...prev,
-          inputBasedContent: content,
-        }));
-        if (inputBasedTextareaRef.current) {
-          inputBasedTextareaRef.current.focus();
-        }
+        form.setValue("content", content, {
+          shouldValidate: true,
+          shouldDirty: true,
+          shouldTouch: true,
+        });
       } else {
-        setUiStore((prev) => ({
-          ...prev,
-          extractKeyContent: content,
-        }));
-        if (extractKeyTextareaRef.current) {
-          extractKeyTextareaRef.current.focus();
-        }
+        form.setValue("extractKeyContent", content, {
+          shouldValidate: true,
+          shouldDirty: true,
+          shouldTouch: true,
+        });
       }
     },
-    [uiStore.activeTab, setUiStore]
+    [uiStore.activeTab, form]
   );
 
   const onActiveTabChange = useCallback(
@@ -161,19 +159,30 @@ const LeftPanel = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     // console.log(values);
-    const res = await generatePrompt({
-      apiKey,
-      model: values.model,
-      lang: "cn",
-      date: values.date,
-      topic: values.content,
-      style: values.style,
-      qrCode: values.qrCode,
-    });
-    setHistoryStore((prev) => ({
-      ...prev,
-      htmls: [...prev.htmls, res.html],
-    }));
+    const historyId = crypto.randomUUID();
+    try {
+      const res = await generateHTML({
+        apiKey: apiKey as string,
+        model: values.model,
+        lang: "cn",
+        date: values.date as string,
+        topic: values.content as string,
+        style: values.style as string,
+        qrCode: values.qrCode as string,
+        type: uiStore.activeTab,
+      });
+      await addHistory({
+        html: res.html,
+        status: "success",
+      });
+    } catch (error) {
+      await updateHistoryStatus(historyId, "failed");
+    }
+
+    // setHistoryStore((prev) => ({
+    //   ...prev,
+    //   htmls: [...prev.htmls, res.html],
+    // }));
   }
 
   return (
@@ -288,7 +297,6 @@ const LeftPanel = () => {
                         <FormItem>
                           <FormControl>
                             <Textarea
-                              // ref={} // ref 主要用于 focus 等操作
                               placeholder="请输入主题词或文章，AI基于输入生成卡片..."
                               className="min-h-[200px]"
                               {...field} // 将 RHF 提供的 props (value, onChange, onBlur, ref) 传递给 Textarea
@@ -308,10 +316,9 @@ const LeftPanel = () => {
                         <FormItem>
                           <FormControl>
                             <Textarea
-                              // ref={extractKeyTextareaRef} // ref 主要用于 focus 等操作
                               placeholder="请输入主题词或文章，AI提取金句创建..."
                               className="min-h-[200px]"
-                              {...field}
+                              {...field} // 添加field绑定，确保React Hook Form可以控制这个字段
                             />
                           </FormControl>
                           <FormMessage /> {/* 显示验证错误 */}
