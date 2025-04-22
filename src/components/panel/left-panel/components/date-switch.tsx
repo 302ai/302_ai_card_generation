@@ -7,14 +7,14 @@ import { PopoverContent } from "@/components/ui/popover";
 import { PopoverTrigger } from "@/components/ui/popover";
 import { Popover } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
+import { format, setDate } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
+import { date } from "zod";
 
 const DateSwitch = ({ field }: { field: ControllerRenderProps<any, any> }) => {
   const [formStore, setFormStore] = useAtom(formStoreAtom);
-  const [showCalendar, setShowCalendar] = useState(false);
   return (
     <div className="flex items-center gap-2">
       {formStore.showDate && (
@@ -35,7 +35,7 @@ const DateSwitch = ({ field }: { field: ControllerRenderProps<any, any> }) => {
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
+          <PopoverContent className="w-full p-0" align="end">
             <Calendar
               mode="single"
               selected={field.value ? new Date(field.value) : undefined}
