@@ -9,6 +9,45 @@
     },
     "title": "Need to share code"
   },
+  "switch_title": {
+    "knowledge_card": "Knowledge Card",
+    "poster": "Poster",
+    "philosophy_card": "Philosophy Card",
+    "quote_card": "Quote Card",
+    "based_on_input": "Based on Input",
+    "extract_quote": "Extract Quote"
+  },
+  "placeholder": {
+    "based_on_input": "Please enter the theme or article, AI generates cards based on the input...",
+    "extract_quote": "Please enter the theme or article, AI extracts quotes to create...",
+    "poster": "Please enter the promotional poster content...",
+    "philosophy_card": "Please enter the philosophy theme...",
+    "quote_card": "Please enter the quote or quote...",
+    "select_text_position": "Please select the text position"
+  },
+  "label": {
+    "model_select": "Model Selection",
+    "date_display": "Date Display",
+    "qr_code": "QR Code",
+    "style_setting": "Style Setting",
+    "quote_signature": "Quote Signature",
+    "card_font": "Card Font",
+    "text_position": "Text Position"
+  },
+  "button": {
+    "generate": "Generate"
+  },
+  "select": {
+    "not_display": "Not Display",
+    "image_upload": "Image Upload",
+    "generate": "Generate",
+    "random": "Random",
+    "template": "Template",
+    "custom": "Custom",
+    "left": "Left Align",
+    "center": "Center Align",
+    "right": "Right Align"
+  },
   "global": {
     "error": {
       "code_invalid": "Invalid sharing code. For more information, visit 302.AI",

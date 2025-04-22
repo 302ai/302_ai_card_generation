@@ -9,6 +9,45 @@
     },
     "title": "需要分享码"
   },
+  "switch_title": {
+    "knowledge_card": "知识卡片",
+    "poster": "宣传海报",
+    "philosophy_card": "哲理卡片",
+    "quote_card": "语录引用",
+    "based_on_input": "基于输入",
+    "extract_quote": "提取金句"
+  },
+  "placeholder": {
+    "based_on_input": "请输入主题词或文章，AI基于输入生成卡片...",
+    "extract_quote": "请输入主题词或文章，AI提取金句创建...",
+    "poster": "请输入宣传海报内容...",
+    "philosophy_card": "请输入哲学主题...",
+    "quote_card": "请输入语录或名言...",
+    "select_text_position": "请选择文字位置"
+  },
+  "label": {
+    "model_select": "模型选择",
+    "date_display": "日期显示",
+    "qr_code": "二维码",
+    "style_setting": "风格设置",
+    "quote_signature": "语录署名",
+    "card_font": "卡片字体",
+    "text_position": "文字位置"
+  },
+  "button": {
+    "generate": "生成"
+  },
+  "select": {
+    "not_display": "不展示",
+    "image_upload": "图片上传",
+    "generate": "生成",
+    "random": "随机",
+    "template": "样板",
+    "custom": "自定义",
+    "left": "靠左对齐",
+    "center": "居中",
+    "right": "靠右对齐"
+  },
   "global": {
     "error": {
       "copy_failed": "复制失败",

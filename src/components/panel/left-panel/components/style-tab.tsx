@@ -4,10 +4,10 @@ import { formStoreAtom } from "@/stores/slices/form_store";
 import { useAtom } from "jotai";
 import { cn } from "@/lib/utils";
 import { ControllerRenderProps } from "react-hook-form";
-
+import { useTranslations } from "next-intl";
 const StyleTab = () => {
   const [formStore, setFormStore] = useAtom(formStoreAtom);
-
+  const t = useTranslations();
   return (
     <div className="">
       <div className="flex justify-end rounded-md">
@@ -22,7 +22,7 @@ const StyleTab = () => {
           )}
           onClick={() => setFormStore({ ...formStore, style: "random" })}
         >
-          随机
+          {t("select.random")}
         </Button>
         <Button
           type="button"
@@ -35,7 +35,7 @@ const StyleTab = () => {
           )}
           onClick={() => setFormStore({ ...formStore, style: "template" })}
         >
-          样板
+          {t("select.template")}
         </Button>
         <Button
           type="button"
@@ -48,7 +48,7 @@ const StyleTab = () => {
           )}
           onClick={() => setFormStore({ ...formStore, style: "custom" })}
         >
-          自定义
+          {t("select.custom")}
         </Button>
       </div>
       {/* 

@@ -9,6 +9,45 @@
     },
     "title": "コードを共有する必要がある"
   },
+  "switch_title": {
+    "knowledge_card": "知識カード",
+    "poster": "宣伝ポスター",
+    "philosophy_card": "哲理カード",
+    "quote_card": "引用カード",
+    "based_on_input": "入力に基づく",
+    "extract_quote": "引用を抽出する"
+  },
+  "placeholder": {
+    "based_on_input": "トピックや記事を入力してください。AIは入力に基づいてカードを生成します...",
+    "extract_quote": "トピックや記事を入力してください。AIは金句を抽出して作成します...",
+    "poster": "宣伝ポスターの内容を入力してください...",
+    "philosophy_card": "哲学のトピックを入力してください...",
+    "quote_card": "語録や名言を入力してください...",
+    "select_text_position": "テキスト位置を選択してください"
+  },
+  "label": {
+    "model_select": "模型選択",
+    "date_display": "日付表示",
+    "qr_code": "QRコード",
+    "style_setting": "スタイル設定",
+    "quote_signature": "語録署名",
+    "card_font": "カードフォント",
+    "text_position": "テキスト位置"
+  },
+  "button": {
+    "generate": "生成する"
+  },
+  "select": {
+    "not_display": "表示しない",
+    "image_upload": "画像アップロード",
+    "generate": "生成する",
+    "random": "ランダム",
+    "template": "テンプレート",
+    "custom": "カスタム",
+    "left": "左揃え",
+    "center": "中央揃え",
+    "right": "右揃え"
+  },
   "global": {
     "error": {
       "code_invalid": "共有コードが無効です。詳細は302.AIをご覧ください",

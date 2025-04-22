@@ -49,6 +49,7 @@ import { generateSVG } from "@/services/generate-svg";
 import { usePosterHistory } from "@/hooks/db/use-poster-history";
 import { genPhilosophicalCard } from "@/services/gen-philosophical-card";
 import { usePhilosophicalHistory } from "@/hooks/db/use-philosophical-history";
+import { useTranslations } from "next-intl";
 const formSchema = z.object({
   "knowledge-card": z.object({
     model: z.string().optional(),
@@ -97,6 +98,8 @@ const LeftPanel = () => {
     updatePosterHistorySvg,
     updatePosterHistoryStatus,
   } = usePosterHistory();
+
+  const t = useTranslations();
 
   const {
     addPhilosophicalHistory,
@@ -196,8 +199,6 @@ const LeftPanel = () => {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(12312312222222222);
-
     if (uiStore.activeCard === "knowledge-card") {
       const historyId = crypto.randomUUID();
       const { "knowledge-card": knowledgeCard } = values;
@@ -297,10 +298,18 @@ const LeftPanel = () => {
                   <SelectValue placeholder="选择内容类型" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="knowledge-card">知识卡片</SelectItem>
-                  <SelectItem value="promotional-poster">宣传海报</SelectItem>
-                  <SelectItem value="philosophical-card">哲理卡片</SelectItem>
-                  <SelectItem value="quote-reference">语录引用</SelectItem>
+                  <SelectItem value="knowledge-card">
+                    {t("switch_title.knowledge_card")}
+                  </SelectItem>
+                  <SelectItem value="promotional-poster">
+                    {t("switch_title.poster")}
+                  </SelectItem>
+                  <SelectItem value="philosophical-card">
+                    {t("switch_title.philosophy_card")}
+                  </SelectItem>
+                  <SelectItem value="quote-reference">
+                    {t("switch_title.quote_card")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -322,13 +331,13 @@ const LeftPanel = () => {
                           value="input-based"
                           className="px-3 py-1.5 text-sm"
                         >
-                          基于输入
+                          {t("switch_title.based_on_input")}
                         </TabsTrigger>
                         <TabsTrigger
                           value="extract-key"
                           className="px-3 py-1.5 text-sm"
                         >
-                          提取金句
+                          {t("switch_title.extract_quote")}
                         </TabsTrigger>
                       </TabsList>
 
@@ -338,7 +347,6 @@ const LeftPanel = () => {
                           size="icon"
                           className="h-6 w-6"
                           onClick={refreshExamples}
-                          title="刷新示例"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -398,7 +406,7 @@ const LeftPanel = () => {
                           <FormItem>
                             <FormControl>
                               <Textarea
-                                placeholder="请输入主题词或文章，AI基于输入生成卡片..."
+                                placeholder={t("placeholder.based_on_input")}
                                 className="min-h-[200px]"
                                 {...field} // 将 RHF 提供的 props (value, onChange, onBlur, ref) 传递给 Textarea
                               />
@@ -417,7 +425,7 @@ const LeftPanel = () => {
                           <FormItem>
                             <FormControl>
                               <Textarea
-                                placeholder="请输入主题词或文章，AI提取金句创建..."
+                                placeholder={t("placeholder.extract_quote")}
                                 className="min-h-[200px]"
                                 {...field} // 添加field绑定，确保React Hook Form可以控制这个字段
                               />
@@ -439,7 +447,7 @@ const LeftPanel = () => {
                       <FormItem>
                         <FormControl>
                           <Textarea
-                            placeholder="请输入宣传海报内容..."
+                            placeholder={t("placeholder.poster")}
                             className="min-h-[200px] w-full"
                             {...field}
                           />
@@ -459,7 +467,7 @@ const LeftPanel = () => {
                       <FormItem>
                         <FormControl>
                           <Textarea
-                            placeholder="请输入语录或名言..."
+                            placeholder={t("placeholder.quote_card")}
                             className="min-h-[200px] w-full"
                             {...field}
                           />
@@ -479,7 +487,7 @@ const LeftPanel = () => {
                       <FormItem>
                         <FormControl>
                           <Textarea
-                            placeholder="请输入哲学主题..."
+                            placeholder={t("placeholder.philosophy_card")}
                             className="min-h-[200px] w-full"
                             {...field}
                           />
@@ -501,7 +509,7 @@ const LeftPanel = () => {
                     name="knowledge-card.model"
                     render={({ field }) => (
                       <FormItem className="flex w-full items-center justify-between">
-                        <FormLabel>模型选择</FormLabel>
+                        <FormLabel>{t("label.model_select")}</FormLabel>
                         <FormControl>
                           <ModelSelect
                             value={field.value as ModelId}
@@ -536,7 +544,9 @@ const LeftPanel = () => {
                     name="quote-reference.cardFont"
                     render={({ field }) => (
                       <FormItem className="flex w-full items-center justify-between">
-                        <FormLabel className="w-full">卡片字体</FormLabel>
+                        <FormLabel className="w-full">
+                          {t("label.card_font")}
+                        </FormLabel>
                         <FormControl>
                           <Select {...field}>
                             <SelectTrigger>
@@ -557,16 +567,28 @@ const LeftPanel = () => {
                     name="quote-reference.cardFont"
                     render={({ field }) => (
                       <FormItem className="flex w-full items-center justify-between">
-                        <FormLabel className="w-full">文字位置</FormLabel>
+                        <FormLabel className="w-full">
+                          {t("label.text_position")}
+                        </FormLabel>
                         <FormControl>
                           <Select {...field}>
                             <SelectTrigger>
-                              <SelectValue placeholder="请选择文字位置" />
+                              <SelectValue
+                                placeholder={t(
+                                  "placeholder.select_text_position"
+                                )}
+                              />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="left">靠左对齐</SelectItem>
-                              <SelectItem value="center">居中</SelectItem>
-                              <SelectItem value="right">靠右对齐</SelectItem>
+                              <SelectItem value="left">
+                                {t("select.left")}
+                              </SelectItem>
+                              <SelectItem value="center">
+                                {t("select.center")}
+                              </SelectItem>
+                              <SelectItem value="right">
+                                {t("select.right")}
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </FormControl>
@@ -584,7 +606,7 @@ const LeftPanel = () => {
                         name="knowledge-card.date"
                         render={({ field }) => (
                           <FormItem className="flex w-full items-center justify-between">
-                            <FormLabel>日期显示</FormLabel>
+                            <FormLabel>{t("label.date_display")}</FormLabel>
                             <FormControl>
                               <DateSwitch field={field} />
                             </FormControl>
@@ -595,7 +617,7 @@ const LeftPanel = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-sm">二维码</span>
+                    <span className="text-sm">{t("label.qr_code")}</span>
                     <QrSelect />
                   </div>
 
@@ -644,7 +666,7 @@ const LeftPanel = () => {
                 </div>
               )}
               <div className="flex items-center">
-                <span className="flex-1">风格设置</span>
+                <span className="flex-1">{t("label.style_setting")}</span>
                 <StyleTab />
               </div>
               {uiStore.activeCard === "knowledge-card" && (
@@ -690,7 +712,7 @@ const LeftPanel = () => {
           type="submit"
           className="w-full bg-purple-500 py-6 text-lg hover:bg-purple-600"
         >
-          生成
+          {t("button.generate")}
         </Button>
       </form>
     </Form>
