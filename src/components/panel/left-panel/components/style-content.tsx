@@ -8,8 +8,10 @@ import { ControllerRenderProps } from "react-hook-form";
 
 const StyleContent = ({
   field,
+  type,
 }: {
   field: ControllerRenderProps<any, any>;
+  type: "knowledgeCard" | "promotionalPoster";
 }) => {
   const [formStore, setFormStore] = useAtom(formStoreAtom);
   return (
@@ -17,13 +19,24 @@ const StyleContent = ({
       {formStore.style === "template" && (
         <div className="mt-2">
           <div className="flex space-x-2 overflow-x-auto pb-2">
-            {STYLE_LIST.map((item) => (
-              <div key={item.id} className="flex-shrink-0">
+            {STYLE_LIST[type]?.map((item) => (
+              <div
+                key={item.id}
+                className={`flex-shrink-0 cursor-pointer transition-all ${
+                  field.value === item.prompt
+                    ? "rounded-md border-2 border-primary shadow-md"
+                    : "border-2 border-transparent"
+                }`}
+                onClick={() => {
+                  field.onChange(item.prompt);
+                }}
+              >
                 <Image
                   src={item.url}
-                  alt={item.cnName}
+                  alt={item.name}
                   width={100}
                   height={100}
+                  className="rounded-md"
                 />
               </div>
             ))}

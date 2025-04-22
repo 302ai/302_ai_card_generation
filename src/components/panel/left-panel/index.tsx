@@ -12,7 +12,11 @@ import { Tabs, TabsTrigger, TabsList } from "@/components/ui/tabs";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { useAtom } from "jotai";
-import { UiStoreActiveTab, uiStoreAtom } from "@/stores/slices/ui_store";
+import {
+  UiStoreActiveCard,
+  UiStoreActiveTab,
+  uiStoreAtom,
+} from "@/stores/slices/ui_store";
 import { CardExamples } from "@/constants/card-examples";
 import ModelSelect from "./components/model-select";
 import { formStoreAtom } from "@/stores/slices/form_store";
@@ -40,30 +44,55 @@ import { store } from "@/stores";
 import { generateHTML } from "@/services/gen-html";
 import { historyStoreAtom } from "@/stores/slices/history_store";
 import { useHistory } from "@/hooks/db/use-gen-history";
+import { STYLES_LIST } from "@/constants/random-styles";
+import { generateSVG } from "@/services/generate-svg";
+import { usePosterHistory } from "@/hooks/db/use-poster-history";
 
 const formSchema = z.object({
-  model: z.string(),
-  content: z.string().optional(),
-  // 添加一个新字段用于 "提取金句" 的 textarea
-  extractKeyContent: z.string().optional(),
-  date: z.string().optional(),
-  qrCode: z.string().optional(),
-  style: z.string().optional(),
+  "knowledge-card": z.object({
+    model: z.string(),
+    content: z.string().optional(),
+    // 添加一个新字段用于 "提取金句" 的 textarea
+    extractKeyContent: z.string().optional(),
+    date: z.string().optional(),
+    qrCode: z.string().optional(),
+    style: z.string().optional(),
+  }),
+  "promotional-poster": z.object({
+    model: z.string(),
+    content: z.string().optional(),
+    style: z.string(),
+  }),
 });
 
 const LeftPanel = () => {
-  const [contentType, setContentType] = useState("knowledge-card");
+  const [contentType, setContentType] = useState<
+    | "knowledge-card"
+    | "promotional-poster"
+    | "philosophical-card"
+    | "quote-reference"
+  >("knowledge-card");
   const [uiStore, setUiStore] = useAtom(uiStoreAtom);
   const [showQrCode, setShowQrCode] = useState(false);
   const [formStore, setFormStore] = useAtom(formStoreAtom);
   const [historyStore, setHistoryStore] = useAtom(historyStoreAtom);
   const { addHistory, updateHistoryHtml, updateHistoryStatus } = useHistory();
+  const {
+    addPosterHistory,
+    updatePosterHistorySvg,
+    updatePosterHistoryStatus,
+  } = usePosterHistory();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      model: "claude-3-7-sonnet-20250219",
+      "knowledge-card": {
+        model: "claude-3-7-sonnet-20250219",
+      },
+      "promotional-poster": {
+        model: "claude-3-7-sonnet-20250219",
+      },
     },
   });
 
@@ -71,8 +100,6 @@ const LeftPanel = () => {
 
   // Remove local state for textarea content as we'll use the store
   // Add refs for the textareas to access them for filling with content
-  const inputBasedTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const extractKeyTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   // State for displayed examples - limited to 4
   const [displayedExamples, setDisplayedExamples] = useState<
@@ -88,7 +115,7 @@ const LeftPanel = () => {
   // Initialize examples on component mount and when active tab changes
   useEffect(() => {
     refreshExamples();
-  }, [uiStore.activeTab]);
+  }, []);
 
   // Function to refresh examples
   const refreshExamples = useCallback(() => {
@@ -99,13 +126,13 @@ const LeftPanel = () => {
   const fillWithExample = useCallback(
     (content: string) => {
       if (uiStore.activeTab === "input-based") {
-        form.setValue("content", content, {
+        form.setValue("knowledge-card.content", content, {
           shouldValidate: true,
           shouldDirty: true,
           shouldTouch: true,
         });
       } else {
-        form.setValue("extractKeyContent", content, {
+        form.setValue("knowledge-card.extractKeyContent", content, {
           shouldValidate: true,
           shouldDirty: true,
           shouldTouch: true,
@@ -156,33 +183,60 @@ const LeftPanel = () => {
     { id: 7, type: "哲理卡片", content: "成长的烦恼", date: "2023-05-09" },
   ];
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    // console.log(values);
-    const historyId = crypto.randomUUID();
-    try {
-      const res = await generateHTML({
-        apiKey: apiKey as string,
-        model: values.model,
-        lang: "cn",
-        date: values.date as string,
-        topic: values.content as string,
-        style: values.style as string,
-        qrCode: values.qrCode as string,
-        type: uiStore.activeTab,
-      });
-      await addHistory({
-        html: res.html,
-        status: "success",
-      });
-    } catch (error) {
-      await updateHistoryStatus(historyId, "failed");
-    }
+    if (uiStore.activeCard === "knowledge-card") {
+      const historyId = crypto.randomUUID();
+      const {
+        "knowledge-card": knowledgeCard,
+        "promotional-poster": promotionalPoster,
+      } = values;
+      let newStyle = knowledgeCard.style as string;
+      if (formStore.style === "random") {
+        // Randomly select a style from STYLES_LIST
+        const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
+        newStyle = STYLES_LIST[randomIndex].description;
+      }
 
-    // setHistoryStore((prev) => ({
-    //   ...prev,
-    //   htmls: [...prev.htmls, res.html],
-    // }));
+      if (formStore.style === "template" || formStore.style === "custom") {
+        newStyle = knowledgeCard.style as string;
+      }
+
+      try {
+        const res = await generateHTML({
+          apiKey: apiKey as string,
+          model: knowledgeCard.model,
+          lang: "cn",
+          date: knowledgeCard.date as string,
+          topic: knowledgeCard.content as string,
+          style: newStyle,
+          qrCode: knowledgeCard.qrCode as string,
+          type: uiStore.activeTab,
+        });
+        await addHistory({
+          html: res.html,
+          status: "success",
+        });
+      } catch (error) {
+        await updateHistoryStatus(historyId, "failed");
+      }
+    }
+    if (uiStore.activeCard === "promotional-poster") {
+      const { "promotional-poster": promotionalPoster } = values;
+      try {
+        const res = await generateSVG({
+          apiKey: apiKey as string,
+          model: promotionalPoster.model,
+          lang: "cn",
+          content: promotionalPoster.content as string,
+          style: formStore.style,
+        });
+        await addPosterHistory({
+          svg: res.stringSVG,
+          status: "success",
+        });
+      } catch (error) {
+        // await updateHistoryStatus(historyId, "failed");
+      }
+    }
   }
 
   return (
@@ -192,7 +246,15 @@ const LeftPanel = () => {
           <div className="space-y-4">
             {/* Dropdown */}
             <div>
-              <Select value={contentType} onValueChange={setContentType}>
+              <Select
+                value={uiStore.activeCard}
+                onValueChange={(value) => {
+                  setUiStore((prev) => ({
+                    ...prev,
+                    activeCard: value as UiStoreActiveCard,
+                  }));
+                }}
+              >
                 <SelectTrigger className="flex w-full justify-center py-3 text-lg">
                   <SelectValue placeholder="选择内容类型" />
                 </SelectTrigger>
@@ -207,127 +269,149 @@ const LeftPanel = () => {
 
             {/* Tabs with Examples */}
             <div className="flex flex-col space-y-2">
-              <div className="flex items-center space-x-2">
-                <Tabs
-                  value={uiStore.activeTab}
-                  onValueChange={(value: string) =>
-                    onActiveTabChange(value as UiStoreActiveTab)
-                  }
-                  className="w-full"
-                >
-                  <div className="flex items-center space-x-2">
-                    <TabsList className="h-9">
-                      <TabsTrigger
-                        value="input-based"
-                        className="px-3 py-1.5 text-sm"
-                      >
-                        基于输入
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="extract-key"
-                        className="px-3 py-1.5 text-sm"
-                      >
-                        提取金句
-                      </TabsTrigger>
-                    </TabsList>
-
-                    <div className="flex items-center space-x-1 text-sm text-gray-500">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        onClick={refreshExamples}
-                        title="刷新示例"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-refresh-cw"
+              {uiStore.activeCard === "knowledge-card" && (
+                <div className="flex items-center space-x-2">
+                  <Tabs
+                    value={uiStore.activeTab}
+                    onValueChange={(value: string) =>
+                      onActiveTabChange(value as UiStoreActiveTab)
+                    }
+                    className="w-full"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <TabsList className="h-9">
+                        <TabsTrigger
+                          value="input-based"
+                          className="px-3 py-1.5 text-sm"
                         >
-                          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                          <path d="M21 3v5h-5" />
-                          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                          <path d="M3 21v-5h5" />
-                        </svg>
-                      </Button>
-                      {uiStore.activeTab === "input-based" ? (
-                        <>
-                          {displayedExamples.map((example, index) => (
-                            <span
-                              key={`${example.id}-${index}`}
-                              className="cursor-pointer rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
-                              onClick={() =>
-                                fillWithExample(example.input_based.content)
-                              }
-                            >
-                              {example.input_based.title}
-                            </span>
-                          ))}
-                        </>
-                      ) : (
-                        <>
-                          {displayedExamples.map((example, index) => (
-                            <span
-                              key={`${example.id}-${index}`}
-                              className="cursor-pointer rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
-                              onClick={() =>
-                                fillWithExample(example.extract_key.content)
-                              }
-                            >
-                              {example.extract_key.title}
-                            </span>
-                          ))}
-                        </>
-                      )}
+                          基于输入
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="extract-key"
+                          className="px-3 py-1.5 text-sm"
+                        >
+                          提取金句
+                        </TabsTrigger>
+                      </TabsList>
+
+                      <div className="flex items-center space-x-1 text-sm text-gray-500">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={refreshExamples}
+                          title="刷新示例"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="lucide lucide-refresh-cw"
+                          >
+                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                            <path d="M21 3v5h-5" />
+                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                            <path d="M3 21v-5h5" />
+                          </svg>
+                        </Button>
+                        {uiStore.activeTab === "input-based" ? (
+                          <>
+                            {displayedExamples.map((example, index) => (
+                              <span
+                                key={`${example.id}-${index}`}
+                                className="cursor-pointer rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
+                                onClick={() =>
+                                  fillWithExample(example.input_based.content)
+                                }
+                              >
+                                {example.input_based.title}
+                              </span>
+                            ))}
+                          </>
+                        ) : (
+                          <>
+                            {displayedExamples.map((example, index) => (
+                              <span
+                                key={`${example.id}-${index}`}
+                                className="cursor-pointer rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
+                                onClick={() =>
+                                  fillWithExample(example.extract_key.content)
+                                }
+                              >
+                                {example.extract_key.title}
+                              </span>
+                            ))}
+                          </>
+                        )}
+                      </div>
                     </div>
-                  </div>
 
-                  <TabsContent value="input-based" className="mt-4 space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="content" // RHF 字段名
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Textarea
-                              placeholder="请输入主题词或文章，AI基于输入生成卡片..."
-                              className="min-h-[200px]"
-                              {...field} // 将 RHF 提供的 props (value, onChange, onBlur, ref) 传递给 Textarea
-                            />
-                          </FormControl>
-                          <FormMessage /> {/* 显示验证错误 */}
-                        </FormItem>
-                      )}
-                    />
-                  </TabsContent>
+                    <TabsContent value="input-based" className="mt-4 space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="knowledge-card.content" // RHF 字段名
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Textarea
+                                placeholder="请输入主题词或文章，AI基于输入生成卡片..."
+                                className="min-h-[200px]"
+                                {...field} // 将 RHF 提供的 props (value, onChange, onBlur, ref) 传递给 Textarea
+                              />
+                            </FormControl>
+                            <FormMessage /> {/* 显示验证错误 */}
+                          </FormItem>
+                        )}
+                      />
+                    </TabsContent>
 
-                  <TabsContent value="extract-key" className="mt-4 space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="extractKeyContent" // RHF 字段名 (与 schema 对应)
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Textarea
-                              placeholder="请输入主题词或文章，AI提取金句创建..."
-                              className="min-h-[200px]"
-                              {...field} // 添加field绑定，确保React Hook Form可以控制这个字段
-                            />
-                          </FormControl>
-                          <FormMessage /> {/* 显示验证错误 */}
-                        </FormItem>
-                      )}
-                    />
-                  </TabsContent>
-                </Tabs>
-              </div>
+                    <TabsContent value="extract-key" className="mt-4 space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="knowledge-card.extractKeyContent" // RHF 字段名 (与 schema 对应)
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Textarea
+                                placeholder="请输入主题词或文章，AI提取金句创建..."
+                                className="min-h-[200px]"
+                                {...field} // 添加field绑定，确保React Hook Form可以控制这个字段
+                              />
+                            </FormControl>
+                            <FormMessage /> {/* 显示验证错误 */}
+                          </FormItem>
+                        )}
+                      />
+                    </TabsContent>
+                  </Tabs>
+                </div>
+              )}
+              {uiStore.activeCard === "promotional-poster" && (
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="promotional-poster.content"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Textarea
+                            placeholder="请输入宣传海报内容..."
+                            className="min-h-[200px] w-full"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Additional Controls */}
@@ -336,7 +420,7 @@ const LeftPanel = () => {
                 <div className="flex w-full items-center justify-between">
                   <FormField
                     control={form.control}
-                    name="model"
+                    name="knowledge-card.model"
                     render={({ field }) => (
                       <FormItem className="flex w-full items-center justify-between">
                         <FormLabel>模型选择</FormLabel>
@@ -355,55 +439,72 @@ const LeftPanel = () => {
                 </div>
               </div>
 
-              <div className="flex">
-                <div className="flex w-full items-center justify-between">
+              {uiStore.activeCard === "knowledge-card" && (
+                <>
+                  <div className="flex">
+                    <div className="flex w-full items-center justify-between">
+                      <FormField
+                        control={form.control}
+                        name="knowledge-card.date"
+                        render={({ field }) => (
+                          <FormItem className="flex w-full items-center justify-between">
+                            <FormLabel>日期显示</FormLabel>
+                            <FormControl>
+                              <DateSwitch field={field} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">二维码</span>
+                    <QrSelect />
+                  </div>
+
                   <FormField
                     control={form.control}
-                    name="date"
+                    name="knowledge-card.qrCode"
                     render={({ field }) => (
-                      <FormItem className="flex w-full items-center justify-between">
-                        <FormLabel>日期显示</FormLabel>
+                      <FormItem>
                         <FormControl>
-                          <DateSwitch field={field} />
+                          <>
+                            {formStore.qrType === "upload" && (
+                              <QrUpload field={field} />
+                            )}
+                            {formStore.qrType === "genrate" && (
+                              <QrGenerate field={field} />
+                            )}
+                          </>
                         </FormControl>
                       </FormItem>
                     )}
                   />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-sm">二维码</span>
-                <QrSelect />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="qrCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <>
-                        {formStore.qrType === "upload" && (
-                          <QrUpload field={field} />
-                        )}
-                        {formStore.qrType === "genrate" && (
-                          <QrGenerate field={field} />
-                        )}
-                      </>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+                </>
+              )}
               <div className="flex items-center">
                 <span className="flex-1">风格设置</span>
                 <StyleTab />
               </div>
-              <FormField
-                control={form.control}
-                name="style"
-                render={({ field }) => <StyleContent field={field} />}
-              />
+              {uiStore.activeCard === "knowledge-card" && (
+                <FormField
+                  control={form.control}
+                  name="knowledge-card.style"
+                  render={({ field }) => (
+                    <StyleContent field={field} type="knowledgeCard" />
+                  )}
+                />
+              )}
+              {uiStore.activeCard === "promotional-poster" && (
+                <FormField
+                  control={form.control}
+                  name="promotional-poster.style"
+                  render={({ field }) => (
+                    <StyleContent field={field} type="promotionalPoster" />
+                  )}
+                />
+              )}
             </div>
           </div>
         </div>

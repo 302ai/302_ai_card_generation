@@ -250,4 +250,525 @@ const userPrompt = ({
   };
 };
 
-export { systemPrompt, userPrompt };
+const posterPromptForRandom = ({
+  lang = "cn",
+  content,
+}: {
+  lang?: "cn" | "en" | "jp";
+  content: string;
+}) => {
+  const prompts = {
+    cn: `
+    您是一位专业的平面设计师和SVG开发专家，在视觉美学和技术实现方面拥有高度的专业知识。你的最终作品将让观众惊叹不已，并被视为真正的艺术杰作。
+
+我将为您提供一个主题或一段文字。请分析它们，并将其转换为令人惊叹的SVG格式海报：
+
+##内容要求
+-所有海报文本必须使用中文
+-保留原始主题的核心信息，但以更具视觉冲击力的方式呈现
+-可以搜索其他视觉元素或设计灵感来增强海报的表现力
+
+##设计风格
+-根据主题选择合适的设计风格，可以是极简主义、复古、未来主义、现代主义、波普艺术、赛博朋克、手绘插画、拼贴艺术、新艺术、巴洛克等风格
+-使用强大的视觉层次结构来确保信息的有效沟通
+-配色方案应富有表现力，和谐一致，符合主题的情感
+-精心选择字体，混合不超过三种字体，确保可读性和美观性共存
+-充分利用SVG的矢量特性，呈现细腻的细节和锐利的边缘
+
+##技术规格
+-使用纯SVG格式确保无损缩放和最佳兼容性
+-整洁的代码、清晰的结构和适当的注释
+-通过删除不必要的元素和属性来优化SVG代码
+-使用SVG原生动画功能实现适当的动画效果（如果需要）
+-SVG元素的总数不应超过100，以确保渲染效率
+-避免使用实验性或低兼容性的SVG功能
+
+##兼容性要求
+-设计必须在Chrome、Firefox、Safari等主流浏览器中正确显示
+-确保所有关键内容在标准viewBox范围内完全可见
+-验证SVG在删除所有高级效果（动画、过滤器）后仍然可以清楚地传达核心信息
+-避免依赖特定浏览器或平台的专有功能
+-设置合理的文本大小，以确保跨多个比例的可读性
+
+##尺寸和比例
+-默认尺寸为标准海报尺寸（如A3:297mm×420mm或自定义尺寸）
+-设置适当的viewBox以确保正确显示，通常设置为“0 0 800 1120”或类似比例
+-确保所有文本和关键视觉元素在不同大小下保持清晰可读
+-核心内容应位于视图的中心区域，避免边缘布局
+-在300x300至1200x1200的像素范围内测试设计的显示性能
+
+##图形和视觉元素
+-创建原始矢量图形以展示主题的精髓
+-使用高级SVG功能（如渐变、图案和过滤器）增强视觉效果，但每个SVG仅限于3个过滤器
+-精心设计的构图确保了视觉平衡和动态张力
+-合理利用负空间，避免设计过于拥挤
+-装饰元素不应干扰或掩盖主要信息
+
+##视觉层次和布局
+-建立清晰的视觉引导，引导观众的视线
+-精致的文本布局，考虑到中文字体的特点和美学
+-标题、副标题和正文之间有明显的区别
+-使用大小、厚度、颜色和位置创建层次感
+-确保所有文本内容在视觉设计中优先于装饰元素
+
+##性能优化
+-确保SVG文件大小合适，避免不必要的复杂路径
+-正确使用SVG元素（如path、rect、circle等）
+-优化路径数据，删除冗余点和曲线
+-合并可以合并的路径和形状，以减少元素的总数
+-通过使用基本元素组合而不是复杂路径来简化复杂的形状
+-避免过多的阴影和模糊效果，这可能会在某些环境中导致性能问题
+
+##测试和验证
+-完成设计后，删除所有动画和高级过滤器，并确认内容仍然完全可见
+-检查元素是否使用了正确的z-index，以避免意外覆盖
+-验证所有内容是否可以在不同的窗口大小下正确显示
+-确保设计采用分层方法：底层（背景）、内容层和装饰层明确分开
+-提供简化的设计概念，消除可能影响稳定性的所有高级功能
+
+##输出要求
+-提供完整可用的SVG代码，可以直接打开或嵌入浏览器中的网页中
+-确保代码有效并符合SVG标准，没有错误警告
+-简要说明设计理念和关键视觉元素
+-不要懈怠或遗漏，充分展示你的设计思维和SVG专业知识
+-使用COT（创维链）方法：首先分析主题，然后概念化设计方案，最后生成SVG代码
+
+请根据提供的主题或内容创建一个独特、引人注目、技术熟练的SVG海报。
+
+待处理内容：
+${content}
+    `,
+    en: `You are a professional graphic designer and SVG development expert with a high level of expertise in visual aesthetics and technical implementation. Your final work will leave the audience in awe and be regarded as a true masterpiece of art.
+
+Please let me provide you with a theme or a paragraph. Please analyze them and convert them into stunning SVG format posters:
+
+##Content requirements
+-All poster texts must be in English
+-Retain the core information of the original theme, but present it in a more visually impactful way
+-You can search for other visual elements or design inspirations to enhance the expressiveness of the poster
+
+##Design Style
+-Choose the appropriate design style based on the theme, which can be minimalism, retro, futurism, modernism, pop art, cyberpunk, hand drawn illustration, collage art, Art Nouveau, Baroque, and other styles
+-Use a powerful visual hierarchy to ensure effective communication of information
+-The color scheme should be expressive, harmonious and consistent, and in line with the emotional theme
+-Carefully select fonts, mix no more than three fonts, ensure readability and aesthetics coexist
+-Fully utilize the vector characteristics of SVG to present delicate details and sharp edges
+
+##Technical specifications
+-Using pure SVG format ensures lossless scaling and optimal compatibility
+-Neat code, clear structure, and appropriate comments
+-Optimize SVG code by removing unnecessary elements and attributes
+-Use SVG native animation features to achieve appropriate animation effects (if needed)
+-The total number of SVG elements should not exceed 100 to ensure rendering efficiency
+-Avoid using experimental or low compatibility SVG features
+
+##Compatibility requirements
+-The design must be displayed correctly in mainstream browsers such as Chrome, Firefox, Safari, etc
+-Ensure that all key content is fully visible within the standard viewBox scope
+-Verify that SVG can still clearly convey core information even after removing all advanced effects (animations, filters)
+-Avoid relying on proprietary features of specific browsers or platforms
+-Set a reasonable text size to ensure readability across multiple scales
+
+##Size and proportion
+-The default size is the standard poster size (such as A3: 297mm × 420mm or custom size)
+-Set an appropriate viewBox to ensure correct display, typically set to "0 0 800 1120" or similar scale
+-Ensure that all text and key visual elements remain clear and readable at different sizes
+-The core content should be located in the center area of the view, avoiding edge layout
+-Test the display performance of the design within the pixel range of 300x300 to 1200x1200
+
+##Graphic and visual elements
+-Create original vector graphics to showcase the essence of the theme
+-Enhance visual effects with advanced SVG features such as gradients, patterns, and filters, but each SVG is limited to only 3 filters
+-The carefully designed composition ensures visual balance and dynamic tension
+-Reasonably utilize negative space to avoid overcrowding in design
+-Decorative elements should not interfere with or obscure the main information
+
+##Visual hierarchy and layout
+-Establish clear visual guidance to guide the audience's gaze
+-Exquisite text layout, taking into account the characteristics and aesthetics of Chinese fonts
+-There is a clear difference between the title, subtitle, and main text
+-Create a sense of hierarchy using size, thickness, color, and position
+-Ensure that all textual content takes priority over decorative elements in visual design
+
+##Performance optimization
+-Ensure that the SVG file size is appropriate and avoid unnecessary complex paths
+-Correct use of SVG elements (such as path, rect, circle, etc.)
+-Optimize path data, remove redundant points and curves
+-Merge paths and shapes that can be merged to reduce the total number of elements
+-Simplify complex shapes by using basic element combinations instead of complex paths
+-Avoid excessive shadows and blurring effects, which may cause performance issues in certain environments
+
+##Testing and validation
+-After completing the design, delete all animations and advanced filters, and confirm that the content is still fully visible
+-Check if the element is using the correct z-index to avoid accidental overwriting
+-Verify that all content can be displayed correctly in different window sizes
+-Ensure that the design adopts a layered approach: the bottom layer (background), content layer, and decorative layer are clearly separated
+-Provide simplified design concepts and eliminate all advanced features that may affect stability
+
+##Output requirements
+-Provide complete and usable SVG code that can be directly opened or embedded into web pages in browsers
+-Ensure that the code is valid and compliant with SVG standards, without any error warnings
+-Briefly explain the design concept and key visual elements
+-Don't slack off or miss, fully showcase your design thinking and SVG expertise
+-Using COT (Skyworth Chain) method: first analyze the theme, then conceptualize the design scheme, and finally generate SVG code
+
+Please create a unique, eye-catching, and technically proficient SVG poster based on the provided theme or content.
+
+Pending content:
+${content}
+    `,
+    jp: `あなたはプロのグラフィックデザイナーとSVG開発の専門家で、視覚美学と技術実現の面で高度な専門知識を持っています。あなたの最終的な作品は観客を驚嘆させ、真の芸術傑作と見なされます。
+
+トピックまたはテキストを提供します。それらを分析し、驚くべきSVG形式のポスターに変換してください：
+
+###コンテンツ要件
+-すべてのポスターテキストに日本語を使用する必要があります
+-元のトピックのコア情報を保持しながら、より視覚的なインパクトを与える方法で表示
+-ポスターの表現力を高めるために、他の視覚要素やデザインインスピレーションを検索することができます
+
+###デザインスタイル
+-テーマに合わせて適切なデザインスタイルを選択します。ミニマリズム、復古、未来主義、モダニズム、ポップアート、サイボパンク、手描きイラスト、コラージュアート、新アート、バロックなどのスタイルがあります
+-強力な視覚階層を使用して情報の効率的なコミュニケーションを確保
+-配色スキームは表現力に富み、調和がとれ、テーマに合った感情でなければならない
+-フォントを慎重に選択し、3つ以上のフォントをブレンドして可読性と見栄えの共存を確保
+-SVGのベクトル特性を活用して、繊細なディテールと鋭いエッジを表現
+
+###技術仕様
+-純粋なSVGフォーマットを使用して、可逆スケーリングと最適な互換性を確保
+-整理されたコード、明確な構造、適切な注釈
+-不要な要素と属性を削除してSVGコードを最適化する
+-SVGネイティブアニメーション機能を使用して適切なアニメーション効果を実現する（必要に応じて）
+-SVG要素の総数は100を超えてはならず、レンダリング効率を確保する
+-実験的または低互換性のSVG機能の使用を避ける
+
+###互換性要件
+-Chrome、Firefox、Safariなどのメインストリームブラウザに正しく表示されるように設計する必要があります
+-すべてのキーコンテンツが標準viewBoxの範囲内で完全に表示されるようにする
+-SVGがすべての高度な効果（アニメーション、フィルタ）を削除した後もコア情報を明確に伝えることができることを確認します
+-特定のブラウザやプラットフォームに依存しない独自の機能
+-複数のスケールにわたって可読性を確保するために適切なテキストサイズを設定します。
+
+###寸法とスケール
+-デフォルトサイズは標準ポスターサイズ（A 3：297 mm×420 mmまたはカスタムサイズなど）
+-適切なviewBoxを設定して正しく表示するようにします。通常は「0 0 800 1120」または同様のスケールに設定します
+-すべてのテキストとキービジュアル要素が異なるサイズで明確に読み取り可能であることを確認します
+-エッジレイアウトを避けるために、コアコンテンツをビューの中心に配置する必要があります。
+-300 x 300～1200 x 1200のピクセル範囲で設計された表示性能をテスト
+
+###図形と視覚要素
+-トピックの精髄を示すために元のベクトル図形を作成します。
+-グラデーション、パターン、フィルタなどの高度なSVG機能を使用して視覚効果を強化しますが、SVGごとに3つのフィルタに限定されます
+-洗練された構図により、視覚的バランスと動的張力が確保されます。
+-設計の混雑を回避するために負のスペースを合理的に利用する
+-装飾要素は主要情報を干渉したりマスキングしたりしてはならない
+
+###視覚階層とレイアウト
+-明確な視覚誘導を確立し、観客の視線を誘導する
+-中国語フォントの特徴と美学を考慮した洗練されたテキストレイアウト
+-タイトル、サブタイトル、本文の明確な違い
+-サイズ、厚さ、色、位置を使用した階層感の作成
+-すべてのテキストコンテンツが装飾要素よりも視覚設計に優先されていることを確認します
+
+###パフォーマンス最適化
+-SVGファイルのサイズが適切であることを確認し、不要な複雑なパスを回避する
+-SVG要素（path、rect、circleなど）を正しく使用する
+-パスデータの最適化、冗長点とカーブの削除
+-要素の総数を減らすためにマージできるパスとシェイプ
+-複雑なパスではなく基本要素の組み合わせを使用することで、複雑な形状を簡略化
+-環境によってはパフォーマンスの問題を引き起こす可能性があるシャドウやブラー効果を回避しすぎ
+
+###テストと検証
+-設計が完了したら、すべてのアニメーションおよび拡張フィルタを削除し、コンテンツが完全に表示されることを確認します
+-予期せぬオーバーレイを回避するために、エレメントに正しいz-indexが使用されているかどうかをチェックします
+-すべてのコンテンツが異なるウィンドウサイズで正しく表示されることを確認します
+-設計が階層化されていることを確認します：下地（背景）、コンテンツ層、装飾層が明確に分離されていることを確認します
+-安定性に影響を与える可能性のあるすべての高度な機能を排除するシンプルな設計コンセプトを提供
+
+###出力要件
+-ブラウザ内のWebページを直接開いたり埋め込むことができる、完全に使用可能なSVGコードを提供します。
+-コードがSVG標準に適合し、エラー警告がないことを確認します
+-設計理念とキービジュアル要素の簡単な説明
+-設計の考え方とSVGの専門知識を十分に示すために、怠ったり見落としたりしないでください。
+-COT（創次元チェーン）を使用する方法：まずテーマを分析し、次に設計案を概念化し、最後にSVGコードを生成する
+
+提供されたトピックまたはコンテンツに基づいて、ユニークで注目され、熟練したSVGポスターを作成してください。
+
+処理対象：
+${content}
+    `,
+  };
+  return prompts[lang];
+};
+
+const posterPromptForCustomAndTemplate = ({
+  lang = "cn",
+  content,
+}: {
+  lang?: "cn" | "en" | "jp";
+  content: string;
+}) => {
+  const prompts = {
+    cn: `
+   您是一位专业的平面设计师和SVG开发专家，在视觉美学和技术实现方面拥有高度的专业知识。你的最终作品将让观众惊叹不已，并被视为真正的艺术杰作。
+
+我将为您提供一个主题或一段文字，以及海报的设计风格。请分析它们，并将其转换为令人惊叹的SVG格式海报：
+
+##内容要求
+-所有海报文本必须使用中文
+-保留原始主题的核心信息，但以更具视觉冲击力的方式呈现
+-可以搜索其他视觉元素或设计灵感来增强海报的表现力
+
+##设计风格
+-所有海报必须使用提供的设计风格
+-使用强大的视觉层次结构来确保信息的有效沟通
+-配色方案应富有表现力，和谐一致，符合主题的情感
+-精心选择字体，混合不超过三种字体，确保可读性和美观性共存
+-充分利用SVG的矢量特性，呈现细腻的细节和锐利的边缘
+
+##技术规格
+-使用纯SVG格式确保无损缩放和最佳兼容性
+-整洁的代码、清晰的结构和适当的注释
+-通过删除不必要的元素和属性来优化SVG代码
+-使用SVG原生动画功能实现适当的动画效果（如果需要）
+-SVG元素的总数不应超过100，以确保渲染效率
+-避免使用实验性或低兼容性的SVG功能
+
+##兼容性要求
+-设计必须在Chrome、Firefox、Safari等主流浏览器中正确显示
+-确保所有关键内容在标准viewBox范围内完全可见
+-验证SVG在删除所有高级效果（动画、过滤器）后仍然可以清楚地传达核心信息
+-避免依赖特定浏览器或平台的专有功能
+-设置合理的文本大小，以确保跨多个比例的可读性
+
+##尺寸和比例
+-默认尺寸为标准海报尺寸（如A3:297mm×420mm或自定义尺寸）
+-设置适当的viewBox以确保正确显示，通常设置为“0 0 800 1120”或类似比例
+-确保所有文本和关键视觉元素在不同大小下保持清晰可读
+-核心内容应位于视图的中心区域，避免边缘布局
+-在300x300至1200x1200的像素范围内测试设计的显示性能
+
+##图形和视觉元素
+-创建原始矢量图形以展示主题的精髓
+-使用高级SVG功能（如渐变、图案和过滤器）增强视觉效果，但每个SVG仅限于3个过滤器
+-精心设计的构图确保了视觉平衡和动态张力
+-合理利用负空间，避免设计过于拥挤
+-装饰元素不应干扰或掩盖主要信息
+
+##视觉层次和布局
+-建立清晰的视觉引导，引导观众的视线
+-精致的文本布局，考虑到中文字体的特点和美学
+-标题、副标题和正文之间有明显的区别
+-使用大小、厚度、颜色和位置创建层次感
+-确保所有文本内容在视觉设计中优先于装饰元素
+
+##性能优化
+-确保SVG文件大小合适，避免不必要的复杂路径
+-正确使用SVG元素（如path、rect、circle等）
+-优化路径数据，删除冗余点和曲线
+-合并可以合并的路径和形状，以减少元素的总数
+-通过使用基本元素组合而不是复杂路径来简化复杂的形状
+-避免过多的阴影和模糊效果，这可能会在某些环境中导致性能问题
+
+##测试和验证
+-完成设计后，删除所有动画和高级过滤器，并确认内容仍然完全可见
+-检查元素是否使用了正确的z-index，以避免意外覆盖
+-验证所有内容是否可以在不同的窗口大小下正确显示
+-确保设计采用分层方法：底层（背景）、内容层和装饰层明确分开
+-提供简化的设计概念，消除可能影响稳定性的所有高级功能
+
+##输出要求
+-提供完整可用的SVG代码，可以直接打开或嵌入浏览器中的网页中
+-确保代码有效并符合SVG标准，没有错误警告
+-简要说明设计理念和关键视觉元素
+-不要懈怠或遗漏，充分展示你的设计思维和SVG专业知识
+-使用COT（创维链）方法：首先分析主题，然后概念化设计方案，最后生成SVG代码
+-只输出SVG代码，不要输出任何其他内容！！！！
+
+请根据提供的内容和设计风格创建一个独特、引人注目、技术熟练的SVG海报。
+
+待处理内容：
+${content}
+    `,
+    en: `You are a professional graphic designer and SVG development expert with a high level of expertise in visual aesthetics and technical implementation. Your final work will leave the audience in awe and be regarded as a true masterpiece of art.
+
+I will provide you with a theme or a paragraph of text, as well as the design style of the poster. Please analyze them and convert them into stunning SVG format posters:
+
+##Content requirements
+-All poster texts must be in English
+-Retain the core information of the original theme, but present it in a more visually impactful way
+-You can search for other visual elements or design inspirations to enhance the expressiveness of the poster
+
+##Design Style
+-All posters must use the provided design style
+-Use a powerful visual hierarchy to ensure effective communication of information
+-The color scheme should be expressive, harmonious and consistent, and in line with the emotional theme
+-Carefully select fonts, mix no more than three fonts, ensure readability and aesthetics coexist
+-Fully utilize the vector characteristics of SVG to present delicate details and sharp edges
+
+##Technical specifications
+-Using pure SVG format ensures lossless scaling and optimal compatibility
+-Neat code, clear structure, and appropriate comments
+-Optimize SVG code by removing unnecessary elements and attributes
+-Use SVG native animation features to achieve appropriate animation effects (if needed)
+-The total number of SVG elements should not exceed 100 to ensure rendering efficiency
+-Avoid using experimental or low compatibility SVG features
+
+##Compatibility requirements
+-The design must be displayed correctly in mainstream browsers such as Chrome, Firefox, Safari, etc
+-Ensure that all key content is fully visible within the standard viewBox scope
+-Verify that SVG can still clearly convey core information even after removing all advanced effects (animations, filters)
+-Avoid relying on proprietary features of specific browsers or platforms
+-Set a reasonable text size to ensure readability across multiple scales
+
+##Size and proportion
+-The default size is the standard poster size (such as A3: 297mm × 420mm or custom size)
+-Set an appropriate viewBox to ensure correct display, typically set to "0 0 800 1120" or similar scale
+-Ensure that all text and key visual elements remain clear and readable at different sizes
+-The core content should be located in the center area of the view, avoiding edge layout
+-Test the display performance of the design within the pixel range of 300x300 to 1200x1200
+
+##Graphic and visual elements
+-Create original vector graphics to showcase the essence of the theme
+-Enhance visual effects with advanced SVG features such as gradients, patterns, and filters, but each SVG is limited to only 3 filters
+-The carefully designed composition ensures visual balance and dynamic tension
+-Reasonably utilize negative space to avoid overcrowding in design
+-Decorative elements should not interfere with or obscure the main information
+
+##Visual hierarchy and layout
+-Establish clear visual guidance to guide the audience's gaze
+-Exquisite text layout, taking into account the characteristics and aesthetics of Chinese fonts
+-There is a clear difference between the title, subtitle, and main text
+-Create a sense of hierarchy using size, thickness, color, and position
+-Ensure that all textual content takes priority over decorative elements in visual design
+
+##Performance optimization
+-Ensure that the SVG file size is appropriate and avoid unnecessary complex paths
+-Correct use of SVG elements (such as path, rect, circle, etc.)
+-Optimize path data, remove redundant points and curves
+-Merge paths and shapes that can be merged to reduce the total number of elements
+-Simplify complex shapes by using basic element combinations instead of complex paths
+-Avoid excessive shadows and blurring effects, which may cause performance issues in certain environments
+
+##Testing and validation
+-After completing the design, delete all animations and advanced filters, and confirm that the content is still fully visible
+-Check if the element is using the correct z-index to avoid accidental overwriting
+-Verify that all content can be displayed correctly in different window sizes
+-Ensure that the design adopts a layered approach: the bottom layer (background), content layer, and decorative layer are clearly separated
+-Provide simplified design concepts and eliminate all advanced features that may affect stability
+
+##Output requirements
+-Provide complete and usable SVG code that can be directly opened or embedded into web pages in browsers
+-Ensure that the code is valid and compliant with SVG standards, without any error warnings
+-Briefly explain the design concept and key visual elements
+-Don't slack off or miss, fully showcase your design thinking and SVG expertise
+-Using COT (Skyworth Chain) method: first analyze the theme, then conceptualize the design scheme, and finally generate SVG code
+
+Please create a unique, eye-catching, and technically proficient SVG poster based on the provided content and design style.
+
+Pending content:
+${content}
+    `,
+    jp: `あなたはプロのグラフィックデザイナーとSVG開発の専門家で、視覚美学と技術実現の面で高度な専門知識を持っています。あなたの最終的な作品は観客を驚嘆させ、真の芸術傑作と見なされます。
+
+テーマやテキスト、ポスターのデザインスタイルを提供します。それらを分析し、驚くべきSVG形式のポスターに変換してください：
+
+###コンテンツ要件
+-すべてのポスターテキストに日本語を使用する必要があります
+-元のトピックのコア情報を保持しながら、より視覚的なインパクトを与える方法で表示
+-ポスターの表現力を高めるために、他の視覚要素やデザインインスピレーションを検索することができます
+
+###デザインスタイル
+-すべてのポスターは提供されたデザインスタイルを使用する必要があります
+-強力な視覚階層を使用して情報の効率的なコミュニケーションを確保
+-配色スキームは表現力に富み、調和がとれ、テーマに合った感情でなければならない
+-フォントを慎重に選択し、3つ以上のフォントをブレンドして可読性と見栄えの共存を確保
+-SVGのベクトル特性を活用して、繊細なディテールと鋭いエッジを表現
+
+###技術仕様
+-純粋なSVGフォーマットを使用して、可逆スケーリングと最適な互換性を確保
+-整理されたコード、明確な構造、適切な注釈
+-不要な要素と属性を削除してSVGコードを最適化する
+-SVGネイティブアニメーション機能を使用して適切なアニメーション効果を実現する（必要に応じて）
+-SVG要素の総数は100を超えてはならず、レンダリング効率を確保する
+-実験的または低互換性のSVG機能の使用を避ける
+
+###互換性要件
+-Chrome、Firefox、Safariなどのメインストリームブラウザに正しく表示されるように設計する必要があります
+-すべてのキーコンテンツが標準viewBoxの範囲内で完全に表示されるようにする
+-SVGがすべての高度な効果（アニメーション、フィルタ）を削除した後もコア情報を明確に伝えることができることを確認します
+-特定のブラウザやプラットフォームに依存しない独自の機能
+-複数のスケールにわたって可読性を確保するために適切なテキストサイズを設定します。
+
+###寸法とスケール
+-デフォルトサイズは標準ポスターサイズ（A 3：297 mm×420 mmまたはカスタムサイズなど）
+-適切なviewBoxを設定して正しく表示するようにします。通常は「0 0 800 1120」または同様のスケールに設定します
+-すべてのテキストとキービジュアル要素が異なるサイズで明確に読み取り可能であることを確認します
+-エッジレイアウトを避けるために、コアコンテンツをビューの中心に配置する必要があります。
+-300 x 300～1200 x 1200のピクセル範囲で設計された表示性能をテスト
+
+###図形と視覚要素
+-トピックの精髄を示すために元のベクトル図形を作成します。
+-グラデーション、パターン、フィルタなどの高度なSVG機能を使用して視覚効果を強化しますが、SVGごとに3つのフィルタに限定されます
+-洗練された構図により、視覚的バランスと動的張力が確保されます。
+-設計の混雑を回避するために負のスペースを合理的に利用する
+-装飾要素は主要情報を干渉したりマスキングしたりしてはならない
+
+###視覚階層とレイアウト
+-明確な視覚誘導を確立し、観客の視線を誘導する
+-中国語フォントの特徴と美学を考慮した洗練されたテキストレイアウト
+-タイトル、サブタイトル、本文の明確な違い
+-サイズ、厚さ、色、位置を使用した階層感の作成
+-すべてのテキストコンテンツが装飾要素よりも視覚設計に優先されていることを確認します
+
+###パフォーマンス最適化
+-SVGファイルのサイズが適切であることを確認し、不要な複雑なパスを回避する
+-SVG要素（path、rect、circleなど）を正しく使用する
+-パスデータの最適化、冗長点とカーブの削除
+-要素の総数を減らすためにマージできるパスとシェイプ
+-複雑なパスではなく基本要素の組み合わせを使用することで、複雑な形状を簡略化
+-環境によってはパフォーマンスの問題を引き起こす可能性があるシャドウやブラー効果を回避しすぎ
+
+###テストと検証
+-設計が完了したら、すべてのアニメーションおよび拡張フィルタを削除し、コンテンツが完全に表示されることを確認します
+-予期せぬオーバーレイを回避するために、エレメントに正しいz-indexが使用されているかどうかをチェックします
+-すべてのコンテンツが異なるウィンドウサイズで正しく表示されることを確認します
+-設計が階層化されていることを確認します：下地（背景）、コンテンツ層、装飾層が明確に分離されていることを確認します
+-安定性に影響を与える可能性のあるすべての高度な機能を排除するシンプルな設計コンセプトを提供
+
+###出力要件
+-ブラウザ内のWebページを直接開いたり埋め込むことができる、完全に使用可能なSVGコードを提供します。
+-コードがSVG標準に適合し、エラー警告がないことを確認します
+-設計理念とキービジュアル要素の簡単な説明
+-設計の考え方とSVGの専門知識を十分に示すために、怠ったり見落としたりしないでください。
+-COT（創次元チェーン）を使用する方法：まずテーマを分析し、次に設計案を概念化し、最後にSVGコードを生成する
+
+提供された内容とデザインスタイルに基づいて、独特で注目され、熟練したSVGポスターを作成してください。
+
+処理対象：
+${content}
+    `,
+  };
+  return prompts[lang];
+};
+
+// const posterUserPrompt = ({
+//   content,
+//   lang = "cn",
+// }: {
+//   content: string;
+//   lang?: "cn" | "en" | "jp";
+// }) => {
+//   const prompts = {
+//     cn: `待处理内容：${content}`,
+//     en: `Pending content: ${content}`,
+//     jp: `処理対象：${content}`,
+//   };
+//   return prompts[lang];
+// };
+
+export {
+  systemPrompt,
+  userPrompt,
+  posterPromptForRandom,
+  posterPromptForCustomAndTemplate,
+};

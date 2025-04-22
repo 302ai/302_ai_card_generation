@@ -3,14 +3,17 @@ import { MODEL_LIST, ModelId } from "@/constants/models";
 import { atomWithStorage, createJSONStorage } from "jotai/utils";
 
 export type UiStoreActiveTab = "input-based" | "extract-key";
+export type UiStoreActiveCard = "knowledge-card" | "promotional-poster";
 export type UiStore = {
   activeTab: UiStoreActiveTab;
+  activeCard: UiStoreActiveCard;
   drawerOpen: boolean;
 };
 
 const STORAGE_KEY = "uiStore";
 const defaultState: UiStore = {
   activeTab: "input-based",
+  activeCard: "knowledge-card",
   drawerOpen: false,
 };
 
