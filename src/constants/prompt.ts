@@ -503,9 +503,11 @@ ${content}
 const posterPromptForCustomAndTemplate = ({
   lang = "cn",
   content,
+  theme,
 }: {
   lang?: "cn" | "en" | "jp";
   content: string;
+  theme: string;
 }) => {
   const prompts = {
     cn: `
@@ -587,6 +589,7 @@ const posterPromptForCustomAndTemplate = ({
 请根据提供的内容和设计风格创建一个独特、引人注目、技术熟练的SVG海报。
 
 待处理内容：
+${theme}
 ${content}
     `,
     en: `You are a professional graphic designer and SVG development expert with a high level of expertise in visual aesthetics and technical implementation. Your final work will leave the audience in awe and be regarded as a true masterpiece of art.
@@ -666,6 +669,7 @@ I will provide you with a theme or a paragraph of text, as well as the design st
 Please create a unique, eye-catching, and technically proficient SVG poster based on the provided content and design style.
 
 Pending content:
+${theme}
 ${content}
     `,
     jp: `あなたはプロのグラフィックデザイナーとSVG開発の専門家で、視覚美学と技術実現の面で高度な専門知識を持っています。あなたの最終的な作品は観客を驚嘆させ、真の芸術傑作と見なされます。
@@ -745,6 +749,7 @@ ${content}
 提供された内容とデザインスタイルに基づいて、独特で注目され、熟練したSVGポスターを作成してください。
 
 処理対象：
+${theme}
 ${content}
     `,
   };

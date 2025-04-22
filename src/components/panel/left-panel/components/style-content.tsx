@@ -12,6 +12,8 @@ const StyleContent = ({
 }: {
   field: ControllerRenderProps<any, any>;
   type: "knowledgeCard" | "promotionalPoster";
+  // | "quoteReference"
+  // | "philosophicalCard";
 }) => {
   const [formStore, setFormStore] = useAtom(formStoreAtom);
   return (

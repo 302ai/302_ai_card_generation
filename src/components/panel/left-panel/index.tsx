@@ -63,6 +63,20 @@ const formSchema = z.object({
     content: z.string().optional(),
     style: z.string(),
   }),
+  "quote-reference": z.object({
+    model: z.string(),
+    author: z.string(),
+    cardFont: z.string(),
+    textPosition: z.string(),
+    content: z.string().optional(),
+    style: z.string(),
+  }),
+  "philosophical-card": z.object({
+    model: z.string(),
+    content: z.string().optional(),
+    style: z.string(),
+    cardFont: z.string(),
+  }),
 });
 
 const LeftPanel = () => {
@@ -91,6 +105,12 @@ const LeftPanel = () => {
         model: "claude-3-7-sonnet-20250219",
       },
       "promotional-poster": {
+        model: "claude-3-7-sonnet-20250219",
+      },
+      "philosophical-card": {
+        model: "claude-3-7-sonnet-20250219",
+      },
+      "quote-reference": {
         model: "claude-3-7-sonnet-20250219",
       },
     },
@@ -185,10 +205,7 @@ const LeftPanel = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (uiStore.activeCard === "knowledge-card") {
       const historyId = crypto.randomUUID();
-      const {
-        "knowledge-card": knowledgeCard,
-        "promotional-poster": promotionalPoster,
-      } = values;
+      const { "knowledge-card": knowledgeCard } = values;
       let newStyle = knowledgeCard.style as string;
       if (formStore.style === "random") {
         // Randomly select a style from STYLES_LIST
@@ -228,6 +245,7 @@ const LeftPanel = () => {
           lang: "cn",
           content: promotionalPoster.content as string,
           style: formStore.style,
+          theme: promotionalPoster.style,
         });
         await addPosterHistory({
           svg: res.stringSVG,
@@ -412,6 +430,26 @@ const LeftPanel = () => {
                   />
                 </div>
               )}
+              {uiStore.activeCard === "quote-reference" && (
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="quote-reference.content"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Textarea
+                            placeholder="请输入语录或名言..."
+                            className="min-h-[200px] w-full"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Additional Controls */}
@@ -438,7 +476,65 @@ const LeftPanel = () => {
                   {/* <ModelSelect /> */}
                 </div>
               </div>
+              {uiStore.activeCard === "quote-reference" && (
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="quote-reference.author"
+                    render={({ field }) => (
+                      <FormItem className="flex w-full items-center justify-between">
+                        <FormLabel className="w-full">语录署名</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
 
+                  <FormField
+                    control={form.control}
+                    name="quote-reference.cardFont"
+                    render={({ field }) => (
+                      <FormItem className="flex w-full items-center justify-between">
+                        <FormLabel className="w-full">卡片字体</FormLabel>
+                        <FormControl>
+                          <Select {...field}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="请选择卡片字体" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="default">默认</SelectItem>
+                              <SelectItem value="custom">自定义</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="quote-reference.cardFont"
+                    render={({ field }) => (
+                      <FormItem className="flex w-full items-center justify-between">
+                        <FormLabel className="w-full">文字位置</FormLabel>
+                        <FormControl>
+                          <Select {...field}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="请选择文字位置" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="left">靠左对齐</SelectItem>
+                              <SelectItem value="center">居中</SelectItem>
+                              <SelectItem value="right">靠右对齐</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
               {uiStore.activeCard === "knowledge-card" && (
                 <>
                   <div className="flex">
@@ -483,6 +579,30 @@ const LeftPanel = () => {
                   />
                 </>
               )}
+              {uiStore.activeCard === "philosophical-card" && (
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="philosophical-card.cardFont"
+                    render={({ field }) => (
+                      <FormItem className="flex w-full items-center justify-between">
+                        <FormLabel className="w-full">卡片字体</FormLabel>
+                        <FormControl>
+                          <Select {...field}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="请选择卡片字体" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="default">默认</SelectItem>
+                              <SelectItem value="custom">自定义</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
               <div className="flex items-center">
                 <span className="flex-1">风格设置</span>
                 <StyleTab />
@@ -500,6 +620,24 @@ const LeftPanel = () => {
                 <FormField
                   control={form.control}
                   name="promotional-poster.style"
+                  render={({ field }) => (
+                    <StyleContent field={field} type="promotionalPoster" />
+                  )}
+                />
+              )}
+              {uiStore.activeCard === "quote-reference" && (
+                <FormField
+                  control={form.control}
+                  name="quote-reference.style"
+                  render={({ field }) => (
+                    <StyleContent field={field} type="promotionalPoster" />
+                  )}
+                />
+              )}
+              {uiStore.activeCard === "philosophical-card" && (
+                <FormField
+                  control={form.control}
+                  name="philosophical-card.style"
                   render={({ field }) => (
                     <StyleContent field={field} type="promotionalPoster" />
                   )}

@@ -17,12 +17,14 @@ export async function POST(request: Request) {
       lang,
       style,
       content,
+      theme,
     }: {
       apiKey: string;
       model: string;
       lang: "cn" | "en" | "jp";
       style: "random" | "template" | "custom";
       content: string;
+      theme: string;
     } = await request.json();
     const ai302 = createAI302({
       apiKey,
@@ -31,7 +33,7 @@ export async function POST(request: Request) {
     const prompt =
       style === "random"
         ? posterPromptForRandom({ lang, content })
-        : posterPromptForCustomAndTemplate({ lang, content });
+        : posterPromptForCustomAndTemplate({ lang, content, theme });
 
     const result = await generateText({
       model: ai302(model),

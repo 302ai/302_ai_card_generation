@@ -9,6 +9,7 @@ interface GenerateSVGParams {
   lang: "cn" | "en" | "jp";
   content: string;
   style: "random" | "template" | "custom";
+  theme: string;
 }
 
 interface GenerateSVGResult {
@@ -21,6 +22,7 @@ export const generateSVG = async ({
   lang,
   content,
   style,
+  theme,
 }: GenerateSVGParams) => {
   try {
     const res = await ky.post("/api/gen-svg-card", {
@@ -31,6 +33,7 @@ export const generateSVG = async ({
         lang,
         content,
         style,
+        theme,
       },
     });
     return res.json<GenerateSVGResult>();
