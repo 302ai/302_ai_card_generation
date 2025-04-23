@@ -188,7 +188,7 @@ const PosterHistory = () => {
             Authorization: `Bearer ${apiKey}`,
           },
           json: {
-            svgContent: svgContent,
+            svgCode: svgContent,
           },
         })
         .json<{
