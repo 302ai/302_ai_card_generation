@@ -52,6 +52,7 @@ import { usePhilosophicalHistory } from "@/hooks/db/use-philosophical-history";
 import { useTranslations } from "next-intl";
 import { generateQuoteCard } from "@/services/gen-quote";
 import { useGenQuoteHistory } from "@/hooks/db/use-gen-quote-history";
+import { useToast } from "@/hooks/global/use-toast";
 const formSchema = z.object({
   knowledgeCard: z.object({
     model: z.string().optional(),
@@ -125,6 +126,8 @@ const LeftPanel = () => {
     updatePosterHistoryStatus,
     updatePosterHistory,
   } = usePosterHistory();
+
+  const { toast } = useToast();
 
   const t = useTranslations();
 
@@ -244,6 +247,36 @@ const LeftPanel = () => {
         content = knowledgeCard.extractKeyContent as string;
       }
 
+      // Content validation
+      if (!content || content.trim() === "") {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.content_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // API Key validation
+      if (!apiKey) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.api_key_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Model validation
+      if (!knowledgeCard.model) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.model_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
       if (formStore.style === "random") {
         // Randomly select a style from STYLES_LIST
         const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
@@ -252,9 +285,25 @@ const LeftPanel = () => {
 
       if (formStore.style === "template") {
         newStyle = knowledgeCard.style as string;
+        if (!newStyle) {
+          toast({
+            title: t("toast.error"),
+            description: t("toast.style_required"),
+            variant: "destructive",
+          });
+          return;
+        }
       }
       if (formStore.style === "custom") {
         newStyle = knowledgeCard.customStyle as string;
+        if (!newStyle || newStyle.trim() === "") {
+          toast({
+            title: t("toast.error"),
+            description: t("toast.custom_style_required"),
+            variant: "destructive",
+          });
+          return;
+        }
       }
 
       // Add a loading card first
@@ -288,6 +337,40 @@ const LeftPanel = () => {
     }
     if (uiStore.activeCard === "promotional-poster") {
       const { promotionalPoster } = values;
+
+      // Content validation
+      if (
+        !promotionalPoster.content ||
+        promotionalPoster.content.trim() === ""
+      ) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.poster_content_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // API Key validation
+      if (!apiKey) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.api_key_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Model validation
+      if (!promotionalPoster.model) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.model_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
       let newStyle = "";
       if (formStore.style === "random") {
         // Randomly select a style from STYLES_LIST
@@ -297,9 +380,25 @@ const LeftPanel = () => {
 
       if (formStore.style === "template") {
         newStyle = promotionalPoster.style as string;
+        if (!newStyle) {
+          toast({
+            title: t("toast.error"),
+            description: t("toast.style_required"),
+            variant: "destructive",
+          });
+          return;
+        }
       }
       if (formStore.style === "custom") {
         newStyle = promotionalPoster.customStyle as string;
+        if (!newStyle || newStyle.trim() === "") {
+          toast({
+            title: t("toast.error"),
+            description: t("toast.custom_style_required"),
+            variant: "destructive",
+          });
+          return;
+        }
       }
 
       // Add a loading card first
@@ -335,6 +434,50 @@ const LeftPanel = () => {
 
     if (uiStore.activeCard === "philosophical-card") {
       const { philosophicalCard } = values;
+
+      // Content validation
+      if (
+        !philosophicalCard.content ||
+        philosophicalCard.content.trim() === ""
+      ) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.philosophical_content_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // API Key validation
+      if (!apiKey) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.api_key_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Model validation
+      if (!philosophicalCard.model) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.model_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Font validation
+      if (formStore.style !== "random" && !philosophicalCard.cardFont) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.font_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
       let style = "";
       if (formStore.style === "random") {
         const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
@@ -342,9 +485,25 @@ const LeftPanel = () => {
       }
       if (formStore.style === "template") {
         style = philosophicalCard.style as string;
+        if (!style) {
+          toast({
+            title: t("toast.error"),
+            description: t("toast.style_required"),
+            variant: "destructive",
+          });
+          return;
+        }
       }
       if (formStore.style === "custom") {
         style = philosophicalCard.customStyle as string;
+        if (!style || style.trim() === "") {
+          toast({
+            title: t("toast.error"),
+            description: t("toast.custom_style_required"),
+            variant: "destructive",
+          });
+          return;
+        }
       }
 
       // Add a loading card first
@@ -376,6 +535,67 @@ const LeftPanel = () => {
     }
     if (uiStore.activeCard === "quote-reference") {
       const { quoteReference } = values;
+
+      // Content validation
+      if (!quoteReference.content || quoteReference.content.trim() === "") {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.quote_content_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Author validation
+      if (!quoteReference.author || quoteReference.author.trim() === "") {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.author_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // API Key validation
+      if (!apiKey) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.api_key_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Model validation
+      if (!quoteReference.model) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.model_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Font validation
+      if (formStore.style !== "random" && !quoteReference.cardFont) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.font_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Text position validation
+      if (!quoteReference.textPosition) {
+        toast({
+          title: t("toast.error"),
+          description: t("toast.text_position_required"),
+          variant: "destructive",
+        });
+        return;
+      }
+
       let style = "";
       if (formStore.style === "random") {
         const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
@@ -383,9 +603,25 @@ const LeftPanel = () => {
       }
       if (formStore.style === "template") {
         style = quoteReference.style as string;
+        if (!style) {
+          toast({
+            title: t("toast.error"),
+            description: t("toast.style_required"),
+            variant: "destructive",
+          });
+          return;
+        }
       }
       if (formStore.style === "custom") {
         style = quoteReference.customStyle as string;
+        if (!style || style.trim() === "") {
+          toast({
+            title: t("toast.error"),
+            description: t("toast.custom_style_required"),
+            variant: "destructive",
+          });
+          return;
+        }
       }
 
       // Add a loading card first
