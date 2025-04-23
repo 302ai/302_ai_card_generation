@@ -55,15 +55,15 @@ const extractSvgContent = (content: string): string => {
       }
     }
 
-    // Ensure SVG has proper viewport attributes
+    // Ensure SVG has proper viewport attributes for poster dimensions
     if (svgContent.includes("<svg")) {
       // Check if SVG already has viewBox
       if (!svgContent.includes("viewBox=")) {
-        // Add viewBox if missing (using a reasonable default)
-        svgContent = svgContent.replace(/<svg/, '<svg viewBox="0 0 800 600"');
+        // Add viewBox if missing with poster dimensions (A3 ratio: 800x1120)
+        svgContent = svgContent.replace(/<svg/, '<svg viewBox="0 0 800 1120"');
       }
 
-      // Make sure SVG has width and height set to 100% to fit container
+      // Make sure SVG has width and height attributes for proper scaling
       if (!svgContent.includes("width=")) {
         svgContent = svgContent.replace(/<svg/, '<svg width="100%"');
       } else {
@@ -78,7 +78,7 @@ const extractSvgContent = (content: string): string => {
         svgContent = svgContent.replace(/height="[^"]*"/, 'height="100%"');
       }
 
-      // Add preserveAspectRatio attribute if not present
+      // Add preserveAspectRatio attribute if not present to maintain poster ratio
       if (!svgContent.includes("preserveAspectRatio=")) {
         svgContent = svgContent.replace(
           /<svg/,
@@ -126,6 +126,7 @@ const customAnimationStyles = `
     justify-content: center;
     background-color: white;
     overflow: hidden; /* Prevent overflow */
+    aspect-ratio: 800 / 1120; /* Poster aspect ratio (A3-like) */
   }
   
   .svg-container svg {
@@ -140,17 +141,27 @@ const customAnimationStyles = `
   .modal-svg-container {
     max-height: 100%;
     max-width: 100%;
-    overflow: auto;
+    overflow: visible;
     display: flex;
     align-items: center;
     justify-content: center;
+    aspect-ratio: 800 / 1120; /* Maintain poster aspect ratio */
+    margin: 0 auto;
+    height: auto;
+    padding: 0;
   }
   
   .modal-svg-container svg {
     max-width: 100%;
     max-height: 100%;
     width: auto;
-    height: auto;
+    height: 100%;
+    min-width: 500px;
+    max-width: 800px;
+    min-height: 700px; /* Significantly increased for better visibility */
+    max-height: calc(95vh - 60px); /* Using more of the viewport height */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
   }
 `;
 
@@ -257,16 +268,20 @@ const PosterHistory = () => {
 
           return (
             <div
-              className="aspect-square w-full cursor-pointer rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-md"
+              className="flex w-full cursor-pointer flex-col rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-md"
               key={index}
               onClick={() => handlePreviewClick(svgContent, index)}
             >
-              <div className="svg-container flex h-full w-full items-center justify-center p-2">
+              <div
+                className="svg-container flex w-full flex-grow items-center justify-center p-2"
+                onClick={() => handlePreviewClick(svgContent, index)}
+              >
                 <div
                   className="flex h-full w-full items-center justify-center overflow-hidden"
                   dangerouslySetInnerHTML={{ __html: svgContent }}
                 />
               </div>
+
               <div className="flex items-center justify-between border-t p-2">
                 <span className="text-sm text-gray-500">
                   {formatTimestamp(item.createdAt)}
@@ -279,6 +294,7 @@ const PosterHistory = () => {
                       e.stopPropagation();
                       onDownLoad(svgContent);
                     }}
+                    aria-label="下载"
                   >
                     <FileDown className="h-4 w-4" />
                   </Button>
@@ -289,6 +305,7 @@ const PosterHistory = () => {
                       e.stopPropagation();
                       deletePosterHistory(item.id);
                     }}
+                    aria-label="删除"
                   >
                     <Trash className="h-4 w-4" />
                   </Button>
@@ -308,13 +325,14 @@ const PosterHistory = () => {
           onClick={handleCloseModal}
         >
           <div
-            className={`modal-content relative h-[90%] w-4/5 overflow-hidden rounded-lg bg-white shadow-xl ${
+            className={`modal-content relative h-auto max-h-[95%] max-w-[90%] rounded-lg bg-white shadow-xl ${
               modalShow ? "show" : ""
             }`}
+            style={{ width: "auto", minWidth: "50vw" }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal 标题栏 */}
-            <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-4 py-3">
+            <div className="flex items-center justify-between rounded-t-lg border-b border-gray-100 bg-gray-50 px-4 py-2">
               <h3 className="m-0 text-base font-semibold text-gray-700">
                 {selectedIndex !== null
                   ? `海报预览 #${selectedIndex + 1}`
@@ -330,7 +348,7 @@ const PosterHistory = () => {
             </div>
 
             {/* SVG 完整预览 */}
-            <div className="flex h-[calc(100%-48px)] w-full items-center justify-center bg-white p-4">
+            <div className="flex h-auto w-full items-center justify-center overflow-auto rounded-b-lg bg-white p-3">
               <div
                 className="modal-svg-container"
                 dangerouslySetInnerHTML={{ __html: selectedSvg }}
