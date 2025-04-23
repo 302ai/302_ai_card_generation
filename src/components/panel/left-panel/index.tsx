@@ -118,11 +118,12 @@ const LeftPanel = () => {
   const [showQrCode, setShowQrCode] = useState(false);
   const [formStore, setFormStore] = useAtom(formStoreAtom);
   const [historyStore, setHistoryStore] = useAtom(historyStoreAtom);
-  const { addHistory, updateHistoryHtml, updateHistoryStatus } = useHistory();
+  const { addHistory, updateHistory, updateHistoryStatus } = useHistory();
   const {
     addPosterHistory,
     updatePosterHistorySvg,
     updatePosterHistoryStatus,
+    updatePosterHistory,
   } = usePosterHistory();
 
   const t = useTranslations();
@@ -131,10 +132,15 @@ const LeftPanel = () => {
     addPhilosophicalHistory,
     updatePhilosophicalHistoryHtml,
     updatePhilosophicalHistoryStatus,
+    updatePhilosophicalHistory,
   } = usePhilosophicalHistory();
 
-  const { addQuoteHistory, updateQuoteHistoryHtml, updateQuoteHistoryStatus } =
-    useGenQuoteHistory();
+  const {
+    addQuoteHistory,
+    updateQuoteHistoryHtml,
+    updateQuoteHistory,
+    updateQuoteHistoryStatus,
+  } = useGenQuoteHistory();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -229,7 +235,6 @@ const LeftPanel = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (uiStore.activeCard === "knowledge-card") {
-      const historyId = crypto.randomUUID();
       const { knowledgeCard } = values;
       let newStyle = knowledgeCard.style as string;
       let content = "";
@@ -252,6 +257,12 @@ const LeftPanel = () => {
         newStyle = knowledgeCard.customStyle as string;
       }
 
+      // Add a loading card first
+      const historyId = await addHistory({
+        html: "",
+        status: "pending",
+      });
+
       try {
         const res = await generateHTML({
           apiKey: apiKey as string,
@@ -263,12 +274,16 @@ const LeftPanel = () => {
           qrCode: knowledgeCard.qrCode as string,
           type: uiStore.activeTab,
         });
-        await addHistory({
+        await updateHistory(historyId, {
           html: res.html,
           status: "success",
         });
       } catch (error) {
-        await updateHistoryStatus(historyId, "failed");
+        // Add a failed card
+        await updateHistory(historyId, {
+          html: "",
+          status: "failed",
+        });
       }
     }
     if (uiStore.activeCard === "promotional-poster") {
@@ -286,6 +301,13 @@ const LeftPanel = () => {
       if (formStore.style === "custom") {
         newStyle = promotionalPoster.customStyle as string;
       }
+
+      // Add a loading card first
+      const historyId = await addPosterHistory({
+        svg: "",
+        status: "pending",
+      });
+
       try {
         const res = await generateSVG({
           apiKey: apiKey as string,
@@ -298,15 +320,18 @@ const LeftPanel = () => {
             | "template"
             | "custom",
         });
-        await addPosterHistory({
+        await updatePosterHistory(historyId, {
           svg: res.stringSVG,
           status: "success",
         });
       } catch (error) {
-        // await updateHistoryStatus(historyId, "failed");
+        // Add a failed card
+        await updatePosterHistory(historyId, {
+          svg: "",
+          status: "failed",
+        });
       }
     }
-    console.log(uiStore.activeCard);
 
     if (uiStore.activeCard === "philosophical-card") {
       const { philosophicalCard } = values;
@@ -321,6 +346,13 @@ const LeftPanel = () => {
       if (formStore.style === "custom") {
         style = philosophicalCard.customStyle as string;
       }
+
+      // Add a loading card first
+      const historyId = await addPhilosophicalHistory({
+        html: "",
+        status: "pending",
+      });
+
       try {
         const res = await genPhilosophicalCard({
           apiKey: apiKey as string,
@@ -330,16 +362,16 @@ const LeftPanel = () => {
           style,
           cardFont: philosophicalCard.cardFont as string,
         });
-        await addPhilosophicalHistory({
+        await updatePhilosophicalHistory(historyId, {
           html: res.html,
           status: "success",
         });
-        // await addPosterHistory({
-        //   html: res.html,
-        //   status: "success",
-        // });
       } catch (error) {
-        // await updateHistoryStatus(historyId, "failed");
+        // Add a failed card
+        await updatePhilosophicalHistory(historyId, {
+          html: "",
+          status: "failed",
+        });
       }
     }
     if (uiStore.activeCard === "quote-reference") {
@@ -356,6 +388,12 @@ const LeftPanel = () => {
         style = quoteReference.customStyle as string;
       }
 
+      // Add a loading card first
+      const historyId = await addQuoteHistory({
+        html: "",
+        status: "pending",
+      });
+
       try {
         const res = await generateQuoteCard({
           apiKey: apiKey as string,
@@ -366,12 +404,16 @@ const LeftPanel = () => {
           textPosition: quoteReference.textPosition as string,
           style,
         });
-        await addQuoteHistory({
+        await updateQuoteHistory(historyId, {
           html: res.html,
           status: "success",
         });
       } catch (error) {
-        // await updateHistoryStatus(historyId, "failed");
+        // Add a failed card
+        await updateQuoteHistory(historyId, {
+          html: "",
+          status: "failed",
+        });
       }
     }
   }

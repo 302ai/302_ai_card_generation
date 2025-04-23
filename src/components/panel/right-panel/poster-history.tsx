@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "@/hooks/db/use-gen-history";
 import { format } from "date-fns";
-import { FileDown, Trash } from "lucide-react";
+import { FileDown, Trash, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ky from "ky";
 import { env } from "@/env";
@@ -137,31 +137,35 @@ const customAnimationStyles = `
     height: auto; /* Maintain aspect ratio */
   }
 
-  /* Additional styles for modal SVG */
+  /* Additional styles for modal SVG - Revised */
   .modal-svg-container {
-    max-height: 100%;
-    max-width: 100%;
-    overflow: visible;
-    display: flex;
+    /* 使用 Flexbox 来居中 SVG 子元素 */
+    display: flex; 
     align-items: center;
     justify-content: center;
-    aspect-ratio: 800 / 1120; /* Maintain poster aspect ratio */
+    
+    /* 设置较大的默认尺寸 */
+    min-width: 600px;
+    min-height: 800px;
+    
+    /* 保持海报宽高比 */
+    aspect-ratio: 800 / 1120;
+    
+    /* 让容器充满其父级（即滚动区域） */
+    width: 100%;
     margin: 0 auto;
-    height: auto;
-    padding: 0;
   }
-  
+
   .modal-svg-container svg {
+    /* 关键：确保 SVG 不会超出其容器 */
     max-width: 100%;
     max-height: 100%;
-    width: auto;
-    height: 100%;
-    min-width: 500px;
-    max-width: 800px;
-    min-height: 700px; /* Significantly increased for better visibility */
-    max-height: calc(95vh - 60px); /* Using more of the viewport height */
+    min-width: 600px; /* 设置最小宽度 */
+    width: 100%; /* 填充容器宽度 */
+    
+    /* 视觉样式 (保留) */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: white;
+    background-color: white; /* 保留背景色以便看清边界 */
   }
 `;
 
@@ -259,6 +263,49 @@ const PosterHistory = () => {
       {/* SVG 卡片网格布局 */}
       <div className="grid w-full grid-cols-3 gap-4 p-4">
         {posterHistory?.items.map((item, index) => {
+          // Handle loading state
+          if (item.status === "pending") {
+            return (
+              <div
+                key={item.id}
+                className="flex aspect-[2/3] w-full flex-col items-center justify-center rounded-lg border border-gray-200 bg-white shadow-sm"
+              >
+                <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <p className="text-sm text-primary">生成中...</p>
+                </div>
+              </div>
+            );
+          }
+
+          // Handle failed state
+          if (item.status === "failed") {
+            return (
+              <div
+                key={item.id}
+                className="flex aspect-[2/3] w-full flex-col items-center justify-center rounded-lg border border-red-200 bg-white shadow-sm"
+              >
+                <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
+                  <AlertCircle className="h-8 w-8 text-red-500" />
+                  <p className="text-sm text-red-500">生成失败</p>
+
+                  <div className="flex">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deletePosterHistory(item.id);
+                      }}
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
           // Try to find SVG content in the item's html field
           const svgContent = extractSvgContent(item.svg || "");
 
@@ -266,6 +313,7 @@ const PosterHistory = () => {
             return null; // Skip if no valid SVG content
           }
 
+          // Normal success state
           return (
             <div
               className="flex w-full cursor-pointer flex-col rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-md"
@@ -319,20 +367,19 @@ const PosterHistory = () => {
       {/* 放大预览的 Modal */}
       {isEnlarged && selectedSvg && (
         <div
-          className={`modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/75 ${
+          className={`modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 ${
             modalShow ? "show" : ""
           }`}
           onClick={handleCloseModal}
         >
           <div
-            className={`modal-content relative h-auto max-h-[95%] max-w-[90%] rounded-lg bg-white shadow-xl ${
+            className={`modal-content relative flex max-h-[95vh] max-w-[95vw] flex-col rounded-lg bg-white shadow-xl ${
               modalShow ? "show" : ""
             }`}
-            style={{ width: "auto", minWidth: "50vw" }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal 标题栏 */}
-            <div className="flex items-center justify-between rounded-t-lg border-b border-gray-100 bg-gray-50 px-4 py-2">
+            <div className="flex flex-shrink-0 items-center justify-between rounded-t-lg border-b border-gray-100 bg-gray-50 px-4 py-2">
               <h3 className="m-0 text-base font-semibold text-gray-700">
                 {selectedIndex !== null
                   ? `海报预览 #${selectedIndex + 1}`
@@ -348,7 +395,7 @@ const PosterHistory = () => {
             </div>
 
             {/* SVG 完整预览 */}
-            <div className="flex h-auto w-full items-center justify-center overflow-auto rounded-b-lg bg-white p-3">
+            <div className="flex-grow overflow-auto p-3">
               <div
                 className="modal-svg-container"
                 dangerouslySetInnerHTML={{ __html: selectedSvg }}

@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "@/hooks/db/use-gen-history";
 import { format } from "date-fns";
-import { FileDown, Trash } from "lucide-react";
+import { FileDown, Trash, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ky from "ky";
 import { env } from "@/env";
@@ -106,6 +106,50 @@ const KnowledgeHistory = () => {
       {/* 卡片网格布局 */}
       <div className="grid w-full grid-cols-3 gap-4 p-4">
         {history?.items.map((item, index) => {
+          // Handle loading state
+          if (item.status === "pending") {
+            return (
+              <div
+                key={item.id}
+                className="flex aspect-[2/3] w-full flex-col items-center justify-center rounded-lg border border-gray-200 bg-white shadow-sm"
+              >
+                <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <p className="text-sm text-primary">生成中...</p>
+                </div>
+              </div>
+            );
+          }
+
+          // Handle failed state
+          if (item.status === "failed") {
+            return (
+              <div
+                key={item.id}
+                className="flex aspect-[2/3] w-full flex-col items-center justify-center rounded-lg border border-red-200 bg-white shadow-sm"
+              >
+                <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
+                  <AlertCircle className="h-8 w-8 text-red-500" />
+                  <p className="text-sm text-red-500">生成失败</p>
+
+                  <div className="flex">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteHistory(item.id);
+                      }}
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          // Normal success state
           return (
             <HtmlPreview
               html={sanitizeHtml(item.html)}

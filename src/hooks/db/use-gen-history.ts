@@ -47,6 +47,7 @@ export const useHistory = (page = 1) => {
       ...history,
       id,
       createdAt: Date.now(),
+      status: history.status || "pending",
     });
     return id;
   }, []);

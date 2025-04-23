@@ -8,27 +8,54 @@ interface HtmlPreviewProps {
 
 // 添加自定义动画的CSS
 const customAnimationStyles = `
-  /* Modal 动画 */
-  .modal-overlay {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  .modal-overlay.show {
-    opacity: 1;
-  }
-  
-  .modal-content {
-    transform: scale(0.9);
-    opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-  }
-  
-  .modal-content.show {
-    transform: scale(1);
-    opacity: 1;
-  }
-  
+.modal-overlay {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.show {
+  opacity: 1;
+}
+.modal-content {
+  transform: scale(0.9);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.modal-content.show {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Style for the *iframe's* internal scrollbar if needed (optional) */
+.iframe-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.iframe-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+.iframe-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+/* Style for the *modal body* scrollbar */
+.modal-body-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-body-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.modal-body-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #a0aec0;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.modal-body-scrollbar {
+   scrollbar-width: thin;
+   scrollbar-color: #a0aec0 transparent;
+}
+
   /* 隐藏iframe滚动条 */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -54,71 +81,17 @@ const HtmlPreview = ({ html, children, title }: HtmlPreviewProps) => {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
-              @font-face {
-                font-family: '行书';
-                src: url('/fonts/行书.otf') format('opentype');
-                font-weight: normal;
-                font-style: normal;
-                font-display: swap;
-              }
-              @font-face {
-                font-family: '宋体';
-                src: url('/fonts/宋体.otf') format('opentype');
-                font-weight: normal;
-                font-style: normal;
-                font-display: swap;
-              }
-              @font-face {
-                font-family: '汇文明朝体';
-                src: url('/fonts/汇文明朝体（默认）.ttf') format('truetype');
-                font-weight: normal;
-                font-style: normal;
-                font-display: swap;
-              }
-              @font-face {
-                font-family: '黑体';
-                src: url('/fonts/黑体.otf') format('opentype');
-                font-weight: normal;
-                font-style: normal;
-                font-display: swap;
-              }
-              html, body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-              }
-              body {
-                display: block;
-                position: relative;
-              }
-              .content-container {
-                width: 400px;
-                max-height: 100%;
-                overflow: hidden;
-                /* 只显示上半部分内容 */
-                mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-                -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-                transform-origin: top center;
-                transform: scale(calc(100% / 400 * 100%));
-              }
-              * {
-                box-sizing: border-box;
-              }
-              img, svg {
-                max-width: 100%;
-                height: auto;
-              }
-              ::-webkit-scrollbar {
-                display: none;
-                width: 0 !important;
-                height: 0 !important;
-              }
-              * {
-                scrollbar-width: none;
-                -ms-overflow-style: none;
-              }
+              @font-face { font-family: '行书'; src: url('/fonts/行书.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+              @font-face { font-family: '宋体'; src: url('/fonts/宋体.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+              @font-face { font-family: '汇文明朝体'; src: url('/fonts/汇文明朝体（默认）.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+              @font-face { font-family: '黑体'; src: url('/fonts/黑体.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+              html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+              body { display: block; position: relative; }
+              .content-container { width: 400px; max-height: 100%; overflow: hidden; mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%); transform-origin: top center; transform: scale(calc(100% / 400 * 100%)); }
+              * { box-sizing: border-box; }
+              img, svg { max-width: 100%; height: auto; }
+              ::-webkit-scrollbar { display: none; width: 0 !important; height: 0 !important; }
+              * { scrollbar-width: none; -ms-overflow-style: none; }
             </style>
           </head>
           <body>
@@ -131,8 +104,9 @@ const HtmlPreview = ({ html, children, title }: HtmlPreviewProps) => {
   };
 
   // 处理卡片点击
-  const handlePreviewClick = (html: string) => {
-    setSelectedHtml(html);
+  const handlePreviewClick = (htmlContent: string, index?: number) => {
+    setSelectedHtml(htmlContent);
+    if (index !== undefined) setSelectedIndex(index);
     setIsEnlarged(true);
 
     // 延迟显示动画效果
@@ -149,6 +123,7 @@ const HtmlPreview = ({ html, children, title }: HtmlPreviewProps) => {
     setTimeout(() => {
       setIsEnlarged(false);
       setSelectedHtml(null);
+      setSelectedIndex(null);
     }, 300);
   };
 
@@ -163,9 +138,9 @@ const HtmlPreview = ({ html, children, title }: HtmlPreviewProps) => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isEnlarged]);
+
   // 为完整预览优化的HTML
   const optimizeHtmlForFullPreview = (html: string): string => {
-    // 添加CSS但允许内容滚动查看
     return `
       <!DOCTYPE html>
       <html>
@@ -173,66 +148,38 @@ const HtmlPreview = ({ html, children, title }: HtmlPreviewProps) => {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
-            @font-face {
-              font-family: '行书';
-              src: url('/fonts/行书.otf') format('opentype');
-              font-weight: normal;
-              font-style: normal;
-              font-display: swap;
-            }
-            @font-face {
-              font-family: '宋体';
-              src: url('/fonts/宋体.otf') format('opentype');
-              font-weight: normal;
-              font-style: normal;
-              font-display: swap;
-            }
-            @font-face {
-              font-family: '汇文明朝体';
-              src: url('/fonts/汇文明朝体（默认）.ttf') format('truetype');
-              font-weight: normal;
-              font-style: normal;
-              font-display: swap;
-            }
-            @font-face {
-              font-family: '黑体';
-              src: url('/fonts/黑体.otf') format('opentype');
-              font-weight: normal;
-              font-style: normal;
-              font-display: swap;
-            }
-            html, body {
+            @font-face { font-family: '行书'; src: url('/fonts/行书.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+            @font-face { font-family: '宋体'; src: url('/fonts/宋体.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+            @font-face { font-family: '汇文明朝体'; src: url('/fonts/汇文明朝体（默认）.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+            @font-face { font-family: '黑体'; src: url('/fonts/黑体.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
+            html { scroll-behavior: smooth; }
+            body {
               margin: 0;
               padding: 0;
               width: 100%;
-              height: 100%;
+              min-height: 100%;
               font-family: Arial, sans-serif;
-              overflow-x: hidden;
-            }
-            body {
               display: flex;
               justify-content: center;
               align-items: flex-start;
-              overflow-x: hidden;
+              box-sizing: border-box;
             }
             .content-container {
               width: 400px;
               max-width: 100%;
               margin: 0 auto;
               padding: 12px;
-              overflow-y: auto;
-              overflow-x: hidden;
-            }
-            * {
               box-sizing: border-box;
             }
-            img, svg {
-              max-width: 100%;
-              height: auto;
-            }
+            * { box-sizing: border-box; }
+            img, svg { max-width: 100%; height: auto; display: block; }
+            
+            body::-webkit-scrollbar { width: 6px; }
+            body::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 3px; }
+            body { scrollbar-width: thin; scrollbar-color: #ccc transparent; }
           </style>
         </head>
-        <body>
+        <body class="iframe-scrollbar">
           <div class="content-container">
             ${html}
           </div>
@@ -250,7 +197,7 @@ const HtmlPreview = ({ html, children, title }: HtmlPreviewProps) => {
         onClick={() => handlePreviewClick(html)}
       >
         <iframe
-          className="no-scrollbar pointer-events-none w-full flex-1 border-0" // 将 h-full 改为 flex-1 (或 flex-grow)
+          className="pointer-events-none block w-full flex-1 border-0"
           srcDoc={optimizedHtml}
           title={title}
           scrolling="no"
@@ -261,41 +208,44 @@ const HtmlPreview = ({ html, children, title }: HtmlPreviewProps) => {
       {/* 放大预览的 Modal */}
       {isEnlarged && selectedHtml && (
         <div
-          className={`modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/75 ${
+          className={`modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 ${
             modalShow ? "show" : ""
           }`}
           onClick={handleCloseModal}
         >
           <div
-            className={`modal-content relative h-[90%] w-[90%] max-w-4xl overflow-hidden rounded-lg bg-white shadow-xl ${
+            className={`modal-content relative flex w-full flex-col rounded-lg bg-white shadow-xl ${
               modalShow ? "show" : ""
-            }`}
+            } h-[90vh] max-w-4xl`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal 标题栏 */}
-            <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 px-4 py-3">
-              <h3 className="m-0 text-base font-semibold text-gray-700">
-                {selectedIndex !== null
-                  ? `知识卡片预览 #${selectedIndex + 1}`
-                  : "知识卡片预览"}
-              </h3>
-              <button
-                className="flex h-8 w-8 items-center justify-center rounded-full border-0 bg-transparent text-xl text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus:outline-none"
-                onClick={handleCloseModal}
-                aria-label="关闭"
-              >
-                ✕
-              </button>
+            <div className="flex-shrink-0 border-b border-gray-100 bg-gray-50 px-4 py-3">
+              <div className="flex items-center justify-between">
+                <h3 className="m-0 text-base font-semibold text-gray-700">
+                  {selectedIndex !== null
+                    ? `知识卡片预览 #${selectedIndex + 1}`
+                    : title || "知识卡片预览"}
+                </h3>
+                <button
+                  className="flex h-8 w-8 items-center justify-center rounded-full border-0 bg-transparent text-xl text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus:outline-none"
+                  onClick={handleCloseModal}
+                  aria-label="关闭"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
-            {/* 完整预览内容 */}
-            <iframe
-              className="h-[calc(100%-48px)] w-full border-0"
-              srcDoc={optimizeHtmlForFullPreview(selectedHtml)}
-              title="Enlarged Knowledge Card Preview"
-              sandbox="allow-scripts allow-same-origin"
-              scrolling="auto"
-            />
+            {/* 完整预览内容 - 添加滚动区域 */}
+            <div className="modal-body-scrollbar flex-grow overflow-y-auto">
+              <iframe
+                className="block h-full w-full border-0"
+                srcDoc={optimizeHtmlForFullPreview(selectedHtml)}
+                title="Enlarged Knowledge Card Preview"
+                sandbox="allow-scripts allow-same-origin"
+              />
+            </div>
           </div>
         </div>
       )}
