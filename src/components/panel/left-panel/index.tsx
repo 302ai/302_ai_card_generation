@@ -51,7 +51,7 @@ import { genPhilosophicalCard } from "@/services/gen-philosophical-card";
 import { usePhilosophicalHistory } from "@/hooks/db/use-philosophical-history";
 import { useTranslations } from "next-intl";
 const formSchema = z.object({
-  "knowledge-card": z.object({
+  knowledgeCard: z.object({
     model: z.string().optional(),
     content: z.string().optional(),
     // 添加一个新字段用于 "提取金句" 的 textarea
@@ -59,13 +59,14 @@ const formSchema = z.object({
     date: z.string().optional(),
     qrCode: z.string().optional(),
     style: z.string().optional(),
+    customStyle: z.string().optional(),
   }),
-  "promotional-poster": z.object({
+  promotionalPoster: z.object({
     model: z.string().optional(),
     content: z.string().optional(),
     style: z.string().optional(),
   }),
-  "quote-reference": z.object({
+  quoteReference: z.object({
     model: z.string().optional(),
     author: z.string().optional(),
     cardFont: z.string().optional(),
@@ -73,7 +74,7 @@ const formSchema = z.object({
     content: z.string().optional(),
     style: z.string().optional(),
   }),
-  "philosophical-card": z.object({
+  philosophicalCard: z.object({
     model: z.string().optional(),
     content: z.string().optional(),
     style: z.string().optional(),
@@ -111,16 +112,16 @@ const LeftPanel = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      "knowledge-card": {
+      knowledgeCard: {
         model: "claude-3-7-sonnet-20250219",
       },
-      "promotional-poster": {
+      promotionalPoster: {
         model: "claude-3-7-sonnet-20250219",
       },
-      "philosophical-card": {
+      philosophicalCard: {
         model: "claude-3-7-sonnet-20250219",
       },
-      "quote-reference": {
+      quoteReference: {
         model: "claude-3-7-sonnet-20250219",
       },
     },
@@ -156,13 +157,13 @@ const LeftPanel = () => {
   const fillWithExample = useCallback(
     (content: string) => {
       if (uiStore.activeTab === "input-based") {
-        form.setValue("knowledge-card.content", content, {
+        form.setValue("knowledgeCard.content", content, {
           shouldValidate: true,
           shouldDirty: true,
           shouldTouch: true,
         });
       } else {
-        form.setValue("knowledge-card.extractKeyContent", content, {
+        form.setValue("knowledgeCard.extractKeyContent", content, {
           shouldValidate: true,
           shouldDirty: true,
           shouldTouch: true,
@@ -201,16 +202,26 @@ const LeftPanel = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (uiStore.activeCard === "knowledge-card") {
       const historyId = crypto.randomUUID();
-      const { "knowledge-card": knowledgeCard } = values;
+      const { knowledgeCard } = values;
       let newStyle = knowledgeCard.style as string;
+      let content = "";
+      if (uiStore.activeTab === "input-based") {
+        content = knowledgeCard.content as string;
+      } else {
+        content = knowledgeCard.extractKeyContent as string;
+      }
+
       if (formStore.style === "random") {
         // Randomly select a style from STYLES_LIST
         const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
         newStyle = STYLES_LIST[randomIndex].description;
       }
 
-      if (formStore.style === "template" || formStore.style === "custom") {
+      if (formStore.style === "template") {
         newStyle = knowledgeCard.style as string;
+      }
+      if (formStore.style === "custom") {
+        newStyle = knowledgeCard.customStyle as string;
       }
 
       try {
@@ -219,7 +230,7 @@ const LeftPanel = () => {
           model: knowledgeCard.model as string,
           lang: "cn",
           date: knowledgeCard.date as string,
-          topic: knowledgeCard.content as string,
+          topic: content,
           style: newStyle,
           qrCode: knowledgeCard.qrCode as string,
           type: uiStore.activeTab,
@@ -233,7 +244,7 @@ const LeftPanel = () => {
       }
     }
     if (uiStore.activeCard === "promotional-poster") {
-      const { "promotional-poster": promotionalPoster } = values;
+      const { promotionalPoster } = values;
       try {
         const res = await generateSVG({
           apiKey: apiKey as string,
@@ -254,7 +265,7 @@ const LeftPanel = () => {
     console.log(uiStore.activeCard);
 
     if (uiStore.activeCard === "philosophical-card") {
-      const { "philosophical-card": philosophicalCard } = values;
+      const { philosophicalCard } = values;
       try {
         const res = await genPhilosophicalCard({
           apiKey: apiKey as string,
@@ -401,7 +412,7 @@ const LeftPanel = () => {
                     <TabsContent value="input-based" className="mt-4 space-y-4">
                       <FormField
                         control={form.control}
-                        name="knowledge-card.content" // RHF 字段名
+                        name="knowledgeCard.content" // RHF 字段名
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
@@ -420,7 +431,7 @@ const LeftPanel = () => {
                     <TabsContent value="extract-key" className="mt-4 space-y-4">
                       <FormField
                         control={form.control}
-                        name="knowledge-card.extractKeyContent" // RHF 字段名 (与 schema 对应)
+                        name="knowledgeCard.extractKeyContent" // RHF 字段名 (与 schema 对应)
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
@@ -442,7 +453,7 @@ const LeftPanel = () => {
                 <div>
                   <FormField
                     control={form.control}
-                    name="promotional-poster.content"
+                    name="promotionalPoster.content"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
@@ -462,7 +473,7 @@ const LeftPanel = () => {
                 <div>
                   <FormField
                     control={form.control}
-                    name="quote-reference.content"
+                    name="quoteReference.content"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
@@ -482,7 +493,7 @@ const LeftPanel = () => {
                 <div>
                   <FormField
                     control={form.control}
-                    name="philosophical-card.content"
+                    name="philosophicalCard.content"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
@@ -506,7 +517,7 @@ const LeftPanel = () => {
                 <div className="flex w-full items-center justify-between">
                   <FormField
                     control={form.control}
-                    name="knowledge-card.model"
+                    name="knowledgeCard.model"
                     render={({ field }) => (
                       <FormItem className="flex w-full items-center justify-between">
                         <FormLabel>{t("label.model_select")}</FormLabel>
@@ -528,7 +539,7 @@ const LeftPanel = () => {
                 <div>
                   <FormField
                     control={form.control}
-                    name="quote-reference.author"
+                    name="quoteReference.author"
                     render={({ field }) => (
                       <FormItem className="flex w-full items-center justify-between">
                         <FormLabel className="w-full">语录署名</FormLabel>
@@ -541,7 +552,7 @@ const LeftPanel = () => {
 
                   <FormField
                     control={form.control}
-                    name="quote-reference.cardFont"
+                    name="quoteReference.cardFont"
                     render={({ field }) => (
                       <FormItem className="flex w-full items-center justify-between">
                         <FormLabel className="w-full">
@@ -564,7 +575,7 @@ const LeftPanel = () => {
 
                   <FormField
                     control={form.control}
-                    name="quote-reference.cardFont"
+                    name="quoteReference.cardFont"
                     render={({ field }) => (
                       <FormItem className="flex w-full items-center justify-between">
                         <FormLabel className="w-full">
@@ -603,7 +614,7 @@ const LeftPanel = () => {
                     <div className="flex w-full items-center justify-between">
                       <FormField
                         control={form.control}
-                        name="knowledge-card.date"
+                        name="knowledgeCard.date"
                         render={({ field }) => (
                           <FormItem className="flex w-full items-center justify-between">
                             <FormLabel>{t("label.date_display")}</FormLabel>
@@ -623,7 +634,7 @@ const LeftPanel = () => {
 
                   <FormField
                     control={form.control}
-                    name="knowledge-card.qrCode"
+                    name="knowledgeCard.qrCode"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
@@ -645,7 +656,7 @@ const LeftPanel = () => {
                 <div>
                   <FormField
                     control={form.control}
-                    name="philosophical-card.cardFont"
+                    name="philosophicalCard.cardFont"
                     render={({ field }) => (
                       <FormItem className="flex w-full items-center justify-between">
                         <FormLabel className="w-full">卡片字体</FormLabel>
@@ -670,40 +681,16 @@ const LeftPanel = () => {
                 <StyleTab />
               </div>
               {uiStore.activeCard === "knowledge-card" && (
-                <FormField
-                  control={form.control}
-                  name="knowledge-card.style"
-                  render={({ field }) => (
-                    <StyleContent field={field} type="knowledgeCard" />
-                  )}
-                />
+                <StyleContent type="knowledgeCard" />
               )}
               {uiStore.activeCard === "promotional-poster" && (
-                <FormField
-                  control={form.control}
-                  name="promotional-poster.style"
-                  render={({ field }) => (
-                    <StyleContent field={field} type="promotionalPoster" />
-                  )}
-                />
+                <StyleContent type="promotionalPoster" />
               )}
               {uiStore.activeCard === "quote-reference" && (
-                <FormField
-                  control={form.control}
-                  name="quote-reference.style"
-                  render={({ field }) => (
-                    <StyleContent field={field} type="promotionalPoster" />
-                  )}
-                />
+                <StyleContent type="quoteReference" />
               )}
               {uiStore.activeCard === "philosophical-card" && (
-                <FormField
-                  control={form.control}
-                  name="philosophical-card.style"
-                  render={({ field }) => (
-                    <StyleContent field={field} type="promotionalPoster" />
-                  )}
-                />
+                <StyleContent type="philosophicalCard" />
               )}
             </div>
           </div>

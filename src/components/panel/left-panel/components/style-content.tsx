@@ -4,52 +4,68 @@ import { useAtom } from "jotai";
 import React from "react";
 import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
-import { ControllerRenderProps } from "react-hook-form";
+import { ControllerRenderProps, useFormContext } from "react-hook-form";
+import { FormField } from "@/components/ui/form";
 
 const StyleContent = ({
-  field,
   type,
 }: {
-  field: ControllerRenderProps<any, any>;
-  type: "knowledgeCard" | "promotionalPoster";
+  type:
+    | "knowledgeCard"
+    | "promotionalPoster"
+    | "quoteReference"
+    | "philosophicalCard";
   // | "quoteReference"
   // | "philosophicalCard";
 }) => {
   const [formStore, setFormStore] = useAtom(formStoreAtom);
+  const form = useFormContext();
   return (
     <div>
       {formStore.style === "template" && (
         <div className="mt-2">
-          <div className="flex space-x-2 overflow-x-auto pb-2">
-            {STYLE_LIST[type]?.map((item) => (
-              <div
-                key={item.id}
-                className={`flex-shrink-0 cursor-pointer transition-all ${
-                  field.value === item.prompt
-                    ? "rounded-md border-2 border-primary shadow-md"
-                    : "border-2 border-transparent"
-                }`}
-                onClick={() => {
-                  field.onChange(item.prompt);
-                }}
-              >
-                <Image
-                  src={item.url}
-                  alt={item.name}
-                  width={100}
-                  height={100}
-                  className="rounded-md"
-                />
+          <FormField
+            control={form.control}
+            name={`${type}.style`}
+            render={({ field }) => (
+              <div className="flex space-x-2 overflow-x-auto pb-2">
+                {STYLE_LIST[type]?.map((item) => (
+                  <div
+                    key={item.id}
+                    className={`flex-shrink-0 cursor-pointer transition-all ${
+                      field.value === item.prompt
+                        ? "rounded-md border-2 border-primary shadow-md"
+                        : "border-2 border-transparent"
+                    }`}
+                    onClick={() => {
+                      field.onChange(item.prompt);
+                    }}
+                  >
+                    <Image
+                      src={item.url}
+                      alt={item.name}
+                      width={100}
+                      height={100}
+                      className="rounded-md"
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+          />
         </div>
       )}
       {formStore.style === "custom" && (
         <div className="mt-2">
-          <Textarea
-            {...field}
-            placeholder="请输入卡片风格 e.g. 简约现代风格，文字排版简洁，有简单的图形元素或线条"
+          <FormField
+            control={form.control}
+            name={`${type}.customStyle`}
+            render={({ field }) => (
+              <Textarea
+                {...field}
+                placeholder="请输入卡片风格 e.g. 简约现代风格，文字排版简洁，有简单的图形元素或线条"
+              />
+            )}
           />
         </div>
       )}
