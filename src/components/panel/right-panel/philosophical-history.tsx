@@ -107,6 +107,7 @@ const PhilosophicalCardHistory = () => {
             <HtmlPreview
               html={sanitizeHtml(item.html)}
               title={`哲学卡片预览 ${index + 1}`}
+              key={item.id}
             >
               <div className="flex items-center justify-between p-2">
                 <span className="text-sm text-gray-500">
