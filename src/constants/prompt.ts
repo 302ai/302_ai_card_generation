@@ -875,6 +875,7 @@ const changeStylePrompt = ({
   html: string;
 }) => {
   return `
+  要求：只输出修改后的html代码，不要输出任何其他内容！！！！
   修改为${content}风格的卡片，html代码为：
   ${html}
   `;
