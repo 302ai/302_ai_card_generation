@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "@/hooks/db/use-gen-history";
 import { format } from "date-fns";
-import { FileDown, Trash } from "lucide-react";
+import { FileDown, Trash, WandSparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ky from "ky";
 import { env } from "@/env";
@@ -11,6 +11,9 @@ import { store } from "@/stores";
 import { useMonitorMessage } from "@/hooks/global/use-monitor-message";
 import { usePhilosophicalHistory } from "@/hooks/db/use-philosophical-history";
 import HtmlPreview from "./html-preview";
+import { MagicWandIcon } from "@radix-ui/react-icons";
+import { modalStoreAtom } from "@/stores/slices/modal_store";
+import ChangeStyleModal from "./change-style-modal";
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
   try {
@@ -70,6 +73,9 @@ const PhilosophicalCardHistory = () => {
     usePhilosophicalHistory();
   const { apiKey } = store.get(appConfigAtom);
   const { handleDownload } = useMonitorMessage();
+  const [modalStore, setModalStore] = useAtom(modalStoreAtom);
+  const [styleModalOpen, setStyleModalOpen] = useState(false);
+  const [selectedHtml, setSelectedHtml] = useState<string>("");
 
   const onDownLoad = async (html: string) => {
     const resp = await ky
@@ -119,6 +125,17 @@ const PhilosophicalCardHistory = () => {
                     size="icon"
                     onClick={(e) => {
                       e.stopPropagation();
+                      setSelectedHtml(sanitizeHtml(item.html));
+                      setStyleModalOpen(true);
+                    }}
+                  >
+                    <WandSparkles className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation();
                       onDownLoad(sanitizeHtml(item.html));
                     }}
                   >
@@ -140,6 +157,12 @@ const PhilosophicalCardHistory = () => {
           );
         })}
       </div>
+
+      <ChangeStyleModal
+        open={styleModalOpen}
+        onOpenChange={setStyleModalOpen}
+        data={{ html: selectedHtml }}
+      />
     </>
   );
 };
