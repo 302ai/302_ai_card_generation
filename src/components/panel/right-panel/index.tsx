@@ -6,6 +6,7 @@ import { useAtom } from "jotai";
 import { formStoreAtom } from "@/stores/slices/form_store";
 import { uiStoreAtom } from "@/stores/slices/ui_store";
 import PhilosophicalCardHistory from "./philosophical-history";
+import QuoteHistory from "./quote-history";
 
 const RightPanel = () => {
   const [uiStore, setUiStore] = useAtom(uiStoreAtom);
@@ -16,6 +17,7 @@ const RightPanel = () => {
       {uiStore.activeCard === "philosophical-card" && (
         <PhilosophicalCardHistory />
       )}
+      {uiStore.activeCard === "quote-reference" && <QuoteHistory />}
     </div>
   );
 };

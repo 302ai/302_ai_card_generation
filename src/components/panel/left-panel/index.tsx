@@ -51,6 +51,7 @@ import { genPhilosophicalCard } from "@/services/gen-philosophical-card";
 import { usePhilosophicalHistory } from "@/hooks/db/use-philosophical-history";
 import { useTranslations } from "next-intl";
 import { generateQuoteCard } from "@/services/gen-quote";
+import { useGenQuoteHistory } from "@/hooks/db/use-gen-quote-history";
 const formSchema = z.object({
   knowledgeCard: z.object({
     model: z.string().optional(),
@@ -76,12 +77,14 @@ const formSchema = z.object({
     textPosition: z.string().optional(),
     content: z.string().optional(),
     style: z.string().optional(),
+    customStyle: z.string().optional(),
   }),
   philosophicalCard: z.object({
     model: z.string().optional(),
     content: z.string().optional(),
     style: z.string().optional(),
     cardFont: z.string().optional(),
+    customStyle: z.string().optional(),
   }),
 });
 
@@ -110,6 +113,9 @@ const LeftPanel = () => {
     updatePhilosophicalHistoryHtml,
     updatePhilosophicalHistoryStatus,
   } = usePhilosophicalHistory();
+
+  const { addQuoteHistory, updateQuoteHistoryHtml, updateQuoteHistoryStatus } =
+    useGenQuoteHistory();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -285,13 +291,24 @@ const LeftPanel = () => {
 
     if (uiStore.activeCard === "philosophical-card") {
       const { philosophicalCard } = values;
+      let style = "";
+      if (formStore.style === "random") {
+        const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
+        style = STYLES_LIST[randomIndex].description;
+      }
+      if (formStore.style === "template") {
+        style = philosophicalCard.style as string;
+      }
+      if (formStore.style === "custom") {
+        style = philosophicalCard.customStyle as string;
+      }
       try {
         const res = await genPhilosophicalCard({
           apiKey: apiKey as string,
           model: philosophicalCard.model as string,
           lang: "cn",
           content: philosophicalCard.content as string,
-          style: formStore.style,
+          style,
           cardFont: philosophicalCard.cardFont as string,
         });
         await addPhilosophicalHistory({
@@ -308,6 +325,18 @@ const LeftPanel = () => {
     }
     if (uiStore.activeCard === "quote-reference") {
       const { quoteReference } = values;
+      let style = "";
+      if (formStore.style === "random") {
+        const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
+        style = STYLES_LIST[randomIndex].description;
+      }
+      if (formStore.style === "template") {
+        style = quoteReference.style as string;
+      }
+      if (formStore.style === "custom") {
+        style = quoteReference.customStyle as string;
+      }
+
       try {
         const res = await generateQuoteCard({
           apiKey: apiKey as string,
@@ -316,7 +345,11 @@ const LeftPanel = () => {
           author: quoteReference.author as string,
           cardFont: quoteReference.cardFont as string,
           textPosition: quoteReference.textPosition as string,
-          style: formStore.style,
+          style,
+        });
+        await addQuoteHistory({
+          html: res.html,
+          status: "success",
         });
       } catch (error) {
         // await updateHistoryStatus(historyId, "failed");
