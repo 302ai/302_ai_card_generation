@@ -175,15 +175,20 @@ const KnowledgeHistory = () => {
               width: 100%;
               height: 100%;
               overflow: hidden;
-              font-family: Arial, sans-serif;
             }
             body {
               display: block;
               position: relative;
             }
             .content-container {
-              width: 100%;
+              width: 400px;
+              max-height: 100%;
               overflow: hidden;
+              /* 只显示上半部分内容 */
+              mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+              -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+              transform-origin: top center;
+              transform: scale(calc(100% / 400 * 100%));
             }
             * {
               box-sizing: border-box;
@@ -229,15 +234,21 @@ const KnowledgeHistory = () => {
               width: 100%;
               height: 100%;
               font-family: Arial, sans-serif;
+              overflow-x: hidden;
             }
             body {
-              display: block;
-              position: relative;
-              overflow: auto;
+              display: flex;
+              justify-content: center;
+              align-items: flex-start;
+              overflow-x: hidden;
             }
             .content-container {
-              width: 100%;
-              padding: 16px;
+              width: 400px;
+              max-width: 100%;
+              margin: 0 auto;
+              padding: 12px;
+              overflow-y: auto;
+              overflow-x: hidden;
             }
             * {
               box-sizing: border-box;
@@ -280,12 +291,12 @@ const KnowledgeHistory = () => {
 
           return (
             <div
-              className="aspect-[2/3] w-full cursor-pointer rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-md"
+              className="flex aspect-[2/3] w-full cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-md"
               key={index}
-              onClick={() => handlePreviewClick(optimizedHtml, index)}
+              onClick={() => handlePreviewClick(item.html, index)}
             >
               <iframe
-                className="no-scrollbar pointer-events-none h-full w-full border-0"
+                className="no-scrollbar pointer-events-none w-full flex-1 border-0" // 将 h-full 改为 flex-1 (或 flex-grow)
                 srcDoc={optimizedHtml}
                 title={`Knowledge Card Preview ${index + 1}`}
                 scrolling="no"
@@ -332,7 +343,7 @@ const KnowledgeHistory = () => {
           onClick={handleCloseModal}
         >
           <div
-            className={`modal-content relative h-[90%] w-4/5 overflow-hidden rounded-lg bg-white shadow-xl ${
+            className={`modal-content relative h-[90%] w-[90%] max-w-4xl overflow-hidden rounded-lg bg-white shadow-xl ${
               modalShow ? "show" : ""
             }`}
             onClick={(e) => e.stopPropagation()}
