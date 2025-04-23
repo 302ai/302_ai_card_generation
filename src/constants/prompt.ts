@@ -867,6 +867,19 @@ Directly output the complete HTML file.
   `;
 };
 
+const changeStylePrompt = ({
+  content,
+  html,
+}: {
+  content: string;
+  html: string;
+}) => {
+  return `
+  修改为${content}风格的卡片，html代码为：
+  ${html}
+  `;
+};
+
 export {
   systemPrompt,
   userPrompt,
@@ -874,4 +887,5 @@ export {
   posterPromptForCustomAndTemplate,
   philosophicalCardPrompt,
   quoteReferenceCardPrompt,
+  changeStylePrompt,
 };

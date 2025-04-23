@@ -3,6 +3,9 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import HtmlPreview from "./html-preview";
+import { store } from "@/stores";
+import { appConfigAtom } from "@/stores/slices/config_store";
+import { generateHTML } from "@/services/change-style";
 
 interface ChangeStyleModalProps {
   open: boolean;
@@ -18,10 +21,16 @@ const ChangeStyleModal: React.FC<ChangeStyleModalProps> = ({
   data,
 }) => {
   const [stylePrompt, setStylePrompt] = useState("");
+  const { apiKey } = store.get(appConfigAtom);
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     // TODO: Implement style generation logic
     console.log("Generate new style with prompt:", stylePrompt);
+    const res = await generateHTML({
+      apiKey: apiKey as string,
+      content: stylePrompt,
+      html: data?.html as string,
+    });
   };
 
   return (
