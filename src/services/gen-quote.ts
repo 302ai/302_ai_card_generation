@@ -3,40 +3,43 @@ import { emitter } from "@/utils/mitt";
 import { store, languageAtom } from "@/stores";
 import { langToCountry } from "@/utils/302";
 
-interface GenerateSVGParams {
+interface GenerateQuoteCardParams {
   apiKey: string;
   model: string;
-  lang: "cn" | "en" | "jp";
   content: string;
+  author: string;
+  textPosition: string;
   style: string;
-  styleType: "random" | "template" | "custom";
+  cardFont: string;
 }
 
-interface GenerateSVGResult {
-  stringSVG: string;
+interface GenerateQuoteCardResult {
+  html: string;
 }
 
-export const generateSVG = async ({
+export const generateQuoteCard = async ({
   apiKey,
   model,
-  lang,
   content,
+  author,
+  textPosition,
   style,
-  styleType,
-}: GenerateSVGParams) => {
+  cardFont,
+}: GenerateQuoteCardParams) => {
   try {
-    const res = await ky.post("/api/gen-svg-card", {
+    const res = await ky.post("/api/gen-quote-card", {
       timeout: 300000,
       json: {
         apiKey,
         model,
-        lang,
         content,
+        author,
+        textPosition,
         style,
-        styleType,
+        cardFont,
       },
     });
-    return res.json<GenerateSVGResult>();
+    return res.json<GenerateQuoteCardResult>();
   } catch (error) {
     if (error instanceof Error) {
       const uiLanguage = store.get(languageAtom);

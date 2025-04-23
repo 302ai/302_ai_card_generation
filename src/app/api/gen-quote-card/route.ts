@@ -3,50 +3,83 @@ import { createAI302 } from "@302ai/ai-sdk";
 import { createScopedLogger } from "@/utils";
 import { env } from "@/env";
 import {
-  posterPromptForRandom,
-  posterPromptForCustomAndTemplate,
+  quoteReferenceCardPrompt,
+  systemPrompt,
+  userPrompt,
 } from "@/constants/prompt";
 
-const logger = createScopedLogger("gen-svg-card");
+const logger = createScopedLogger("gen-quote-card");
 
 export async function POST(request: Request) {
   try {
     const {
       apiKey,
       model,
-      lang,
-      style,
       content,
-      styleType,
+      style,
+      author,
+      cardFont,
+      textPosition,
     }: {
       apiKey: string;
       model: string;
-      lang: "cn" | "en" | "jp";
-      style: string;
       content: string;
-      styleType: "random" | "template" | "custom";
+      style: string;
+      author: string;
+      cardFont: string;
+      textPosition: string;
     } = await request.json();
     const ai302 = createAI302({
       apiKey,
       baseURL: `${env.NEXT_PUBLIC_API_URL}/v1/chat/completions`,
     });
-    const prompt =
-      styleType === "random"
-        ? posterPromptForRandom({ lang, content })
-        : posterPromptForCustomAndTemplate({
-            lang,
-            content,
-            style,
-          });
 
     const result = await generateText({
       model: ai302(model),
-      prompt,
+      messages: [
+        {
+          role: "user",
+          content: quoteReferenceCardPrompt({
+            content,
+            author,
+            textPosition,
+            style,
+          }),
+        },
+      ],
     });
 
-    const stringSVG = result.text;
+    const stringHTML = result.text;
+    let html;
 
-    return Response.json({ stringSVG });
+    try {
+      // First, check if response contains markdown code blocks
+      if (stringHTML.includes("```")) {
+        const cleanedHTML = stringHTML
+          .replace(/```+html/g, "") // Handle any number of backticks followed by html
+          .replace(/```+/g, "") // Handle any number of backticks
+          .trim();
+
+        html = JSON.parse(cleanedHTML);
+      }
+      // Check if it's directly HTML content
+      else if (
+        stringHTML.trim().startsWith("<!DOCTYPE") ||
+        stringHTML.trim().startsWith("<html")
+      ) {
+        html = stringHTML;
+      }
+      // If it's a JSON string
+      else {
+        html = JSON.parse(stringHTML);
+      }
+    } catch (parseError) {
+      logger.error("Failed to parse AI response:", parseError);
+      // Return the raw text if parsing fails
+      html = stringHTML;
+    }
+
+    return Response.json({ html });
   } catch (error) {
     logger.error(error);
     if (error instanceof APICallError) {

@@ -50,6 +50,7 @@ import { usePosterHistory } from "@/hooks/db/use-poster-history";
 import { genPhilosophicalCard } from "@/services/gen-philosophical-card";
 import { usePhilosophicalHistory } from "@/hooks/db/use-philosophical-history";
 import { useTranslations } from "next-intl";
+import { generateQuoteCard } from "@/services/gen-quote";
 const formSchema = z.object({
   knowledgeCard: z.object({
     model: z.string().optional(),
@@ -65,6 +66,8 @@ const formSchema = z.object({
     model: z.string().optional(),
     content: z.string().optional(),
     style: z.string().optional(),
+    styleType: z.string().optional(),
+    customStyle: z.string().optional(),
   }),
   quoteReference: z.object({
     model: z.string().optional(),
@@ -245,14 +248,30 @@ const LeftPanel = () => {
     }
     if (uiStore.activeCard === "promotional-poster") {
       const { promotionalPoster } = values;
+      let newStyle = "";
+      if (formStore.style === "random") {
+        // Randomly select a style from STYLES_LIST
+        const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
+        newStyle = STYLES_LIST[randomIndex].description;
+      }
+
+      if (formStore.style === "template") {
+        newStyle = promotionalPoster.style as string;
+      }
+      if (formStore.style === "custom") {
+        newStyle = promotionalPoster.customStyle as string;
+      }
       try {
         const res = await generateSVG({
           apiKey: apiKey as string,
           model: promotionalPoster.model as string,
           lang: "cn",
           content: promotionalPoster.content as string,
-          style: formStore.style,
-          theme: promotionalPoster.style as string,
+          style: newStyle,
+          styleType: promotionalPoster.styleType as
+            | "random"
+            | "template"
+            | "custom",
         });
         await addPosterHistory({
           svg: res.stringSVG,
@@ -283,6 +302,22 @@ const LeftPanel = () => {
         //   html: res.html,
         //   status: "success",
         // });
+      } catch (error) {
+        // await updateHistoryStatus(historyId, "failed");
+      }
+    }
+    if (uiStore.activeCard === "quote-reference") {
+      const { quoteReference } = values;
+      try {
+        const res = await generateQuoteCard({
+          apiKey: apiKey as string,
+          model: quoteReference.model as string,
+          content: quoteReference.content as string,
+          author: quoteReference.author as string,
+          cardFont: quoteReference.cardFont as string,
+          textPosition: quoteReference.textPosition as string,
+          style: formStore.style,
+        });
       } catch (error) {
         // await updateHistoryStatus(historyId, "failed");
       }
