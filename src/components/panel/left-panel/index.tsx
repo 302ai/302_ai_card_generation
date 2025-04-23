@@ -88,6 +88,25 @@ const formSchema = z.object({
   }),
 });
 
+const FONTS = [
+  {
+    name: "行书",
+    url: "/fonts/行书.otf",
+  },
+  {
+    name: "宋体",
+    url: "/fonts/宋体.otf",
+  },
+  {
+    name: "汇文明朝体",
+    url: "/fonts/汇文明朝体（默认）.ttf",
+  },
+  {
+    name: "黑体",
+    url: "/fonts/黑体.otf",
+  },
+];
+
 const LeftPanel = () => {
   const [contentType, setContentType] = useState<
     | "knowledge-card"
@@ -632,8 +651,11 @@ const LeftPanel = () => {
                               <SelectValue placeholder="请选择卡片字体" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="default">默认</SelectItem>
-                              <SelectItem value="custom">自定义</SelectItem>
+                              {FONTS.map((font) => (
+                                <SelectItem key={font.name} value={font.url}>
+                                  {font.name}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         </FormControl>
@@ -729,13 +751,21 @@ const LeftPanel = () => {
                       <FormItem className="flex w-full items-center justify-between">
                         <FormLabel className="w-full">卡片字体</FormLabel>
                         <FormControl>
-                          <Select {...field}>
+                          <Select
+                            {...field}
+                            onValueChange={(value) => {
+                              field.onChange(value);
+                            }}
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="请选择卡片字体" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="default">默认</SelectItem>
-                              <SelectItem value="custom">自定义</SelectItem>
+                              {FONTS.map((font) => (
+                                <SelectItem key={font.name} value={font.url}>
+                                  {font.name}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         </FormControl>

@@ -757,21 +757,6 @@ ${content}
   return prompts[lang];
 };
 
-// const posterUserPrompt = ({
-//   content,
-//   lang = "cn",
-// }: {
-//   content: string;
-//   lang?: "cn" | "en" | "jp";
-// }) => {
-//   const prompts = {
-//     cn: `待处理内容：${content}`,
-//     en: `Pending content: ${content}`,
-//     jp: `処理対象：${content}`,
-//   };
-//   return prompts[lang];
-// };
-
 const philosophicalCardPrompt = ({
   content,
   style,
