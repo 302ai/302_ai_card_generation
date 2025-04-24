@@ -508,7 +508,7 @@ const LeftPanel = () => {
   }
 
   return (
-    <div className="md:sticky md:top-5">
+    <div className="md:sticky md:top-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div>
@@ -547,7 +547,7 @@ const LeftPanel = () => {
               {/* Tabs with Examples */}
               <div className="flex flex-col space-y-2">
                 {uiStore.activeCard === "knowledge-card" && (
-                  <div className="flex items-center space-x-2">
+                  <div className="space-y-2">
                     <Tabs
                       value={uiStore.activeTab}
                       onValueChange={(value: string) =>
@@ -570,75 +570,9 @@ const LeftPanel = () => {
                             {t("switch_title.extract_quote")}
                           </TabsTrigger>
                         </TabsList>
-
-                        <div className="flex items-center space-x-1 text-sm text-gray-500">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6 flex-shrink-0"
-                            onClick={refreshExamples}
-                            type="button"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="14"
-                              height="14"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="lucide lucide-refresh-cw"
-                            >
-                              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                              <path d="M21 3v5h-5" />
-                              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                              <path d="M3 21v-5h5" />
-                            </svg>
-                          </Button>
-                          <div className="scrollbar-hide flex max-w-[calc(100%-2rem)] items-center space-x-1 overflow-x-auto">
-                            {uiStore.activeTab === "input-based" ? (
-                              <>
-                                {displayedExamples.map((example, index) => (
-                                  <span
-                                    key={`${example.id}-${index}`}
-                                    className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
-                                    onClick={() =>
-                                      fillWithExample(
-                                        example.input_based.content
-                                      )
-                                    }
-                                  >
-                                    {example.input_based.title}
-                                  </span>
-                                ))}
-                              </>
-                            ) : (
-                              <>
-                                {displayedExamples.map((example, index) => (
-                                  <span
-                                    key={`${example.id}-${index}`}
-                                    className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
-                                    onClick={() =>
-                                      fillWithExample(
-                                        example.extract_key.content
-                                      )
-                                    }
-                                  >
-                                    {example.extract_key.title}
-                                  </span>
-                                ))}
-                              </>
-                            )}
-                          </div>
-                        </div>
                       </div>
 
-                      <TabsContent
-                        value="input-based"
-                        className="mt-4 space-y-4"
-                      >
+                      <TabsContent value="input-based" className="">
                         <FormField
                           control={form.control}
                           name="knowledgeCard.content" // RHF 字段名
@@ -657,10 +591,7 @@ const LeftPanel = () => {
                         />
                       </TabsContent>
 
-                      <TabsContent
-                        value="extract-key"
-                        className="mt-4 space-y-4"
-                      >
+                      <TabsContent value="extract-key" className="">
                         <FormField
                           control={form.control}
                           name="knowledgeCard.extractKeyContent" // RHF 字段名 (与 schema 对应)
@@ -679,6 +610,64 @@ const LeftPanel = () => {
                         />
                       </TabsContent>
                     </Tabs>
+                    <div className="flex items-center justify-end space-x-1 text-sm text-gray-500">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 flex-shrink-0"
+                        onClick={refreshExamples}
+                        type="button"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="lucide lucide-refresh-cw"
+                        >
+                          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                          <path d="M21 3v5h-5" />
+                          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                          <path d="M3 21v-5h5" />
+                        </svg>
+                      </Button>
+                      <div className="scrollbar-hide flex max-w-[calc(100%-2rem)] items-center space-x-1 overflow-x-auto">
+                        {uiStore.activeTab === "input-based" ? (
+                          <>
+                            {displayedExamples.map((example, index) => (
+                              <span
+                                key={`${example.id}-${index}`}
+                                className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
+                                onClick={() =>
+                                  fillWithExample(example.input_based.content)
+                                }
+                              >
+                                {example.input_based.title}
+                              </span>
+                            ))}
+                          </>
+                        ) : (
+                          <>
+                            {displayedExamples.map((example, index) => (
+                              <span
+                                key={`${example.id}-${index}`}
+                                className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
+                                onClick={() =>
+                                  fillWithExample(example.extract_key.content)
+                                }
+                              >
+                                {example.extract_key.title}
+                              </span>
+                            ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )}
                 {uiStore.activeCard === "promotional-poster" && (
