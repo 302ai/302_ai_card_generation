@@ -772,7 +772,6 @@ const philosophicalCardPrompt = ({
   // Determine the correct file extension and format based on the font name
   const fileExtension = cardFont === "汇文明朝体" ? "ttf" : "otf";
   const formatType = fileExtension === "ttf" ? "truetype" : "opentype";
-  console.log(style);
 
   const prompts = {
     zh: `根据用户输入将主题翻译成英文，然后使用100字以内的简洁语言来分解其深层含义。然后使用HTML创建一个优雅的文本卡来表示这个主题。
