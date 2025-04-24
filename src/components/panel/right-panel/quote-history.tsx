@@ -2,7 +2,13 @@ import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "@/hooks/db/use-gen-history";
 import { format } from "date-fns";
-import { FileDown, Trash, AlertCircle, Loader2 } from "lucide-react";
+import {
+  FileDown,
+  Trash,
+  AlertCircle,
+  Loader2,
+  WandSparkles,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ky from "ky";
 import { env } from "@/env";
@@ -12,6 +18,7 @@ import { useMonitorMessage } from "@/hooks/global/use-monitor-message";
 import { useGenQuoteHistory } from "@/hooks/db/use-gen-quote-history";
 import HtmlPreview from "./html-preview";
 import { useTranslations } from "next-intl";
+import ChangeStyleModal from "./change-style-modal";
 
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
@@ -72,6 +79,9 @@ const QuoteHistory = () => {
   const { apiKey } = store.get(appConfigAtom);
   const { handleDownload } = useMonitorMessage();
   const t = useTranslations();
+  const [styleModalOpen, setStyleModalOpen] = useState(false);
+  const [selectedHtml, setSelectedHtml] = useState<string>("");
+
   const onDownLoad = async (html: string) => {
     const resp = await ky
       .post(`${env.NEXT_PUBLIC_API_URL}/v1/htmltopng`, {
@@ -170,6 +180,17 @@ const QuoteHistory = () => {
                     size="icon"
                     onClick={(e) => {
                       e.stopPropagation();
+                      setSelectedHtml(sanitizeHtml(item.html));
+                      setStyleModalOpen(true);
+                    }}
+                  >
+                    <WandSparkles className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation();
                       onDownLoad(sanitizeHtml(item.html));
                     }}
                   >
@@ -191,6 +212,11 @@ const QuoteHistory = () => {
           );
         })}
       </div>
+      <ChangeStyleModal
+        open={styleModalOpen}
+        onOpenChange={setStyleModalOpen}
+        data={{ html: selectedHtml }}
+      />
     </>
   );
 };

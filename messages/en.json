@@ -35,7 +35,8 @@
     "style_required": "Please select the style",
     "text_position_required": "Please select the text position",
     "quote_content_required": "Please enter the quote content",
-    "content_required": "Please enter the content"
+    "content_required": "Please enter the content",
+    "change_style_required": "Please enter the style description"
   },
   "placeholder": {
     "based_on_input": "Please enter the theme or article, AI generates cards based on the input...",
@@ -56,7 +57,10 @@
     "knowledge_card_preview": "Knowledge Card Preview",
     "philosophical_card_preview": "Philosophical Card Preview",
     "quote_card_preview": "Quote Card Preview",
-    "poster_preview": "Poster Preview"
+    "poster_preview": "Poster Preview",
+    "change_style": "Change Style",
+    "change_style_placeholder": "Please enter the style description you want to change...",
+    "generate_new_style": "Generate New Style"
   },
   "button": {
     "generate": "Generate"

@@ -46,7 +46,10 @@
     "knowledge_card_preview": "知识卡片预览",
     "philosophical_card_preview": "哲理卡片预览",
     "quote_card_preview": "语录引用预览",
-    "poster_preview": "宣传海报预览"
+    "poster_preview": "宣传海报预览",
+    "change_style": "修改风格",
+    "change_style_placeholder": "请输入你想要的风格描述...",
+    "generate_new_style": "生成新样式"
   },
   "button": {
     "generate": "生成"
@@ -59,7 +62,8 @@
     "style_required": "请选择风格",
     "text_position_required": "请选择文字位置",
     "quote_content_required": "请输入语录内容",
-    "content_required": "请输入内容"
+    "content_required": "请输入内容",
+    "change_style_required": "请输入风格描述"
   },
   "select": {
     "not_display": "不展示",

@@ -36,7 +36,8 @@
     "style_required": "スタイルを選択してください",
     "text_position_required": "テキスト位置を選択してください",
     "quote_content_required": "語録内容を入力してください",
-    "content_required": "内容を入力してください"
+    "content_required": "内容を入力してください",
+    "change_style_required": "スタイルを入力してください"
   },
   "placeholder": {
     "based_on_input": "トピックや記事を入力してください。AIは入力に基づいてカードを生成します...",
@@ -57,7 +58,10 @@
     "knowledge_card_preview": "知識カードプレビュー",
     "philosophical_card_preview": "哲理カードプレビュー",
     "quote_card_preview": "引用カードプレビュー",
-    "poster_preview": "宣伝ポスタープレビュー"
+    "poster_preview": "宣伝ポスタープレビュー",
+    "change_style": "スタイルを変更する",
+    "change_style_placeholder": "変更したいスタイルを入力してください...",
+    "generate_new_style": "新しいスタイルを生成する"
   },
   "button": {
     "generate": "生成する"

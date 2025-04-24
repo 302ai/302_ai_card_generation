@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,6 +6,13 @@ import HtmlPreview from "./html-preview";
 import { store } from "@/stores";
 import { appConfigAtom } from "@/stores/slices/config_store";
 import { generateHTML } from "@/services/change-style";
+import { usePhilosophicalHistory } from "@/hooks/db/use-philosophical-history";
+import { useTranslations } from "next-intl";
+import { formStoreAtom } from "@/stores/slices/form_store";
+import { useAtom } from "jotai";
+import { toast } from "sonner";
+import { uiStoreAtom } from "@/stores/slices/ui_store";
+import { useGenQuoteHistory } from "@/hooks/db/use-gen-quote-history";
 
 interface ChangeStyleModalProps {
   open: boolean;
@@ -22,15 +29,75 @@ const ChangeStyleModal: React.FC<ChangeStyleModalProps> = ({
 }) => {
   const [stylePrompt, setStylePrompt] = useState("");
   const { apiKey } = store.get(appConfigAtom);
+  const { addPhilosophicalHistory, updatePhilosophicalHistory } =
+    usePhilosophicalHistory();
+  const { addQuoteHistory, updateQuoteHistory } = useGenQuoteHistory();
+  const t = useTranslations();
+  const [uiStore, setUiStore] = useAtom(uiStoreAtom);
+
+  useEffect(() => {
+    setStylePrompt("");
+  }, [open]);
 
   const handleGenerate = async () => {
-    // TODO: Implement style generation logic
-    console.log("Generate new style with prompt:", stylePrompt);
-    const res = await generateHTML({
-      apiKey: apiKey as string,
-      content: stylePrompt,
-      html: data?.html as string,
-    });
+    if (!stylePrompt) {
+      toast.error(t("toast.change_style_required"));
+      return;
+    }
+
+    if (!data?.html) {
+      toast.error(t("toast.html_content_required"));
+      return;
+    }
+
+    let historyId = "";
+
+    try {
+      // Add loading card based on active card type
+      if (uiStore.activeCard === "philosophical-card") {
+        historyId = await addPhilosophicalHistory({
+          html: "",
+          status: "pending",
+        });
+      } else if (uiStore.activeCard === "quote-reference") {
+        historyId = await addQuoteHistory({
+          html: "",
+          status: "pending",
+        });
+      }
+      onOpenChange(false);
+      const res = await generateHTML({
+        apiKey: apiKey as string,
+        content: stylePrompt,
+        html: data.html,
+      });
+
+      // Update history based on active card type
+      const updateHistory =
+        uiStore.activeCard === "philosophical-card"
+          ? updatePhilosophicalHistory
+          : updateQuoteHistory;
+
+      await updateHistory(historyId, {
+        html: res.html,
+        status: "success",
+      });
+    } catch (error) {
+      const updateHistory =
+        uiStore.activeCard === "philosophical-card"
+          ? updatePhilosophicalHistory
+          : updateQuoteHistory;
+
+      await updateHistory(historyId, {
+        status: "failed",
+      });
+
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : t("toast.style_generation_failed")
+      );
+    }
   };
 
   return (
@@ -54,15 +121,15 @@ const ChangeStyleModal: React.FC<ChangeStyleModalProps> = ({
 
           {/* Right side - Style Input */}
           <div className="flex w-1/2 flex-col gap-4">
-            <h3 className="text-lg font-semibold">想要修改的风格</h3>
+            <h3 className="text-lg font-semibold">{t("label.change_style")}</h3>
             <Textarea
-              placeholder="请输入你想要的风格描述..."
+              placeholder={t("label.change_style_placeholder")}
               className="h-[500px] resize-none"
               value={stylePrompt}
               onChange={(e) => setStylePrompt(e.target.value)}
             />
             <Button onClick={handleGenerate} className="w-full">
-              生成新样式
+              {t("label.generate_new_style")}
             </Button>
           </div>
         </div>
