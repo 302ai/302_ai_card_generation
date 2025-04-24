@@ -1,5 +1,5 @@
 import React from "react";
-import { FileCode, FileDown, Image } from "lucide-react";
+import { Download, FileCode, FileDown, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -65,7 +65,7 @@ const DownloadDropdown = ({
             e.stopPropagation();
           }}
         >
-          <FileDown className="h-4 w-4" />
+          <Download className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
