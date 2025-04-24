@@ -106,13 +106,30 @@ const QuoteHistory = () => {
             return (
               <div
                 key={item.id}
-                className="flex aspect-[2/3] w-full flex-col items-center justify-center rounded-lg border border-gray-200 bg-white shadow-sm"
+                className="flex aspect-[2/3] w-full flex-col items-center rounded-lg border border-gray-200 bg-white shadow-sm"
               >
-                <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
+                <div className="flex flex-1 flex-col items-center justify-center space-y-4 p-4 text-center">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                   <p className="text-sm text-primary">
                     {t("status.generating")}...
                   </p>
+                </div>
+                <div className="flex w-full items-center justify-between p-2">
+                  <span className="text-sm text-gray-500">
+                    {formatTimestamp(item.createdAt)}
+                  </span>
+                  <div className="flex">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteQuoteHistory(item.id);
+                      }}
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             );
