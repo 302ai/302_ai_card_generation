@@ -53,6 +53,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { generateQuoteCard } from "@/services/gen-quote";
 import { useGenQuoteHistory } from "@/hooks/db/use-gen-quote-history";
 import { toast } from "sonner";
+import { STYLE_LIST } from "@/constants/style";
 const formSchema = z.object({
   knowledgeCard: z.object({
     model: z.string().optional(),
@@ -386,8 +387,10 @@ const LeftPanel = () => {
         return;
       }
       if (formStore.style === "random") {
-        const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
-        style = STYLES_LIST[randomIndex].description;
+        const randomIndex = Math.floor(
+          Math.random() * STYLE_LIST["philosophicalCard"].length
+        );
+        style = STYLE_LIST["philosophicalCard"][randomIndex].prompt;
       }
       if (formStore.style === "template") {
         style = philosophicalCard.style as string;
@@ -454,8 +457,10 @@ const LeftPanel = () => {
         return;
       }
       if (formStore.style === "random") {
-        const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
-        style = STYLES_LIST[randomIndex].description;
+        const randomIndex = Math.floor(
+          Math.random() * STYLE_LIST["quoteReference"].length
+        );
+        style = STYLE_LIST["quoteReference"][randomIndex].prompt;
       }
       if (formStore.style === "template") {
         style = quoteReference.style as string;
