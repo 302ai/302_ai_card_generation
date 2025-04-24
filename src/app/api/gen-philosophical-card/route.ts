@@ -31,6 +31,7 @@ export async function POST(request: Request) {
       apiKey,
       baseURL: `${env.NEXT_PUBLIC_API_URL}/v1/chat/completions`,
     });
+    console.log({ cardFont });
 
     const result = await generateText({
       model: ai302(model),

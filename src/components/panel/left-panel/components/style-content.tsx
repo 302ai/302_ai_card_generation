@@ -29,11 +29,11 @@ const StyleContent = ({
             control={form.control}
             name={`${type}.style`}
             render={({ field }) => (
-              <div className="flex space-x-2 overflow-x-auto pb-2">
+              <div className="grid max-h-[300px] grid-cols-2 gap-2 overflow-y-auto pb-2 pr-1">
                 {STYLE_LIST[type]?.map((item) => (
                   <div
                     key={item.id}
-                    className={`flex-shrink-0 cursor-pointer transition-all ${
+                    className={`cursor-pointer transition-all ${
                       field.value === item.prompt
                         ? "rounded-md border-2 border-primary shadow-md"
                         : "border-2 border-transparent"
@@ -47,7 +47,7 @@ const StyleContent = ({
                       alt={item.name}
                       width={100}
                       height={100}
-                      className="rounded-md"
+                      className="h-auto w-full rounded-md"
                     />
                   </div>
                 ))}

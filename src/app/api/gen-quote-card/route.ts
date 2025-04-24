@@ -44,6 +44,7 @@ export async function POST(request: Request) {
             author,
             textPosition,
             style,
+            cardFont,
           }),
         },
       ],

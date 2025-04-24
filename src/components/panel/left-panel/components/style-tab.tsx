@@ -51,10 +51,6 @@ const StyleTab = () => {
           {t("select.custom")}
         </Button>
       </div>
-      {/* 
-      {selected === "random" && <div className="mt-2">随机样式内容</div>}
-      {selected === "template" && <div className="mt-2">样板内容</div>}
-      {selected === "custom" && <div className="mt-2">自定义内容</div>} */}
     </div>
   );
 };

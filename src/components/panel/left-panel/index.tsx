@@ -100,7 +100,7 @@ const FONTS = [
   },
   {
     name: "汇文明朝体",
-    value: "/fonts/汇文明朝体（默认）.ttf",
+    value: "/fonts/汇文明朝体.ttf",
   },
   {
     name: "黑体",
@@ -816,7 +816,10 @@ const LeftPanel = () => {
                             {t("label.quote_signature")}
                           </FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input
+                              placeholder={t("toast.author_required")}
+                              {...field}
+                            />
                           </FormControl>
                         </FormItem>
                       )}
