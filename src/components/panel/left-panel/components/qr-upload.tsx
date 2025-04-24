@@ -5,12 +5,13 @@ import { Upload } from "lucide-react";
 import { ControllerRenderProps } from "react-hook-form";
 import ky from "ky";
 import { env } from "@/env";
+import { useTranslations } from "next-intl";
 
 const QrUpload = ({ field }: { field: ControllerRenderProps<any, any> }) => {
   const [image, setImage] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const t = useTranslations();
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -101,7 +102,7 @@ const QrUpload = ({ field }: { field: ControllerRenderProps<any, any> }) => {
           <div className="p-4 text-center">
             <Upload className="mx-auto h-12 w-12 text-gray-400" />
             <p className="mt-2 text-sm text-gray-500">
-              Click or drag image to upload
+              {t("label.upload_qr_code")}
             </p>
           </div>
         )}

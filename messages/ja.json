@@ -51,7 +51,9 @@
     "poster": "宣伝ポスターの内容を入力してください...",
     "philosophy_card": "哲学のトピックを入力してください...",
     "quote_card": "語録や名言を入力してください...",
-    "select_text_position": "テキスト位置を選択してください"
+    "select_text_position": "テキスト位置を選択してください",
+    "input_content": "内容を入力してください",
+    "input_style": "カードスタイルを入力してください e.g. シンプルな現代スタイル、文字排版がシンプルで、シンプルなグラフィック要素や線があります"
   },
   "label": {
     "model_select": "模型選択",
@@ -67,7 +69,8 @@
     "poster_preview": "宣伝ポスタープレビュー",
     "change_style": "スタイルを変更する",
     "change_style_placeholder": "変更したいスタイルを入力してください...",
-    "generate_new_style": "新しいスタイルを生成する"
+    "generate_new_style": "新しいスタイルを生成する",
+    "upload_qr_code": "クリックまたは画像をドラッグしてアップロード"
   },
   "button": {
     "generate": "生成する"

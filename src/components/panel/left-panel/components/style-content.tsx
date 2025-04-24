@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
 import { ControllerRenderProps, useFormContext } from "react-hook-form";
 import { FormField } from "@/components/ui/form";
-
+import { useTranslations } from "next-intl";
 const StyleContent = ({
   type,
 }: {
@@ -20,6 +20,7 @@ const StyleContent = ({
 }) => {
   const [formStore, setFormStore] = useAtom(formStoreAtom);
   const form = useFormContext();
+  const t = useTranslations();
   return (
     <div>
       {formStore.style === "template" && (
@@ -61,10 +62,7 @@ const StyleContent = ({
             control={form.control}
             name={`${type}.customStyle`}
             render={({ field }) => (
-              <Textarea
-                {...field}
-                placeholder="请输入卡片风格 e.g. 简约现代风格，文字排版简洁，有简单的图形元素或线条"
-              />
+              <Textarea {...field} placeholder={t("placeholder.input_style")} />
             )}
           />
         </div>

@@ -50,7 +50,9 @@
     "poster": "Please enter the promotional poster content...",
     "philosophy_card": "Please enter the philosophy theme...",
     "quote_card": "Please enter the quote or quote...",
-    "select_text_position": "Please select the text position"
+    "select_text_position": "Please select the text position",
+    "input_content": "Please enter the content",
+    "input_style": "Please enter the card style e.g. simple modern style, simple text layout, simple graphic elements or lines"
   },
   "label": {
     "model_select": "Model Selection",
@@ -66,7 +68,8 @@
     "poster_preview": "Poster Preview",
     "change_style": "Change Style",
     "change_style_placeholder": "Please enter the style description you want to change...",
-    "generate_new_style": "Generate New Style"
+    "generate_new_style": "Generate New Style",
+    "upload_qr_code": "Click or drag image to upload"
   },
   "button": {
     "generate": "Generate"

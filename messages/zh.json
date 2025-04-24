@@ -39,7 +39,9 @@
     "poster": "请输入宣传海报内容...",
     "philosophy_card": "请输入哲学主题...",
     "quote_card": "请输入语录或名言...",
-    "select_text_position": "请选择文字位置"
+    "select_text_position": "请选择文字位置",
+    "input_content": "请输入内容",
+    "input_style": "请输入卡片风格 e.g. 简约现代风格，文字排版简洁，有简单的图形元素或线条"
   },
   "label": {
     "model_select": "模型选择",
@@ -55,7 +57,8 @@
     "poster_preview": "宣传海报预览",
     "change_style": "修改风格",
     "change_style_placeholder": "请输入你想要的风格描述...",
-    "generate_new_style": "生成新样式"
+    "generate_new_style": "生成新样式",
+    "upload_qr_code": "点击或拖动图片上传"
   },
   "button": {
     "generate": "生成"
