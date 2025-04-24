@@ -20,6 +20,7 @@ import HtmlPreview from "./html-preview";
 import { MagicWandIcon } from "@radix-ui/react-icons";
 import { modalStoreAtom } from "@/stores/slices/modal_store";
 import ChangeStyleModal from "./change-style-modal";
+import { useTranslations } from "next-intl";
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
   try {
@@ -82,7 +83,7 @@ const PhilosophicalCardHistory = () => {
   const [modalStore, setModalStore] = useAtom(modalStoreAtom);
   const [styleModalOpen, setStyleModalOpen] = useState(false);
   const [selectedHtml, setSelectedHtml] = useState<string>("");
-
+  const t = useTranslations();
   const onDownLoad = async (html: string) => {
     const resp = await ky
       .post(`${env.NEXT_PUBLIC_API_URL}/v1/htmltopng`, {
@@ -124,7 +125,9 @@ const PhilosophicalCardHistory = () => {
               >
                 <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <p className="text-sm text-primary">生成中...</p>
+                  <p className="text-sm text-primary">
+                    {t("status.generating")}...
+                  </p>
                 </div>
               </div>
             );
@@ -139,7 +142,9 @@ const PhilosophicalCardHistory = () => {
               >
                 <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
                   <AlertCircle className="h-8 w-8 text-red-500" />
-                  <p className="text-sm text-red-500">生成失败</p>
+                  <p className="text-sm text-red-500">
+                    {t("status.generating_failed")}
+                  </p>
 
                   <div className="flex">
                     <Button
@@ -162,7 +167,7 @@ const PhilosophicalCardHistory = () => {
           return (
             <HtmlPreview
               html={sanitizeHtml(item.html)}
-              title={`哲学卡片预览 ${index + 1}`}
+              title={t("label.philosophical_card_preview")}
               key={item.id}
             >
               <div className="flex items-center justify-between p-2">

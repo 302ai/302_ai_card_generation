@@ -9,6 +9,11 @@
     },
     "title": "コードを共有する必要がある"
   },
+  "home": {
+    "header": {
+      "title": "AI AIカード生成"
+    }
+  },
   "switch_title": {
     "knowledge_card": "知識カード",
     "poster": "宣伝ポスター",
@@ -17,6 +22,12 @@
     "based_on_input": "入力に基づく",
     "extract_quote": "引用を抽出する"
   },
+  "status": {
+    "generating": "生成中",
+    "generating_failed": "生成失敗",
+    "generating_success": "生成成功"
+  },
+
   "toast": {
     "author_required": "語録署名を入力してください",
     "card_font_required": "カードフォントを選択してください",
@@ -42,7 +53,11 @@
     "style_setting": "スタイル設定",
     "quote_signature": "語録署名",
     "card_font": "カードフォント",
-    "text_position": "テキスト位置"
+    "text_position": "テキスト位置",
+    "knowledge_card_preview": "知識カードプレビュー",
+    "philosophical_card_preview": "哲理カードプレビュー",
+    "quote_card_preview": "引用カードプレビュー",
+    "poster_preview": "宣伝ポスタープレビュー"
   },
   "button": {
     "generate": "生成する"

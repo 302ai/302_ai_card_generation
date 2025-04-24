@@ -10,6 +10,7 @@ import { appConfigAtom } from "@/stores/slices/config_store";
 import { store } from "@/stores";
 import { useMonitorMessage } from "@/hooks/global/use-monitor-message";
 import { usePosterHistory } from "@/hooks/db/use-poster-history";
+import { useTranslations } from "next-intl";
 
 // Utility function to extract SVG content from various formats
 const extractSvgContent = (content: string): string => {
@@ -177,7 +178,7 @@ const PosterHistory = () => {
   const [modalShow, setModalShow] = useState(false);
   const { apiKey } = store.get(appConfigAtom);
   const { handleDownload } = useMonitorMessage();
-
+  const t = useTranslations();
   // 下载SVG为PNG
   const onDownLoad = async (svgContent: string) => {
     try {
@@ -272,7 +273,9 @@ const PosterHistory = () => {
               >
                 <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <p className="text-sm text-primary">生成中...</p>
+                  <p className="text-sm text-primary">
+                    {t("status.generating")}...
+                  </p>
                 </div>
               </div>
             );
@@ -287,7 +290,9 @@ const PosterHistory = () => {
               >
                 <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
                   <AlertCircle className="h-8 w-8 text-red-500" />
-                  <p className="text-sm text-red-500">生成失败</p>
+                  <p className="text-sm text-red-500">
+                    {t("status.generating_failed")}
+                  </p>
 
                   <div className="flex">
                     <Button
@@ -382,8 +387,8 @@ const PosterHistory = () => {
             <div className="flex flex-shrink-0 items-center justify-between rounded-t-lg border-b border-gray-100 bg-gray-50 px-4 py-2">
               <h3 className="m-0 text-base font-semibold text-gray-700">
                 {selectedIndex !== null
-                  ? `海报预览 #${selectedIndex + 1}`
-                  : "海报预览"}
+                  ? `${t("label.poster_preview")}`
+                  : t("label.poster_preview")}
               </h3>
               <button
                 className="flex h-8 w-8 items-center justify-center rounded-full border-0 bg-transparent text-xl text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus:outline-none"

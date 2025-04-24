@@ -9,6 +9,16 @@
     },
     "title": "Need to share code"
   },
+  "status": {
+    "generating": "Generating",
+    "generating_failed": "Generating failed",
+    "generating_success": "Generating success"
+  },
+  "home": {
+    "header": {
+      "title": "AI Card Generation"
+    }
+  },
   "switch_title": {
     "knowledge_card": "Knowledge Card",
     "poster": "Poster",
@@ -42,7 +52,11 @@
     "style_setting": "Style Setting",
     "quote_signature": "Quote Signature",
     "card_font": "Card Font",
-    "text_position": "Text Position"
+    "text_position": "Text Position",
+    "knowledge_card_preview": "Knowledge Card Preview",
+    "philosophical_card_preview": "Philosophical Card Preview",
+    "quote_card_preview": "Quote Card Preview",
+    "poster_preview": "Poster Preview"
   },
   "button": {
     "generate": "Generate"

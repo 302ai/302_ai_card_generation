@@ -763,7 +763,9 @@ const LeftPanel = () => {
                     name="quoteReference.author"
                     render={({ field }) => (
                       <FormItem className="flex w-full items-center justify-between">
-                        <FormLabel className="w-full">语录署名</FormLabel>
+                        <FormLabel className="w-full">
+                          {t("label.quote_signature")}
+                        </FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -785,7 +787,9 @@ const LeftPanel = () => {
                             onValueChange={field.onChange}
                           >
                             <SelectTrigger>
-                              <SelectValue placeholder="请选择卡片字体" />
+                              <SelectValue
+                                placeholder={t("placeholder.card_font")}
+                              />
                             </SelectTrigger>
                             <SelectContent>
                               {FONTS.map((font) => (
@@ -889,14 +893,18 @@ const LeftPanel = () => {
                     name="philosophicalCard.cardFont"
                     render={({ field }) => (
                       <FormItem className="flex w-full items-center justify-between">
-                        <FormLabel className="w-full">卡片字体</FormLabel>
+                        <FormLabel className="w-full">
+                          {t("label.card_font")}
+                        </FormLabel>
                         <FormControl>
                           <Select
                             value={field.value}
                             onValueChange={field.onChange}
                           >
                             <SelectTrigger>
-                              <SelectValue placeholder="请选择卡片字体" />
+                              <SelectValue
+                                placeholder={t("placeholder.card_font")}
+                              />
                             </SelectTrigger>
                             <SelectContent>
                               {FONTS.map((font) => (

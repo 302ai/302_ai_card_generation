@@ -9,6 +9,16 @@
     },
     "title": "需要分享码"
   },
+  "status": {
+    "generating": "生成中",
+    "generating_failed": "生成失败",
+    "generating_success": "生成成功"
+  },
+  "home": {
+    "header": {
+      "title": "AI 卡片生成"
+    }
+  },
   "switch_title": {
     "knowledge_card": "知识卡片",
     "poster": "宣传海报",
@@ -32,7 +42,11 @@
     "style_setting": "风格设置",
     "quote_signature": "语录署名",
     "card_font": "卡片字体",
-    "text_position": "文字位置"
+    "text_position": "文字位置",
+    "knowledge_card_preview": "知识卡片预览",
+    "philosophical_card_preview": "哲理卡片预览",
+    "quote_card_preview": "语录引用预览",
+    "poster_preview": "宣传海报预览"
   },
   "button": {
     "generate": "生成"

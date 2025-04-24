@@ -11,6 +11,7 @@ import { store } from "@/stores";
 import { useMonitorMessage } from "@/hooks/global/use-monitor-message";
 import { useGenQuoteHistory } from "@/hooks/db/use-gen-quote-history";
 import HtmlPreview from "./html-preview";
+import { useTranslations } from "next-intl";
 
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
@@ -70,7 +71,7 @@ const QuoteHistory = () => {
   const { quoteHistory, deleteQuoteHistory } = useGenQuoteHistory();
   const { apiKey } = store.get(appConfigAtom);
   const { handleDownload } = useMonitorMessage();
-
+  const t = useTranslations();
   const onDownLoad = async (html: string) => {
     const resp = await ky
       .post(`${env.NEXT_PUBLIC_API_URL}/v1/htmltopng`, {
@@ -114,7 +115,9 @@ const QuoteHistory = () => {
               >
                 <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <p className="text-sm text-primary">生成中...</p>
+                  <p className="text-sm text-primary">
+                    {t("status.generating")}...
+                  </p>
                 </div>
               </div>
             );
@@ -129,7 +132,9 @@ const QuoteHistory = () => {
               >
                 <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
                   <AlertCircle className="h-8 w-8 text-red-500" />
-                  <p className="text-sm text-red-500">生成失败</p>
+                  <p className="text-sm text-red-500">
+                    {t("status.generating_failed")}
+                  </p>
 
                   <div className="flex">
                     <Button
@@ -152,7 +157,7 @@ const QuoteHistory = () => {
           return (
             <HtmlPreview
               html={sanitizeHtml(item.html)}
-              title={`知识卡片预览 ${index + 1}`}
+              title={t("label.quote_card_preview")}
               key={item.id}
             >
               <div className="flex items-center justify-between p-2">
