@@ -54,6 +54,12 @@ import { generateQuoteCard } from "@/services/gen-quote";
 import { useGenQuoteHistory } from "@/hooks/db/use-gen-quote-history";
 import { toast } from "sonner";
 import { STYLE_LIST } from "@/constants/style";
+import { generationStoreAtom } from "@/stores/slices/generation_store";
+import {
+  concurrentTaskCountAtom,
+  MAX_CONCURRENT_TASKS,
+} from "@/stores/slices/task_store";
+
 const formSchema = z.object({
   knowledgeCard: z.object({
     model: z.string().optional(),
@@ -114,6 +120,9 @@ const LeftPanel = () => {
   const [showQrCode, setShowQrCode] = useState(false);
   const [formStore, setFormStore] = useAtom(formStoreAtom);
   const [historyStore, setHistoryStore] = useAtom(historyStoreAtom);
+  const [concurrentTasks, setConcurrentTasks] = useAtom(
+    concurrentTaskCountAtom
+  );
   const { addHistory, updateHistory, updateHistoryStatus } = useHistory();
   const {
     addPosterHistory,
@@ -122,8 +131,9 @@ const LeftPanel = () => {
     updatePosterHistory,
   } = usePosterHistory();
 
-  const locale = useLocale(); // This gives you the current language code (e.g., "en", "zh", etc.)
+  const locale = useLocale();
   const t = useTranslations();
+  const [generationStore, setGenerationStore] = useAtom(generationStoreAtom);
 
   const {
     addPhilosophicalHistory,
@@ -234,55 +244,76 @@ const LeftPanel = () => {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (uiStore.activeCard === "knowledge-card") {
-      const { knowledgeCard } = values;
-      let newStyle = knowledgeCard.style as string;
-      let content = "";
-      if (uiStore.activeTab === "input-based") {
-        content = knowledgeCard.content as string;
-      } else {
-        content = knowledgeCard.extractKeyContent as string;
-      }
-      // Content validation
-      if (!content || content.trim() === "") {
-        toast.error(t("toast.content_required"));
-        return;
-      }
+    // Check concurrent task limit
+    if (concurrentTasks >= MAX_CONCURRENT_TASKS) {
+      toast.error(
+        t("toast.task_limit_reached", { limit: MAX_CONCURRENT_TASKS })
+      );
+      return;
+    }
 
-      // Model validation
-      if (!knowledgeCard.model) {
-        toast.error(t("toast.model_required"));
-        return;
-      }
+    let historyId: string | undefined;
+    let taskStarted = false;
+    let updateStatusFunction:
+      | ((
+          id: string,
+          data: { status: "pending" | "success" | "failed" }
+        ) => Promise<void>)
+      | undefined;
 
-      if (formStore.style === "random") {
-        // Randomly select a style from STYLES_LIST
-        const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
-        newStyle = STYLES_LIST[randomIndex].description;
-      }
-
-      if (formStore.style === "template") {
-        newStyle = knowledgeCard.style as string;
-        if (!newStyle) {
-          toast.error(t("toast.style_required"));
+    try {
+      if (uiStore.activeCard === "knowledge-card") {
+        const { knowledgeCard } = values;
+        let content = "";
+        if (uiStore.activeTab === "input-based") {
+          content = knowledgeCard.content as string;
+        } else {
+          content = knowledgeCard.extractKeyContent as string;
+        }
+        // Content validation
+        if (!content || content.trim() === "") {
+          toast.error(t("toast.content_required"));
           return;
         }
-      }
-      if (formStore.style === "custom") {
-        newStyle = knowledgeCard.customStyle as string;
-        if (!newStyle || newStyle.trim() === "") {
-          toast.error(t("toast.custom_style_required"));
+
+        // Model validation
+        if (!knowledgeCard.model) {
+          toast.error(t("toast.model_required"));
           return;
         }
-      }
 
-      // Add a loading card first
-      const historyId = await addHistory({
-        html: "",
-        status: "pending",
-      });
+        let newStyle = knowledgeCard.style as string;
+        if (formStore.style === "random") {
+          // Randomly select a style from STYLES_LIST
+          const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
+          newStyle = STYLES_LIST[randomIndex].description;
+        }
 
-      try {
+        if (formStore.style === "template") {
+          newStyle = knowledgeCard.style as string;
+          if (!newStyle) {
+            toast.error(t("toast.style_required"));
+            return;
+          }
+        }
+        if (formStore.style === "custom") {
+          newStyle = knowledgeCard.customStyle as string;
+          if (!newStyle || newStyle.trim() === "") {
+            toast.error(t("toast.custom_style_required"));
+            return;
+          }
+        }
+
+        // Validation passed, start the task
+        taskStarted = true;
+        setConcurrentTasks((prev) => prev + 1);
+        historyId = await addHistory({
+          html: "",
+          status: "pending",
+        });
+        updateStatusFunction = async (id, data) =>
+          await updateHistory(id, { ...data, html: "" });
+
         const res = await generateHTML({
           apiKey: apiKey as string,
           model: knowledgeCard.model as string,
@@ -297,123 +328,118 @@ const LeftPanel = () => {
           html: res.html,
           status: "success",
         });
-      } catch (error) {
-        // Add a failed card
-        await updateHistory(historyId, {
-          html: "",
-          status: "failed",
+      } else if (uiStore.activeCard === "promotional-poster") {
+        const { promotionalPoster } = values;
+
+        // Content validation
+        if (
+          !promotionalPoster.content ||
+          promotionalPoster.content.trim() === ""
+        ) {
+          toast.error(t("toast.poster_content_required"));
+          return;
+        }
+
+        // Model validation
+        if (!promotionalPoster.model) {
+          toast.error(t("toast.model_required"));
+          return;
+        }
+
+        let newStyle = "";
+        if (formStore.style === "random") {
+          // Randomly select a style from STYLES_LIST
+          const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
+          newStyle = STYLES_LIST[randomIndex].description;
+        }
+
+        if (formStore.style === "template") {
+          newStyle = promotionalPoster.style as string;
+          if (!newStyle) {
+            toast.error(t("toast.style_required"));
+            return;
+          }
+        }
+        if (formStore.style === "custom") {
+          newStyle = promotionalPoster.customStyle as string;
+          if (!newStyle || newStyle.trim() === "") {
+            toast.error(t("toast.custom_style_required"));
+            return;
+          }
+        }
+
+        // Validation passed, start the task
+        taskStarted = true;
+        setConcurrentTasks((prev) => prev + 1);
+        historyId = await addPosterHistory({
+          svg: "",
+          status: "pending",
         });
-      }
-    }
-    if (uiStore.activeCard === "promotional-poster") {
-      const { promotionalPoster } = values;
-      let newStyle = "";
-      // Content validation
-      if (
-        !promotionalPoster.content ||
-        promotionalPoster.content.trim() === ""
-      ) {
-        toast.error(t("toast.poster_content_required"));
-        return;
-      }
+        updateStatusFunction = async (id, data) =>
+          await updatePosterHistory(id, { ...data, svg: "" });
 
-      // Model validation
-      if (!promotionalPoster.model) {
-        toast.error(t("toast.model_required"));
-        return;
-      }
-
-      if (formStore.style === "random") {
-        // Randomly select a style from STYLES_LIST
-        const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
-        newStyle = STYLES_LIST[randomIndex].description;
-      }
-
-      if (formStore.style === "template") {
-        newStyle = promotionalPoster.style as string;
-        if (!newStyle) {
-          toast.error(t("toast.style_required"));
-          return;
-        }
-      }
-      if (formStore.style === "custom") {
-        newStyle = promotionalPoster.customStyle as string;
-        if (!newStyle || newStyle.trim() === "") {
-          toast.error(t("toast.custom_style_required"));
-          return;
-        }
-      }
-
-      // Add a loading card first
-      const historyId = await addPosterHistory({
-        svg: "",
-        status: "pending",
-      });
-
-      try {
         const res = await generateSVG({
           apiKey: apiKey as string,
           model: promotionalPoster.model as string,
           lang: locale as "zh" | "en" | "ja",
           content: promotionalPoster.content as string,
           style: newStyle,
-          styleType: promotionalPoster.styleType as
-            | "random"
-            | "template"
-            | "custom",
+          styleType: formStore.style as "random" | "template" | "custom",
         });
         await updatePosterHistory(historyId, {
           svg: res.stringSVG,
           status: "success",
         });
-      } catch (error) {
-        // Add a failed card
-        await updatePosterHistory(historyId, {
-          svg: "",
-          status: "failed",
+      } else if (uiStore.activeCard === "philosophical-card") {
+        const { philosophicalCard } = values;
+
+        // Content validation
+        if (
+          !philosophicalCard.content ||
+          philosophicalCard.content.trim() === ""
+        ) {
+          toast.error(t("toast.philosophy_content_required"));
+          return;
+        }
+
+        // Model validation
+        if (!philosophicalCard.model) {
+          toast.error(t("toast.model_required"));
+          return;
+        }
+
+        let style = "";
+        if (formStore.style === "random") {
+          const randomIndex = Math.floor(
+            Math.random() * STYLE_LIST["philosophicalCard"].length
+          );
+          style = STYLE_LIST["philosophicalCard"][randomIndex].prompt;
+        }
+        if (formStore.style === "template") {
+          style = philosophicalCard.style as string;
+          if (!style) {
+            toast.error(t("toast.style_required"));
+            return;
+          }
+        }
+        if (formStore.style === "custom") {
+          style = philosophicalCard.customStyle as string;
+          if (!style || style.trim() === "") {
+            toast.error(t("toast.custom_style_required"));
+            return;
+          }
+        }
+
+        // Validation passed, start the task
+        taskStarted = true;
+        setConcurrentTasks((prev) => prev + 1);
+        historyId = await addPhilosophicalHistory({
+          html: "",
+          status: "pending",
         });
-      }
-    }
+        updateStatusFunction = async (id, data) =>
+          await updatePhilosophicalHistory(id, { ...data, html: "" });
 
-    if (uiStore.activeCard === "philosophical-card") {
-      const { philosophicalCard } = values;
-      let style = "";
-      // Content validation
-      if (
-        !philosophicalCard.content ||
-        philosophicalCard.content.trim() === ""
-      ) {
-        toast.error(t("toast.philosophy_content_required"));
-        return;
-      }
-      if (formStore.style === "random") {
-        const randomIndex = Math.floor(
-          Math.random() * STYLE_LIST["philosophicalCard"].length
-        );
-        style = STYLE_LIST["philosophicalCard"][randomIndex].prompt;
-      }
-      if (formStore.style === "template") {
-        style = philosophicalCard.style as string;
-        if (!style) {
-          toast.error(t("toast.style_required"));
-          return;
-        }
-      }
-      if (formStore.style === "custom") {
-        style = philosophicalCard.customStyle as string;
-        if (!style || style.trim() === "") {
-          toast.error(t("toast.custom_style_required"));
-          return;
-        }
-      }
-
-      // Add a loading card first
-      const historyId = await addPhilosophicalHistory({
-        html: "",
-        status: "pending",
-      });
-
-      try {
         const res = await genPhilosophicalCard({
           apiKey: apiKey as string,
           model: philosophicalCard.model as string,
@@ -426,64 +452,63 @@ const LeftPanel = () => {
           html: res.html,
           status: "success",
         });
-      } catch (error) {
-        // Add a failed card
-        await updatePhilosophicalHistory(historyId, {
+      } else if (uiStore.activeCard === "quote-reference") {
+        const { quoteReference } = values;
+
+        // Content validation
+        if (!quoteReference.content || quoteReference.content.trim() === "") {
+          toast.error(t("toast.quote_content_required"));
+          return;
+        }
+
+        // Model validation
+        if (!quoteReference.model) {
+          toast.error(t("toast.model_required"));
+          return;
+        }
+
+        if (!quoteReference.author) {
+          toast.error(t("toast.author_required"));
+          return;
+        }
+
+        if (!quoteReference.textPosition) {
+          toast.error(t("toast.text_position_required"));
+          return;
+        }
+
+        let style = "";
+        if (formStore.style === "random") {
+          const randomIndex = Math.floor(
+            Math.random() * STYLE_LIST["quoteReference"].length
+          );
+          style = STYLE_LIST["quoteReference"][randomIndex].prompt;
+        }
+        if (formStore.style === "template") {
+          style = quoteReference.style as string;
+          if (!style) {
+            toast.error(t("toast.style_required"));
+            return;
+          }
+        }
+        if (formStore.style === "custom") {
+          style = quoteReference.customStyle as string;
+          if (!style || style.trim() === "") {
+            toast.error(t("toast.custom_style_required"));
+            return;
+          }
+        }
+
+        // Validation passed, start the task
+        taskStarted = true;
+        setConcurrentTasks((prev) => prev + 1);
+        historyId = await addQuoteHistory({
           html: "",
-          status: "failed",
+          status: "pending",
         });
-      }
-    }
-    if (uiStore.activeCard === "quote-reference") {
-      const { quoteReference } = values;
-      let style = "";
-      // Content validation
-      if (!quoteReference.content || quoteReference.content.trim() === "") {
-        toast.error(t("toast.quote_content_required"));
-        return;
-      }
-      // Model validation
-      if (!quoteReference.model) {
-        toast.error(t("toast.model_required"));
-        return;
-      }
-      if (!quoteReference.author) {
-        toast.error(t("toast.author_required"));
-        return;
-      }
+        updateStatusFunction = async (id, data) =>
+          await updateQuoteHistory(id, { ...data, html: "" });
 
-      if (!quoteReference.textPosition) {
-        toast.error(t("toast.text_position_required"));
-        return;
-      }
-      if (formStore.style === "random") {
-        const randomIndex = Math.floor(
-          Math.random() * STYLE_LIST["quoteReference"].length
-        );
-        style = STYLE_LIST["quoteReference"][randomIndex].prompt;
-      }
-      if (formStore.style === "template") {
-        style = quoteReference.style as string;
-        if (!style) {
-          toast.error(t("toast.style_required"));
-          return;
-        }
-      }
-      if (formStore.style === "custom") {
-        style = quoteReference.customStyle as string;
-        if (!style || style.trim() === "") {
-          toast.error(t("toast.custom_style_required"));
-          return;
-        }
-      }
-
-      // Add a loading card first
-      const historyId = await addQuoteHistory({
-        html: "",
-        status: "pending",
-      });
-
-      try {
         const res = await generateQuoteCard({
           apiKey: apiKey as string,
           model: quoteReference.model as string,
@@ -497,12 +522,26 @@ const LeftPanel = () => {
           html: res.html,
           status: "success",
         });
-      } catch (error) {
-        // Add a failed card
-        await updateQuoteHistory(historyId, {
-          html: "",
-          status: "failed",
-        });
+      }
+    } catch (error) {
+      console.error("Generation failed:", error);
+      toast.error(t("toast.generation_failed"));
+
+      // If the task has started and we have historyId and update function, update record to failed
+      if (taskStarted && historyId !== undefined && updateStatusFunction) {
+        try {
+          await updateStatusFunction(historyId, { status: "failed" });
+        } catch (updateError) {
+          console.error(
+            "Failed to update history status to failed:",
+            updateError
+          );
+        }
+      }
+    } finally {
+      // Only decrease the counter if the task actually started
+      if (taskStarted) {
+        setConcurrentTasks((prev) => Math.max(0, prev - 1)); // Ensure counter never goes below 0
       }
     }
   }
@@ -998,7 +1037,7 @@ const LeftPanel = () => {
           </div>
           <Button
             type="submit"
-            className="w-full bg-purple-500 py-6 text-lg hover:bg-purple-600"
+            className="w-full bg-purple-500 py-6 text-lg hover:bg-purple-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {t("button.generate")}
           </Button>

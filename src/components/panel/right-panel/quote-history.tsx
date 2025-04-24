@@ -20,6 +20,7 @@ import HtmlPreview from "./html-preview";
 import { useTranslations } from "next-intl";
 import ChangeStyleModal from "./change-style-modal";
 import DownloadDropdown from "./download-dropdown";
+import { concurrentTaskCountAtom } from "@/stores/slices/task_store";
 
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
@@ -76,12 +77,18 @@ const sanitizeHtml = (htmlContent: string): string => {
 };
 
 const QuoteHistory = () => {
-  const { quoteHistory, deleteQuoteHistory } = useGenQuoteHistory();
+  const { quoteHistory, deleteQuoteHistory, updateQuoteHistoryStatus } =
+    useGenQuoteHistory();
   const { apiKey } = store.get(appConfigAtom);
   const { handleDownload } = useMonitorMessage();
   const t = useTranslations();
   const [styleModalOpen, setStyleModalOpen] = useState(false);
   const [selectedHtml, setSelectedHtml] = useState<string>("");
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [modalShow, setModalShow] = useState(false);
+  const [concurrentTasks, setConcurrentTasks] = useAtom(
+    concurrentTaskCountAtom
+  );
 
   // Format timestamp function
   const formatTimestamp = (timestamp: string | number) => {
@@ -93,6 +100,39 @@ const QuoteHistory = () => {
       return timestamp; // Return original timestamp if formatting fails
     }
   };
+
+  // Check for stale pending tasks (older than 5 minutes)
+  useEffect(() => {
+    if (!quoteHistory?.items) return;
+
+    const checkStaleItems = () => {
+      const now = Date.now();
+      const fiveMinutesInMs = 5 * 60 * 1000;
+
+      quoteHistory.items.forEach((item) => {
+        if (item.status === "pending") {
+          const itemAge = now - item.createdAt;
+
+          // If the item is pending for more than 5 minutes
+          if (itemAge > fiveMinutesInMs) {
+            // Mark as failed
+            updateQuoteHistoryStatus(item.id, "failed");
+
+            // Decrement the concurrent task count
+            setConcurrentTasks((prev) => Math.max(0, prev - 1));
+          }
+        }
+      });
+    };
+
+    // Initial check
+    checkStaleItems();
+
+    // Set up interval to check periodically
+    const intervalId = setInterval(checkStaleItems, 30000); // Check every 30 seconds
+
+    return () => clearInterval(intervalId);
+  }, [quoteHistory?.items, setConcurrentTasks, updateQuoteHistoryStatus]);
 
   return (
     <>

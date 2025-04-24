@@ -34,6 +34,8 @@
     "extract_quote": "Extract Quote"
   },
   "toast": {
+    "task_limit_reached": "Task limit reached ({limit}), please try again later",
+    "generation_failed": "Generation failed, please try again",
     "author_required": "Please enter the quote signature",
     "card_font_required": "Please select the card font",
     "custom_style_required": "Please enter the custom style",
@@ -72,7 +74,9 @@
     "upload_qr_code": "Click or drag image to upload"
   },
   "button": {
-    "generate": "Generate"
+    "generate": "Generate",
+    "generating_with_count": "Generating ({count}/{limit})",
+    "generating_limit_reached": "Limit reached ({count}/{limit})"
   },
   "select": {
     "not_display": "Not Display",

@@ -11,6 +11,7 @@ import { store } from "@/stores";
 import { useMonitorMessage } from "@/hooks/global/use-monitor-message";
 import { usePosterHistory } from "@/hooks/db/use-poster-history";
 import { useTranslations } from "next-intl";
+import { concurrentTaskCountAtom } from "@/stores/slices/task_store";
 
 // Utility function to extract SVG content from various formats
 const extractSvgContent = (content: string): string => {
@@ -171,13 +172,17 @@ const customAnimationStyles = `
 `;
 
 const PosterHistory = () => {
-  const { posterHistory, deletePosterHistory } = usePosterHistory();
+  const { posterHistory, deletePosterHistory, updatePosterHistoryStatus } =
+    usePosterHistory();
   const [isEnlarged, setIsEnlarged] = useState(false);
   const [selectedSvg, setSelectedSvg] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [modalShow, setModalShow] = useState(false);
   const { apiKey } = store.get(appConfigAtom);
   const { handleDownload } = useMonitorMessage();
+  const [concurrentTasks, setConcurrentTasks] = useAtom(
+    concurrentTaskCountAtom
+  );
   const t = useTranslations();
   // 下载SVG为PNG
   const onDownLoad = async (svgContent: string) => {
@@ -255,6 +260,39 @@ const PosterHistory = () => {
       return timestamp; // Return original timestamp if formatting fails
     }
   };
+
+  // Check for stale pending tasks (older than 5 minutes)
+  useEffect(() => {
+    if (!posterHistory?.items) return;
+
+    const checkStaleItems = () => {
+      const now = Date.now();
+      const fiveMinutesInMs = 5 * 60 * 1000;
+
+      posterHistory.items.forEach((item) => {
+        if (item.status === "pending") {
+          const itemAge = now - item.createdAt;
+
+          // If the item is pending for more than 5 minutes
+          if (itemAge > fiveMinutesInMs) {
+            // Mark as failed
+            updatePosterHistoryStatus(item.id, "failed");
+
+            // Decrement the concurrent task count
+            setConcurrentTasks((prev) => Math.max(0, prev - 1));
+          }
+        }
+      });
+    };
+
+    // Initial check
+    checkStaleItems();
+
+    // Set up interval to check periodically
+    const intervalId = setInterval(checkStaleItems, 30000); // Check every 30 seconds
+
+    return () => clearInterval(intervalId);
+  }, [posterHistory?.items, setConcurrentTasks, updatePosterHistoryStatus]);
 
   return (
     <>

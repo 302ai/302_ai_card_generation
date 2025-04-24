@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "@/hooks/db/use-gen-history";
 import { format } from "date-fns";
 import { Trash, AlertCircle, Loader2 } from "lucide-react";
@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import HtmlPreview from "./html-preview";
 import { useTranslations } from "next-intl";
 import DownloadDropdown from "./download-dropdown";
+import { useAtom } from "jotai";
+import { concurrentTaskCountAtom } from "@/stores/slices/task_store";
 
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
@@ -62,11 +64,14 @@ const sanitizeHtml = (htmlContent: string): string => {
 };
 
 const KnowledgeHistory = () => {
-  const { history, deleteHistory } = useHistory();
+  const { history, deleteHistory, updateHistoryStatus } = useHistory();
   const [isEnlarged, setIsEnlarged] = useState(false);
   const [selectedHtml, setSelectedHtml] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [modalShow, setModalShow] = useState(false);
+  const [concurrentTasks, setConcurrentTasks] = useAtom(
+    concurrentTaskCountAtom
+  );
   const t = useTranslations();
 
   // Format timestamp function
@@ -79,6 +84,39 @@ const KnowledgeHistory = () => {
       return timestamp;
     }
   };
+
+  // Check for stale pending tasks (older than 5 minutes)
+  useEffect(() => {
+    if (!history?.items) return;
+
+    const checkStaleItems = () => {
+      const now = Date.now();
+      const fiveMinutesInMs = 5 * 60 * 1000;
+
+      history.items.forEach((item) => {
+        if (item.status === "pending") {
+          const itemAge = now - item.createdAt;
+
+          // If the item is pending for more than 5 minutes
+          if (itemAge > fiveMinutesInMs) {
+            // Mark as failed
+            updateHistoryStatus(item.id, "failed");
+
+            // Decrement the concurrent task count
+            setConcurrentTasks((prev) => Math.max(0, prev - 1));
+          }
+        }
+      });
+    };
+
+    // Initial check
+    checkStaleItems();
+
+    // Set up interval to check periodically
+    const intervalId = setInterval(checkStaleItems, 30000); // Check every 30 seconds
+
+    return () => clearInterval(intervalId);
+  }, [history?.items, setConcurrentTasks, updateHistoryStatus]);
 
   return (
     <>

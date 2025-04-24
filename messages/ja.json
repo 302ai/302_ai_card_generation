@@ -35,15 +35,19 @@
   },
 
   "toast": {
-    "author_required": "語録署名を入力してください",
-    "card_font_required": "カードフォントを選択してください",
+    "task_limit_reached": "タスク上限({limit})に達しました、後でお試しください",
+    "generation_failed": "生成に失敗しました、もう一度お試しください",
+    "author_required": "引用の署名を入力してください",
+    "card_font_required": "カードのフォントを選択してください",
     "custom_style_required": "カスタムスタイルを入力してください",
     "model_required": "モデルを選択してください",
     "style_required": "スタイルを選択してください",
     "text_position_required": "テキスト位置を選択してください",
-    "quote_content_required": "語録内容を入力してください",
+    "quote_content_required": "引用内容を入力してください",
     "content_required": "内容を入力してください",
-    "change_style_required": "スタイルを入力してください"
+    "change_style_required": "スタイル説明を入力してください",
+    "poster_content_required": "ポスター内容を入力してください",
+    "philosophy_content_required": "哲学テーマを入力してください"
   },
   "placeholder": {
     "based_on_input": "トピックや記事を入力してください。AIは入力に基づいてカードを生成します...",
@@ -73,7 +77,9 @@
     "upload_qr_code": "クリックまたは画像をドラッグしてアップロード"
   },
   "button": {
-    "generate": "生成する"
+    "generate": "生成する",
+    "generating_with_count": "生成中({count}/{limit})",
+    "generating_limit_reached": "上限に達しました({count}/{limit})"
   },
   "select": {
     "not_display": "表示しない",

@@ -22,6 +22,8 @@ import { modalStoreAtom } from "@/stores/slices/modal_store";
 import ChangeStyleModal from "./change-style-modal";
 import { useTranslations } from "next-intl";
 import DownloadDropdown from "./download-dropdown";
+import { concurrentTaskCountAtom } from "@/stores/slices/task_store";
+
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
   try {
@@ -77,14 +79,20 @@ const sanitizeHtml = (htmlContent: string): string => {
 };
 
 const PhilosophicalCardHistory = () => {
-  const { philosophicalHistory, deletePhilosophicalHistory } =
-    usePhilosophicalHistory();
+  const {
+    philosophicalHistory,
+    deletePhilosophicalHistory,
+    updatePhilosophicalHistoryStatus,
+  } = usePhilosophicalHistory();
   const { apiKey } = store.get(appConfigAtom);
   const { handleDownload } = useMonitorMessage();
   const [modalStore, setModalStore] = useAtom(modalStoreAtom);
   const [styleModalOpen, setStyleModalOpen] = useState(false);
   const [selectedHtml, setSelectedHtml] = useState<string>("");
   const t = useTranslations();
+  const [concurrentTasks, setConcurrentTasks] = useAtom(
+    concurrentTaskCountAtom
+  );
 
   // Format timestamp function
   const formatTimestamp = (timestamp: string | number) => {
@@ -96,6 +104,43 @@ const PhilosophicalCardHistory = () => {
       return timestamp; // Return original timestamp if formatting fails
     }
   };
+
+  // Check for stale pending tasks (older than 5 minutes)
+  useEffect(() => {
+    if (!philosophicalHistory?.items) return;
+
+    const checkStaleItems = () => {
+      const now = Date.now();
+      const fiveMinutesInMs = 5 * 60 * 1000;
+
+      philosophicalHistory.items.forEach((item) => {
+        if (item.status === "pending") {
+          const itemAge = now - item.createdAt;
+
+          // If the item is pending for more than 5 minutes
+          if (itemAge > fiveMinutesInMs) {
+            // Mark as failed
+            updatePhilosophicalHistoryStatus(item.id, "failed");
+
+            // Decrement the concurrent task count
+            setConcurrentTasks((prev) => Math.max(0, prev - 1));
+          }
+        }
+      });
+    };
+
+    // Initial check
+    checkStaleItems();
+
+    // Set up interval to check periodically
+    const intervalId = setInterval(checkStaleItems, 30000); // Check every 30 seconds
+
+    return () => clearInterval(intervalId);
+  }, [
+    philosophicalHistory?.items,
+    setConcurrentTasks,
+    updatePhilosophicalHistoryStatus,
+  ]);
 
   return (
     <>
