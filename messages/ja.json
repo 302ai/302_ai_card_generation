@@ -9,6 +9,12 @@
     },
     "title": "コードを共有する必要がある"
   },
+  "action": {
+    "download_as_png": "PNGとしてダウンロード",
+    "download_as_html": "HTMLとしてダウンロード",
+    "delete": "削除",
+    "change_style": "スタイルを変更する"
+  },
   "home": {
     "header": {
       "title": "AI AIカード生成"

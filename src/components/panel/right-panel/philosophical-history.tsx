@@ -21,6 +21,7 @@ import { MagicWandIcon } from "@radix-ui/react-icons";
 import { modalStoreAtom } from "@/stores/slices/modal_store";
 import ChangeStyleModal from "./change-style-modal";
 import { useTranslations } from "next-intl";
+import DownloadDropdown from "./download-dropdown";
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
   try {
@@ -84,21 +85,6 @@ const PhilosophicalCardHistory = () => {
   const [styleModalOpen, setStyleModalOpen] = useState(false);
   const [selectedHtml, setSelectedHtml] = useState<string>("");
   const t = useTranslations();
-  const onDownLoad = async (html: string) => {
-    const resp = await ky
-      .post(`${env.NEXT_PUBLIC_API_URL}/v1/htmltopng`, {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-        json: {
-          htmlCode: html,
-        },
-      })
-      .json<{
-        output: string;
-      }>();
-    handleDownload(resp.output, "knowledge-card.png");
-  };
 
   // Format timestamp function
   const formatTimestamp = (timestamp: string | number) => {
@@ -186,16 +172,10 @@ const PhilosophicalCardHistory = () => {
                   >
                     <WandSparkles className="h-4 w-4" />
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDownLoad(sanitizeHtml(item.html));
-                    }}
-                  >
-                    <FileDown className="h-4 w-4" />
-                  </Button>
+                  <DownloadDropdown
+                    html={sanitizeHtml(item.html)}
+                    filename="philosophical-card"
+                  />
                   <Button
                     variant="ghost"
                     size="icon"

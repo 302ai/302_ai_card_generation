@@ -19,6 +19,7 @@ import { useGenQuoteHistory } from "@/hooks/db/use-gen-quote-history";
 import HtmlPreview from "./html-preview";
 import { useTranslations } from "next-intl";
 import ChangeStyleModal from "./change-style-modal";
+import DownloadDropdown from "./download-dropdown";
 
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
@@ -81,22 +82,6 @@ const QuoteHistory = () => {
   const t = useTranslations();
   const [styleModalOpen, setStyleModalOpen] = useState(false);
   const [selectedHtml, setSelectedHtml] = useState<string>("");
-
-  const onDownLoad = async (html: string) => {
-    const resp = await ky
-      .post(`${env.NEXT_PUBLIC_API_URL}/v1/htmltopng`, {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-        json: {
-          htmlCode: html,
-        },
-      })
-      .json<{
-        output: string;
-      }>();
-    handleDownload(resp.output, "knowledge-card.png");
-  };
 
   // Format timestamp function
   const formatTimestamp = (timestamp: string | number) => {
@@ -186,16 +171,10 @@ const QuoteHistory = () => {
                   >
                     <WandSparkles className="h-4 w-4" />
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDownLoad(sanitizeHtml(item.html));
-                    }}
-                  >
-                    <FileDown className="h-4 w-4" />
-                  </Button>
+                  <DownloadDropdown
+                    html={sanitizeHtml(item.html)}
+                    filename="quote-card"
+                  />
                   <Button
                     variant="ghost"
                     size="icon"

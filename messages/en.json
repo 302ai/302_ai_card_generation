@@ -9,6 +9,12 @@
     },
     "title": "Need to share code"
   },
+  "action": {
+    "download_as_png": "Download as PNG",
+    "download_as_html": "Download as HTML",
+    "delete": "Delete",
+    "change_style": "Change Style"
+  },
   "status": {
     "generating": "Generating",
     "generating_failed": "Generating failed",

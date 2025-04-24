@@ -9,6 +9,12 @@
     },
     "title": "需要分享码"
   },
+  "action": {
+    "download_as_png": "下载为PNG",
+    "download_as_html": "下载为HTML",
+    "delete": "删除",
+    "change_style": "修改风格"
+  },
   "status": {
     "generating": "生成中",
     "generating_failed": "生成失败",

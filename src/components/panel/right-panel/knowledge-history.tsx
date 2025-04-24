@@ -1,16 +1,11 @@
-import { useAtom } from "jotai";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory } from "@/hooks/db/use-gen-history";
 import { format } from "date-fns";
-import { FileDown, Trash, AlertCircle, Loader2 } from "lucide-react";
+import { Trash, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ky from "ky";
-import { env } from "@/env";
-import { appConfigAtom } from "@/stores/slices/config_store";
-import { store } from "@/stores";
-import { useMonitorMessage } from "@/hooks/global/use-monitor-message";
 import HtmlPreview from "./html-preview";
 import { useTranslations } from "next-intl";
+import DownloadDropdown from "./download-dropdown";
 
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
@@ -72,25 +67,7 @@ const KnowledgeHistory = () => {
   const [selectedHtml, setSelectedHtml] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [modalShow, setModalShow] = useState(false);
-  const { apiKey } = store.get(appConfigAtom);
-  const { handleDownload } = useMonitorMessage();
   const t = useTranslations();
-
-  const onDownLoad = async (html: string) => {
-    const resp = await ky
-      .post(`${env.NEXT_PUBLIC_API_URL}/v1/htmltopng`, {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-        json: {
-          htmlCode: html,
-        },
-      })
-      .json<{
-        output: string;
-      }>();
-    handleDownload(resp.output, "knowledge-card.png");
-  };
 
   // Format timestamp function
   const formatTimestamp = (timestamp: string | number) => {
@@ -167,16 +144,10 @@ const KnowledgeHistory = () => {
                   {formatTimestamp(item.createdAt)}
                 </span>
                 <div className="flex">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDownLoad(sanitizeHtml(item.html));
-                    }}
-                  >
-                    <FileDown className="h-4 w-4" />
-                  </Button>
+                  <DownloadDropdown
+                    html={sanitizeHtml(item.html)}
+                    filename="knowledge-card"
+                  />
                   <Button
                     variant="ghost"
                     size="icon"
