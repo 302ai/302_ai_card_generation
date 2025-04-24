@@ -37,6 +37,16 @@
   "button": {
     "generate": "生成"
   },
+  "toast": {
+    "author_required": "请输入语录署名",
+    "card_font_required": "请选择卡片字体",
+    "custom_style_required": "请输入自定义样式",
+    "model_required": "请选择模型",
+    "style_required": "请选择风格",
+    "text_position_required": "请选择文字位置",
+    "quote_content_required": "请输入语录内容",
+    "content_required": "请输入内容"
+  },
   "select": {
     "not_display": "不展示",
     "image_upload": "图片上传",

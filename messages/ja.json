@@ -17,6 +17,16 @@
     "based_on_input": "入力に基づく",
     "extract_quote": "引用を抽出する"
   },
+  "toast": {
+    "author_required": "語録署名を入力してください",
+    "card_font_required": "カードフォントを選択してください",
+    "custom_style_required": "カスタムスタイルを入力してください",
+    "model_required": "モデルを選択してください",
+    "style_required": "スタイルを選択してください",
+    "text_position_required": "テキスト位置を選択してください",
+    "quote_content_required": "語録内容を入力してください",
+    "content_required": "内容を入力してください"
+  },
   "placeholder": {
     "based_on_input": "トピックや記事を入力してください。AIは入力に基づいてカードを生成します...",
     "extract_quote": "トピックや記事を入力してください。AIは金句を抽出して作成します...",

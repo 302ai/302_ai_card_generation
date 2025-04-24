@@ -52,6 +52,7 @@ import { usePhilosophicalHistory } from "@/hooks/db/use-philosophical-history";
 import { useTranslations } from "next-intl";
 import { generateQuoteCard } from "@/services/gen-quote";
 import { useGenQuoteHistory } from "@/hooks/db/use-gen-quote-history";
+import { toast } from "sonner";
 const formSchema = z.object({
   knowledgeCard: z.object({
     model: z.string().optional(),
@@ -91,19 +92,19 @@ const formSchema = z.object({
 const FONTS = [
   {
     name: "行书",
-    url: "/fonts/行书.otf",
+    value: "/fonts/行书.otf",
   },
   {
     name: "宋体",
-    url: "/fonts/宋体.otf",
+    value: "/fonts/宋体.otf",
   },
   {
     name: "汇文明朝体",
-    url: "/fonts/汇文明朝体（默认）.ttf",
+    value: "/fonts/汇文明朝体（默认）.ttf",
   },
   {
     name: "黑体",
-    url: "/fonts/黑体.otf",
+    value: "/fonts/黑体.otf",
   },
 ];
 
@@ -154,9 +155,12 @@ const LeftPanel = () => {
       },
       philosophicalCard: {
         model: "claude-3-7-sonnet-20250219",
+        cardFont: "汇文明朝体",
       },
       quoteReference: {
         model: "claude-3-7-sonnet-20250219",
+        cardFont: "汇文明朝体",
+        textPosition: "left",
       },
     },
   });
@@ -243,6 +247,17 @@ const LeftPanel = () => {
       } else {
         content = knowledgeCard.extractKeyContent as string;
       }
+      // Content validation
+      if (!content || content.trim() === "") {
+        toast.error(t("toast.content_required"));
+        return;
+      }
+
+      // Model validation
+      if (!knowledgeCard.model) {
+        toast.error(t("toast.model_required"));
+        return;
+      }
 
       if (formStore.style === "random") {
         // Randomly select a style from STYLES_LIST
@@ -252,9 +267,17 @@ const LeftPanel = () => {
 
       if (formStore.style === "template") {
         newStyle = knowledgeCard.style as string;
+        if (!newStyle) {
+          toast.error(t("toast.style_required"));
+          return;
+        }
       }
       if (formStore.style === "custom") {
         newStyle = knowledgeCard.customStyle as string;
+        if (!newStyle || newStyle.trim() === "") {
+          toast.error(t("toast.custom_style_required"));
+          return;
+        }
       }
 
       // Add a loading card first
@@ -289,6 +312,21 @@ const LeftPanel = () => {
     if (uiStore.activeCard === "promotional-poster") {
       const { promotionalPoster } = values;
       let newStyle = "";
+      // Content validation
+      if (
+        !promotionalPoster.content ||
+        promotionalPoster.content.trim() === ""
+      ) {
+        toast.error(t("toast.poster_content_required"));
+        return;
+      }
+
+      // Model validation
+      if (!promotionalPoster.model) {
+        toast.error(t("toast.model_required"));
+        return;
+      }
+
       if (formStore.style === "random") {
         // Randomly select a style from STYLES_LIST
         const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
@@ -297,9 +335,17 @@ const LeftPanel = () => {
 
       if (formStore.style === "template") {
         newStyle = promotionalPoster.style as string;
+        if (!newStyle) {
+          toast.error(t("toast.style_required"));
+          return;
+        }
       }
       if (formStore.style === "custom") {
         newStyle = promotionalPoster.customStyle as string;
+        if (!newStyle || newStyle.trim() === "") {
+          toast.error(t("toast.custom_style_required"));
+          return;
+        }
       }
 
       // Add a loading card first
@@ -336,15 +382,31 @@ const LeftPanel = () => {
     if (uiStore.activeCard === "philosophical-card") {
       const { philosophicalCard } = values;
       let style = "";
+      // Content validation
+      if (
+        !philosophicalCard.content ||
+        philosophicalCard.content.trim() === ""
+      ) {
+        toast.error(t("toast.philosophy_content_required"));
+        return;
+      }
       if (formStore.style === "random") {
         const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
         style = STYLES_LIST[randomIndex].description;
       }
       if (formStore.style === "template") {
         style = philosophicalCard.style as string;
+        if (!style) {
+          toast.error(t("toast.style_required"));
+          return;
+        }
       }
       if (formStore.style === "custom") {
         style = philosophicalCard.customStyle as string;
+        if (!style || style.trim() === "") {
+          toast.error(t("toast.custom_style_required"));
+          return;
+        }
       }
 
       // Add a loading card first
@@ -377,15 +439,42 @@ const LeftPanel = () => {
     if (uiStore.activeCard === "quote-reference") {
       const { quoteReference } = values;
       let style = "";
+      // Content validation
+      if (!quoteReference.content || quoteReference.content.trim() === "") {
+        toast.error(t("toast.quote_content_required"));
+        return;
+      }
+      // Model validation
+      if (!quoteReference.model) {
+        toast.error(t("toast.model_required"));
+        return;
+      }
+      if (!quoteReference.author) {
+        toast.error(t("toast.author_required"));
+        return;
+      }
+
+      if (!quoteReference.textPosition) {
+        toast.error(t("toast.text_position_required"));
+        return;
+      }
       if (formStore.style === "random") {
         const randomIndex = Math.floor(Math.random() * STYLES_LIST.length);
         style = STYLES_LIST[randomIndex].description;
       }
       if (formStore.style === "template") {
         style = quoteReference.style as string;
+        if (!style) {
+          toast.error(t("toast.style_required"));
+          return;
+        }
       }
       if (formStore.style === "custom") {
         style = quoteReference.customStyle as string;
+        if (!style || style.trim() === "") {
+          toast.error(t("toast.custom_style_required"));
+          return;
+        }
       }
 
       // Add a loading card first
@@ -691,13 +780,16 @@ const LeftPanel = () => {
                           {t("label.card_font")}
                         </FormLabel>
                         <FormControl>
-                          <Select {...field}>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="请选择卡片字体" />
                             </SelectTrigger>
                             <SelectContent>
                               {FONTS.map((font) => (
-                                <SelectItem key={font.name} value={font.url}>
+                                <SelectItem key={font.name} value={font.name}>
                                   {font.name}
                                 </SelectItem>
                               ))}
@@ -710,14 +802,17 @@ const LeftPanel = () => {
 
                   <FormField
                     control={form.control}
-                    name="quoteReference.cardFont"
+                    name="quoteReference.textPosition"
                     render={({ field }) => (
                       <FormItem className="flex w-full items-center justify-between">
                         <FormLabel className="w-full">
                           {t("label.text_position")}
                         </FormLabel>
                         <FormControl>
-                          <Select {...field}>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
                             <SelectTrigger>
                               <SelectValue
                                 placeholder={t(
@@ -797,17 +892,15 @@ const LeftPanel = () => {
                         <FormLabel className="w-full">卡片字体</FormLabel>
                         <FormControl>
                           <Select
-                            {...field}
-                            onValueChange={(value) => {
-                              field.onChange(value);
-                            }}
+                            value={field.value}
+                            onValueChange={field.onChange}
                           >
                             <SelectTrigger>
                               <SelectValue placeholder="请选择卡片字体" />
                             </SelectTrigger>
                             <SelectContent>
                               {FONTS.map((font) => (
-                                <SelectItem key={font.name} value={font.url}>
+                                <SelectItem key={font.name} value={font.name}>
                                   {font.name}
                                 </SelectItem>
                               ))}

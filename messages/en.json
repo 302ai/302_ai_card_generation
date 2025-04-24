@@ -17,6 +17,16 @@
     "based_on_input": "Based on Input",
     "extract_quote": "Extract Quote"
   },
+  "toast": {
+    "author_required": "Please enter the quote signature",
+    "card_font_required": "Please select the card font",
+    "custom_style_required": "Please enter the custom style",
+    "model_required": "Please select the model",
+    "style_required": "Please select the style",
+    "text_position_required": "Please select the text position",
+    "quote_content_required": "Please enter the quote content",
+    "content_required": "Please enter the content"
+  },
   "placeholder": {
     "based_on_input": "Please enter the theme or article, AI generates cards based on the input...",
     "extract_quote": "Please enter the theme or article, AI extracts quotes to create...",
