@@ -393,7 +393,7 @@ const PosterHistory = () => {
               <button
                 className="flex h-8 w-8 items-center justify-center rounded-full border-0 bg-transparent text-xl text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus:outline-none"
                 onClick={handleCloseModal}
-                aria-label="关闭"
+                aria-label="close"
               >
                 ✕
               </button>
