@@ -18,7 +18,7 @@ export const MODEL_LIST = [
   },
   {
     id: "gemini-2.5-pro-exp-03-25",
-    name: "Gemini 2.5 pro exp 0325",
+    name: "gemini-2.5-pro-exp-03-25",
   },
   {
     id: "gpt-4.1",
