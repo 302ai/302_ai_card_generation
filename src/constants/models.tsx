@@ -17,7 +17,7 @@ export const MODEL_LIST = [
     name: "claude-3-5-sonnet-20241022",
   },
   {
-    id: "Gemini 2.5 pro exp 0325",
+    id: "gemini-2.5-pro-exp-03-25",
     name: "Gemini 2.5 pro exp 0325",
   },
   {
