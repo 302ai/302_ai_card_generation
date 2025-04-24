@@ -508,445 +508,457 @@ const LeftPanel = () => {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div>
-          <div className="space-y-4">
-            {/* Dropdown */}
-            <div>
-              <Select
-                value={uiStore.activeCard}
-                onValueChange={(value) => {
-                  setUiStore((prev) => ({
-                    ...prev,
-                    activeCard: value as UiStoreActiveCard,
-                  }));
-                }}
-              >
-                <SelectTrigger className="flex w-full justify-center py-3 text-lg">
-                  <SelectValue placeholder="选择内容类型" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="knowledge-card">
-                    {t("switch_title.knowledge_card")}
-                  </SelectItem>
-                  <SelectItem value="promotional-poster">
-                    {t("switch_title.poster")}
-                  </SelectItem>
-                  <SelectItem value="philosophical-card">
-                    {t("switch_title.philosophy_card")}
-                  </SelectItem>
-                  <SelectItem value="quote-reference">
-                    {t("switch_title.quote_card")}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+    <div className="md:sticky md:top-5">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div>
+            <div className="space-y-4">
+              {/* Dropdown */}
+              <div>
+                <Select
+                  value={uiStore.activeCard}
+                  onValueChange={(value) => {
+                    setUiStore((prev) => ({
+                      ...prev,
+                      activeCard: value as UiStoreActiveCard,
+                    }));
+                  }}
+                >
+                  <SelectTrigger className="flex w-full justify-center py-3 text-lg">
+                    <SelectValue placeholder="选择内容类型" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="knowledge-card">
+                      {t("switch_title.knowledge_card")}
+                    </SelectItem>
+                    <SelectItem value="promotional-poster">
+                      {t("switch_title.poster")}
+                    </SelectItem>
+                    <SelectItem value="philosophical-card">
+                      {t("switch_title.philosophy_card")}
+                    </SelectItem>
+                    <SelectItem value="quote-reference">
+                      {t("switch_title.quote_card")}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-            {/* Tabs with Examples */}
-            <div className="flex flex-col space-y-2">
-              {uiStore.activeCard === "knowledge-card" && (
-                <div className="flex items-center space-x-2">
-                  <Tabs
-                    value={uiStore.activeTab}
-                    onValueChange={(value: string) =>
-                      onActiveTabChange(value as UiStoreActiveTab)
-                    }
-                    className="w-full"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <TabsList className="h-9">
-                        <TabsTrigger
-                          value="input-based"
-                          className="px-3 py-1.5 text-sm"
-                        >
-                          {t("switch_title.based_on_input")}
-                        </TabsTrigger>
-                        <TabsTrigger
-                          value="extract-key"
-                          className="px-3 py-1.5 text-sm"
-                        >
-                          {t("switch_title.extract_quote")}
-                        </TabsTrigger>
-                      </TabsList>
-
-                      <div className="flex items-center space-x-1 text-sm text-gray-500">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6 flex-shrink-0"
-                          onClick={refreshExamples}
-                          type="button"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="lucide lucide-refresh-cw"
+              {/* Tabs with Examples */}
+              <div className="flex flex-col space-y-2">
+                {uiStore.activeCard === "knowledge-card" && (
+                  <div className="flex items-center space-x-2">
+                    <Tabs
+                      value={uiStore.activeTab}
+                      onValueChange={(value: string) =>
+                        onActiveTabChange(value as UiStoreActiveTab)
+                      }
+                      className="w-full"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <TabsList className="h-9">
+                          <TabsTrigger
+                            value="input-based"
+                            className="px-3 py-1.5 text-sm"
                           >
-                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                            <path d="M21 3v5h-5" />
-                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                            <path d="M3 21v-5h5" />
-                          </svg>
-                        </Button>
-                        <div className="scrollbar-hide flex max-w-[calc(100%-2rem)] items-center space-x-1 overflow-x-auto">
-                          {uiStore.activeTab === "input-based" ? (
-                            <>
-                              {displayedExamples.map((example, index) => (
-                                <span
-                                  key={`${example.id}-${index}`}
-                                  className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
-                                  onClick={() =>
-                                    fillWithExample(example.input_based.content)
-                                  }
-                                >
-                                  {example.input_based.title}
-                                </span>
-                              ))}
-                            </>
-                          ) : (
-                            <>
-                              {displayedExamples.map((example, index) => (
-                                <span
-                                  key={`${example.id}-${index}`}
-                                  className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
-                                  onClick={() =>
-                                    fillWithExample(example.extract_key.content)
-                                  }
-                                >
-                                  {example.extract_key.title}
-                                </span>
-                              ))}
-                            </>
-                          )}
+                            {t("switch_title.based_on_input")}
+                          </TabsTrigger>
+                          <TabsTrigger
+                            value="extract-key"
+                            className="px-3 py-1.5 text-sm"
+                          >
+                            {t("switch_title.extract_quote")}
+                          </TabsTrigger>
+                        </TabsList>
+
+                        <div className="flex items-center space-x-1 text-sm text-gray-500">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 flex-shrink-0"
+                            onClick={refreshExamples}
+                            type="button"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="14"
+                              height="14"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="lucide lucide-refresh-cw"
+                            >
+                              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                              <path d="M21 3v5h-5" />
+                              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                              <path d="M3 21v-5h5" />
+                            </svg>
+                          </Button>
+                          <div className="scrollbar-hide flex max-w-[calc(100%-2rem)] items-center space-x-1 overflow-x-auto">
+                            {uiStore.activeTab === "input-based" ? (
+                              <>
+                                {displayedExamples.map((example, index) => (
+                                  <span
+                                    key={`${example.id}-${index}`}
+                                    className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
+                                    onClick={() =>
+                                      fillWithExample(
+                                        example.input_based.content
+                                      )
+                                    }
+                                  >
+                                    {example.input_based.title}
+                                  </span>
+                                ))}
+                              </>
+                            ) : (
+                              <>
+                                {displayedExamples.map((example, index) => (
+                                  <span
+                                    key={`${example.id}-${index}`}
+                                    className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
+                                    onClick={() =>
+                                      fillWithExample(
+                                        example.extract_key.content
+                                      )
+                                    }
+                                  >
+                                    {example.extract_key.title}
+                                  </span>
+                                ))}
+                              </>
+                            )}
+                          </div>
                         </div>
+                      </div>
+
+                      <TabsContent
+                        value="input-based"
+                        className="mt-4 space-y-4"
+                      >
+                        <FormField
+                          control={form.control}
+                          name="knowledgeCard.content" // RHF 字段名
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Textarea
+                                  placeholder={t("placeholder.based_on_input")}
+                                  className="min-h-[200px]"
+                                  {...field} // 将 RHF 提供的 props (value, onChange, onBlur, ref) 传递给 Textarea
+                                />
+                              </FormControl>
+                              <FormMessage /> {/* 显示验证错误 */}
+                            </FormItem>
+                          )}
+                        />
+                      </TabsContent>
+
+                      <TabsContent
+                        value="extract-key"
+                        className="mt-4 space-y-4"
+                      >
+                        <FormField
+                          control={form.control}
+                          name="knowledgeCard.extractKeyContent" // RHF 字段名 (与 schema 对应)
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Textarea
+                                  placeholder={t("placeholder.extract_quote")}
+                                  className="min-h-[200px]"
+                                  {...field} // 添加field绑定，确保React Hook Form可以控制这个字段
+                                />
+                              </FormControl>
+                              <FormMessage /> {/* 显示验证错误 */}
+                            </FormItem>
+                          )}
+                        />
+                      </TabsContent>
+                    </Tabs>
+                  </div>
+                )}
+                {uiStore.activeCard === "promotional-poster" && (
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="promotionalPoster.content"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Textarea
+                              placeholder={t("placeholder.poster")}
+                              className="min-h-[200px] w-full"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+                {uiStore.activeCard === "quote-reference" && (
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="quoteReference.content"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Textarea
+                              placeholder={t("placeholder.quote_card")}
+                              className="min-h-[200px] w-full"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+                {uiStore.activeCard === "philosophical-card" && (
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="philosophicalCard.content"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Textarea
+                              placeholder={t("placeholder.philosophy_card")}
+                              className="min-h-[200px] w-full"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Additional Controls */}
+              <div className="mt-4 space-y-4 pt-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex w-full items-center justify-between">
+                    <FormField
+                      control={form.control}
+                      name="knowledgeCard.model"
+                      render={({ field }) => (
+                        <FormItem className="flex w-full items-center justify-between">
+                          <FormLabel>{t("label.model_select")}</FormLabel>
+                          <FormControl>
+                            <ModelSelect
+                              value={field.value as ModelId}
+                              onChange={field.onChange}
+                              name={field.name}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    {/* <span className="text-sm">模型选择</span> */}
+                    {/* <ModelSelect /> */}
+                  </div>
+                </div>
+                {uiStore.activeCard === "quote-reference" && (
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="quoteReference.author"
+                      render={({ field }) => (
+                        <FormItem className="flex w-full items-center justify-between">
+                          <FormLabel className="w-full">
+                            {t("label.quote_signature")}
+                          </FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="quoteReference.cardFont"
+                      render={({ field }) => (
+                        <FormItem className="flex w-full items-center justify-between">
+                          <FormLabel className="w-full">
+                            {t("label.card_font")}
+                          </FormLabel>
+                          <FormControl>
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger>
+                                <SelectValue
+                                  placeholder={t("placeholder.card_font")}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {FONTS.map((font) => (
+                                  <SelectItem key={font.name} value={font.name}>
+                                    {font.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="quoteReference.textPosition"
+                      render={({ field }) => (
+                        <FormItem className="flex w-full items-center justify-between">
+                          <FormLabel className="w-full">
+                            {t("label.text_position")}
+                          </FormLabel>
+                          <FormControl>
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger>
+                                <SelectValue
+                                  placeholder={t(
+                                    "placeholder.select_text_position"
+                                  )}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="left">
+                                  {t("select.left")}
+                                </SelectItem>
+                                <SelectItem value="center">
+                                  {t("select.center")}
+                                </SelectItem>
+                                <SelectItem value="right">
+                                  {t("select.right")}
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+                {uiStore.activeCard === "knowledge-card" && (
+                  <>
+                    <div className="flex">
+                      <div className="flex w-full items-center justify-between">
+                        <FormField
+                          control={form.control}
+                          name="knowledgeCard.date"
+                          render={({ field }) => (
+                            <FormItem className="flex w-full items-center justify-between">
+                              <FormLabel>{t("label.date_display")}</FormLabel>
+                              <FormControl>
+                                <DateSwitch field={field} />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
                       </div>
                     </div>
 
-                    <TabsContent value="input-based" className="mt-4 space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="knowledgeCard.content" // RHF 字段名
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Textarea
-                                placeholder={t("placeholder.based_on_input")}
-                                className="min-h-[200px]"
-                                {...field} // 将 RHF 提供的 props (value, onChange, onBlur, ref) 传递给 Textarea
-                              />
-                            </FormControl>
-                            <FormMessage /> {/* 显示验证错误 */}
-                          </FormItem>
-                        )}
-                      />
-                    </TabsContent>
-
-                    <TabsContent value="extract-key" className="mt-4 space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="knowledgeCard.extractKeyContent" // RHF 字段名 (与 schema 对应)
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Textarea
-                                placeholder={t("placeholder.extract_quote")}
-                                className="min-h-[200px]"
-                                {...field} // 添加field绑定，确保React Hook Form可以控制这个字段
-                              />
-                            </FormControl>
-                            <FormMessage /> {/* 显示验证错误 */}
-                          </FormItem>
-                        )}
-                      />
-                    </TabsContent>
-                  </Tabs>
-                </div>
-              )}
-              {uiStore.activeCard === "promotional-poster" && (
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="promotionalPoster.content"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Textarea
-                            placeholder={t("placeholder.poster")}
-                            className="min-h-[200px] w-full"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              )}
-              {uiStore.activeCard === "quote-reference" && (
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="quoteReference.content"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Textarea
-                            placeholder={t("placeholder.quote_card")}
-                            className="min-h-[200px] w-full"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              )}
-              {uiStore.activeCard === "philosophical-card" && (
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="philosophicalCard.content"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Textarea
-                            placeholder={t("placeholder.philosophy_card")}
-                            className="min-h-[200px] w-full"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* Additional Controls */}
-            <div className="mt-4 space-y-4 pt-4">
-              <div className="flex items-center justify-between">
-                <div className="flex w-full items-center justify-between">
-                  <FormField
-                    control={form.control}
-                    name="knowledgeCard.model"
-                    render={({ field }) => (
-                      <FormItem className="flex w-full items-center justify-between">
-                        <FormLabel>{t("label.model_select")}</FormLabel>
-                        <FormControl>
-                          <ModelSelect
-                            value={field.value as ModelId}
-                            onChange={field.onChange}
-                            name={field.name}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  {/* <span className="text-sm">模型选择</span> */}
-                  {/* <ModelSelect /> */}
-                </div>
-              </div>
-              {uiStore.activeCard === "quote-reference" && (
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="quoteReference.author"
-                    render={({ field }) => (
-                      <FormItem className="flex w-full items-center justify-between">
-                        <FormLabel className="w-full">
-                          {t("label.quote_signature")}
-                        </FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="quoteReference.cardFont"
-                    render={({ field }) => (
-                      <FormItem className="flex w-full items-center justify-between">
-                        <FormLabel className="w-full">
-                          {t("label.card_font")}
-                        </FormLabel>
-                        <FormControl>
-                          <Select
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={t("placeholder.card_font")}
-                              />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {FONTS.map((font) => (
-                                <SelectItem key={font.name} value={font.name}>
-                                  {font.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="quoteReference.textPosition"
-                    render={({ field }) => (
-                      <FormItem className="flex w-full items-center justify-between">
-                        <FormLabel className="w-full">
-                          {t("label.text_position")}
-                        </FormLabel>
-                        <FormControl>
-                          <Select
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={t(
-                                  "placeholder.select_text_position"
-                                )}
-                              />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="left">
-                                {t("select.left")}
-                              </SelectItem>
-                              <SelectItem value="center">
-                                {t("select.center")}
-                              </SelectItem>
-                              <SelectItem value="right">
-                                {t("select.right")}
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              )}
-              {uiStore.activeCard === "knowledge-card" && (
-                <>
-                  <div className="flex">
-                    <div className="flex w-full items-center justify-between">
-                      <FormField
-                        control={form.control}
-                        name="knowledgeCard.date"
-                        render={({ field }) => (
-                          <FormItem className="flex w-full items-center justify-between">
-                            <FormLabel>{t("label.date_display")}</FormLabel>
-                            <FormControl>
-                              <DateSwitch field={field} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">{t("label.qr_code")}</span>
+                      <QrSelect />
                     </div>
-                  </div>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">{t("label.qr_code")}</span>
-                    <QrSelect />
+                    <FormField
+                      control={form.control}
+                      name="knowledgeCard.qrCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <>
+                              {formStore.qrType === "upload" && (
+                                <QrUpload field={field} />
+                              )}
+                              {formStore.qrType === "genrate" && (
+                                <QrGenerate field={field} />
+                              )}
+                            </>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
+                {uiStore.activeCard === "philosophical-card" && (
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="philosophicalCard.cardFont"
+                      render={({ field }) => (
+                        <FormItem className="flex w-full items-center justify-between">
+                          <FormLabel className="w-full">
+                            {t("label.card_font")}
+                          </FormLabel>
+                          <FormControl>
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger>
+                                <SelectValue
+                                  placeholder={t("placeholder.card_font")}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {FONTS.map((font) => (
+                                  <SelectItem key={font.name} value={font.name}>
+                                    {font.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                   </div>
-
-                  <FormField
-                    control={form.control}
-                    name="knowledgeCard.qrCode"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <>
-                            {formStore.qrType === "upload" && (
-                              <QrUpload field={field} />
-                            )}
-                            {formStore.qrType === "genrate" && (
-                              <QrGenerate field={field} />
-                            )}
-                          </>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </>
-              )}
-              {uiStore.activeCard === "philosophical-card" && (
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="philosophicalCard.cardFont"
-                    render={({ field }) => (
-                      <FormItem className="flex w-full items-center justify-between">
-                        <FormLabel className="w-full">
-                          {t("label.card_font")}
-                        </FormLabel>
-                        <FormControl>
-                          <Select
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={t("placeholder.card_font")}
-                              />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {FONTS.map((font) => (
-                                <SelectItem key={font.name} value={font.name}>
-                                  {font.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                )}
+                <div className="flex items-center">
+                  <span className="flex-1">{t("label.style_setting")}</span>
+                  <StyleTab />
                 </div>
-              )}
-              <div className="flex items-center">
-                <span className="flex-1">{t("label.style_setting")}</span>
-                <StyleTab />
+                {uiStore.activeCard === "knowledge-card" && (
+                  <StyleContent type="knowledgeCard" />
+                )}
+                {uiStore.activeCard === "promotional-poster" && (
+                  <StyleContent type="promotionalPoster" />
+                )}
+                {uiStore.activeCard === "quote-reference" && (
+                  <StyleContent type="quoteReference" />
+                )}
+                {uiStore.activeCard === "philosophical-card" && (
+                  <StyleContent type="philosophicalCard" />
+                )}
               </div>
-              {uiStore.activeCard === "knowledge-card" && (
-                <StyleContent type="knowledgeCard" />
-              )}
-              {uiStore.activeCard === "promotional-poster" && (
-                <StyleContent type="promotionalPoster" />
-              )}
-              {uiStore.activeCard === "quote-reference" && (
-                <StyleContent type="quoteReference" />
-              )}
-              {uiStore.activeCard === "philosophical-card" && (
-                <StyleContent type="philosophicalCard" />
-              )}
             </div>
           </div>
-        </div>
-        <Button
-          type="submit"
-          className="w-full bg-purple-500 py-6 text-lg hover:bg-purple-600"
-        >
-          {t("button.generate")}
-        </Button>
-      </form>
-    </Form>
+          <Button
+            type="submit"
+            className="w-full bg-purple-500 py-6 text-lg hover:bg-purple-600"
+          >
+            {t("button.generate")}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 };
 
