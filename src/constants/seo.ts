@@ -14,18 +14,18 @@ export const SEO_DATA: SEOData = {
   // TODO: Change to your own SEO data
   languages: {
     zh: {
-      title: "AI 播客制作",
-      description: "将任意素材转为有意思的播客",
+      title: "AI 卡片生成",
+      description: "使用AI生成多种类型卡片",
       image: "/images/global/desc_zh.png",
     },
     en: {
-      title: "AI Podcast Production",
-      description: "Turn any material into an interesting podcast",
+      title: "AI Card Generation",
+      description: "Using AI to generate multiple types of cards",
       image: "/images/global/desc_en.png",
     },
     ja: {
-      title: "AIポッドキャスト制作",
-      description: "あらゆる素材を興味深いポッドキャストに変える",
+      title: "AIカード生成",
+      description: "AIを用いた複数種類のカードの生成",
       image: "/images/global/desc_ja.png",
     },
   },
