@@ -6,7 +6,7 @@ import { langToCountry } from "@/utils/302";
 interface GenerateHTMLParams {
   apiKey: string;
   model: string;
-  lang: "cn" | "en" | "jp";
+  lang: "zh" | "en" | "ja";
   style: string;
   content: string;
   cardFont: string;

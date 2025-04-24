@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       html,
     }: {
       apiKey: string;
-      lang: "cn" | "en" | "jp";
+      lang: "zh" | "en" | "ja";
       content: string;
       html: string;
     } = await request.json();

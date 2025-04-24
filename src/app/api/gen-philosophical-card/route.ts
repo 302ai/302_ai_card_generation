@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     }: {
       apiKey: string;
       model: string;
-      lang: "cn" | "en" | "jp";
+      lang: "zh" | "en" | "ja";
       content: string;
       style: string;
       cardFont: string;

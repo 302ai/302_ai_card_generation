@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     }: {
       apiKey: string;
       model: string;
-      lang: "cn" | "en" | "jp";
+      lang: "zh" | "en" | "ja";
       style: string;
       content: string;
       styleType: "random" | "template" | "custom";

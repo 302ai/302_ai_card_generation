@@ -2,15 +2,15 @@ import style from "styled-jsx/style";
 import { date } from "zod";
 
 const systemPrompt = ({
-  lang = "cn",
+  lang = "zh",
   type,
 }: {
-  lang?: "cn" | "en" | "jp";
+  lang?: "zh" | "en" | "ja";
   type: "input-based" | "extract-key";
 }) => {
   const prompts = {
     "input-based": {
-      cn: `
+      zh: `
       您是一位国际知名的数字杂志艺术总监和前端开发专家，曾为《Vogue》和《Elle》等时尚杂志设计过数字版面。您擅长将奢侈杂志美学与现代网页设计无缝融合，创造令人惊叹的视觉体验。
       
       你的任务是根据提供的内容设计知识卡，以精致豪华的杂志编排呈现主题，让用户体验到类似于翻阅高端杂志的视觉享受。
@@ -87,7 +87,7 @@ const systemPrompt = ({
       
       `,
 
-      jp: `
+      ja: `
       あなたは国際的に有名なデジタル雑誌のアートディレクターとフロントエンドの開発専門家で、「Vogue」や「Elle」などのファッション雑誌のデジタル紙面を設計したことがあります。贅沢な雑誌の美学と現代のウェブデザインをシームレスに融合させ、驚くべき視覚体験を創造するのが得意です。
       
       あなたの任務は、提供されたコンテンツに基づいて知識カードを設計し、洗練された豪華な雑誌編成でテーマを提示し、ユーザーにハイエンド雑誌をめくるような視覚的な楽しみを体験させることです。
@@ -96,7 +96,7 @@ const systemPrompt = ({
       `,
     },
     "extract-key": {
-      cn: `您是一位国际知名的数字杂志艺术总监和前端开发专家，曾为《Vogue》和《Elle》等时尚杂志设计过数字版面。您擅长将奢侈杂志美学与现代网页设计无缝融合，创造令人惊叹的视觉体验。
+      zh: `您是一位国际知名的数字杂志艺术总监和前端开发专家，曾为《Vogue》和《Elle》等时尚杂志设计过数字版面。您擅长将奢侈杂志美学与现代网页设计无缝融合，创造令人惊叹的视觉体验。
 
 你的任务是根据提取的金句，以高端时尚杂志的风格设计知识卡，以精致豪华的杂志编排呈现日常信息，让用户体验到类似于翻阅高端杂志的视觉享受。
 
@@ -174,43 +174,44 @@ Output requirements:
 
 Please create stunning digital magazine style cards with the vision and aesthetic standards of top international magazine art directors, allowing users to feel that 'this is not just an ordinary information card, but a collectible digital artwork'. Directly output HTML results without further explanation.
       `,
-      jp: `
-      You are an internationally renowned digital magazine art director and front-end development expert, who has designed digital layouts for fashion magazines such as Vogue and Elle. You excel at seamlessly integrating luxury magazine aesthetics with modern web design, creating stunning visual experiences.
+      ja: `
+      あなたは国際的に有名なデジタル雑誌のアートディレクターとフロントエンドの開発専門家で、「Vogue」や「Elle」などのファッション雑誌のデジタル紙面を設計したことがあります。贅沢な雑誌の美学と現代のウェブデザインをシームレスに融合させ、驚くべき視覚体験を創造するのが得意です。
+﻿
+あなたの任務は、提供されたコンテンツに基づいて知識カードを設計し、洗練された豪華な雑誌編成でテーマを提示し、ユーザーにハイエンド雑誌をめくるような視覚的な楽しみを体験させることです。
+﻿
+提供されるデザインスタイルはカードのスタイルデザインにのみ使用され、カードの文字内容としては使用されません！！！カードの文字内容は提供されたテーマに基づいて生成される！！！
+テーマに応じて適切なiconや文字コンテンツを生成することはできますが、デザインスタイルの記述を文字コンテンツとして使用することはできません！！！！！
 
-Your task is to design a knowledge card in the style of a high-end fashion magazine based on the extracted golden phrases, presenting daily information in exquisite and luxurious magazine arrangement, allowing users to experience a visual enjoyment similar to flipping through high-end magazines.
+カードには次の要素が含まれている必要がありますが、異なる視覚的表現があります。
+-日付領域：各スタイルのユニークなスタイルで日付を表示します（日付が空でない場合は指定された日付を使用する必要があります。空の場合は日付領域は表示されません！！！！）
+-タイトルとサブタイトル：スタイルに合わせてフォント、サイズ、レイアウトを変更する
+-参照ブロック:スタイルフィーチャーを反映するように独自の参照スタイルを設計する
+-コア・ポイント・リスト：リストの内容を適切なスタイルで表示
+-2次元コード領域：2次元コードを全体の設計に組み込む（2次元コードが空でない場合は、対応する2次元コードスクリーンショットアドレスを使用する必要があります。空の場合は、2次元コード領域は表示されません！！！！）
+-編集者には、コメントの内容を簡潔にすることができますが、完全に表示する必要があるスタイルのサイドバーやコメントを設計するためのヒントがあります。
 
-Firstly, you need to extract golden sentences from the input article, and then use the extracted golden sentences to design a knowledge card.
-
-The card should contain the following elements, but with different visual representations:
--Date Area: Display dates in a unique style for each style (when the date is not empty, the provided date must be used; if it is empty, the date area will not be displayed!!!)
--Title and Subtitle: Adjust font, size, and layout according to style
--Reference block: Design unique reference styles to reflect style features
--List of golden sentences: Present golden sentences in an appropriate style
--QR code area: Integrate the QR code into the overall design (when the QR code is not empty, the corresponding QR code screenshot address must be used; if it is empty, the QR code area will not be displayed!!!)
--Editor's note/tip: Design a stylish sidebar or annotation that can be concise, but must be fully displayed
-
-Technical specifications:
--Use HTML5, Font Awesome, Tailwind CSS, and necessary JavaScript
-* Font Awesome: [ https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css ]( https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css )
-* Tailwind CSS: [ https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css ]( https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css )
--Consider adding subtle animations, such as fade in effects during page loading or subtle hover feedback
--Ensure concise and efficient code, focus on performance and maintainability
--Use CSS variables to manage colors and spacing for style consistency
--For the liquid digital formalism style, fluid dynamics and gradient transitions must be added
--For the ultra sensory minimalist style, precise control over each pixel and subtle interactive feedback is necessary
--For the New Expressionist data visualization style, data must be visually integrated into the design
+技術仕様：
+-HTML 5、Font Awesome、Tailwind CSS、必要なJavaScriptの使用
+* Font Awesome: [https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css](https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css)
+* Tailwind CSS: [https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css](https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css)
+-ページロード中のフェードエフェクトや微妙なサスペンションフィードバックなど、微妙なアニメーションの追加を検討します。
+-シンプルで効率的なコードを確保し、パフォーマンスと保守性を重視
+-CSS変数を使用して色と間隔を管理し、スタイルの一貫性を実現
+-液体デジタル形式主義のスタイルには、流体力学と勾配遷移を追加する必要があります
+-超感覚的なミニマリズムスタイルには、各ピクセルと微妙な相互作用フィードバックを正確に制御する必要がある
+-新しい表現主義のデータ可視化スタイルのために、データを視覚的に設計に統合する必要があります
 
 
-Output requirements:
--Provide a complete HTML file
--Code should be elegant, in line with best practices, and CSS should reflect the ultimate pursuit of detail
--Design width of 400px, height not exceeding 1280px
--Abstracting and refining the theme content, only displaying column key points or core sentence references, providing readers with a sense of gain
--Always output in Japanese, decorative elements can be expressed in languages such as French and English to create a sense of delicacy
--When the date is not empty, the provided date must be used; If it is empty, the date range will not be displayed!!!!
--When the QR code is not empty, the corresponding QR code screenshot address must be used; If it is empty, the QR code area will not be displayed!!!!
+出力要件：
+-完全なHTMLファイルを提供
+-コードは優雅でベストプラクティスに合致し、CSSは細部への究極の追求を反映しなければならない
+-設計幅は400 px、高さは1280 px未満
+-トピックの内容を抽象化し、コラムの要点や核心文の引用だけを表示し、読者に獲得感を提供する
+-いつまでも日本語で出力され、装飾要素はフランス語、英語などの言語で表現され、洗練された感覚を作り出すことができます
+-日付が空でない場合は、指定された日付を使用する必要があります。空の場合、日付領域は表示されません！！！！
+-2次元コードが空でない場合は、対応する2次元コードスクリーンショットアドレスを使用する必要があります。NULLの場合、QRコード領域は表示されません！！！！
 
-Please create stunning digital magazine style cards with the vision and aesthetic standards of top international magazine art directors, allowing users to feel that 'this is not just an ordinary information card, but a collectible digital artwork'. Directly output HTML results without further explanation.
+HTML結果を直接出力するので、これ以上説明する必要はありません。
       `,
     },
   };
@@ -230,7 +231,7 @@ const userPrompt = ({
   qrCode: string;
 }) => {
   return {
-    cn: `
+    zh: `
     日期：${date}
     主题：${topic}
     设计风格：${style}
@@ -242,7 +243,7 @@ const userPrompt = ({
     Style: ${style}
     QR Code: ${qrCode}
     `,
-    jp: `
+    ja: `
     日付：${date}
     トピック：${topic}
     デザインスタイル：${style}
@@ -252,14 +253,14 @@ const userPrompt = ({
 };
 
 const posterPromptForRandom = ({
-  lang = "cn",
+  lang = "zh",
   content,
 }: {
-  lang?: "cn" | "en" | "jp";
+  lang?: "zh" | "en" | "ja";
   content: string;
 }) => {
   const prompts = {
-    cn: `
+    zh: `
     您是一位专业的平面设计师和SVG开发专家，在视觉美学和技术实现方面拥有高度的专业知识。你的最终作品将让观众惊叹不已，并被视为真正的艺术杰作。
 
 我将为您提供一个主题或一段文字。请分析它们，并将其转换为令人惊叹的SVG格式海报：
@@ -418,7 +419,7 @@ Please create a unique, eye-catching, and technically proficient SVG poster base
 Pending content:
 ${content}
     `,
-    jp: `あなたはプロのグラフィックデザイナーとSVG開発の専門家で、視覚美学と技術実現の面で高度な専門知識を持っています。あなたの最終的な作品は観客を驚嘆させ、真の芸術傑作と見なされます。
+    ja: `あなたはプロのグラフィックデザイナーとSVG開発の専門家で、視覚美学と技術実現の面で高度な専門知識を持っています。あなたの最終的な作品は観客を驚嘆させ、真の芸術傑作と見なされます。
 
 トピックまたはテキストを提供します。それらを分析し、驚くべきSVG形式のポスターに変換してください：
 
@@ -502,16 +503,16 @@ ${content}
 };
 
 const posterPromptForCustomAndTemplate = ({
-  lang = "cn",
+  lang = "zh",
   content,
   style,
 }: {
-  lang?: "cn" | "en" | "jp";
+  lang?: "zh" | "en" | "ja";
   content: string;
   style: string;
 }) => {
   const prompts = {
-    cn: `
+    zh: `
    您是一位专业的平面设计师和SVG开发专家，在视觉美学和技术实现方面拥有高度的专业知识。你的最终作品将让观众惊叹不已，并被视为真正的艺术杰作。
 
 我将为您提供一个主题或一段文字，以及海报的设计风格。请分析它们，并将其转换为令人惊叹的SVG格式海报：
@@ -673,7 +674,7 @@ Pending content:
 ${style}
 ${content}
     `,
-    jp: `あなたはプロのグラフィックデザイナーとSVG開発の専門家で、視覚美学と技術実現の面で高度な専門知識を持っています。あなたの最終的な作品は観客を驚嘆させ、真の芸術傑作と見なされます。
+    ja: `あなたはプロのグラフィックデザイナーとSVG開発の専門家で、視覚美学と技術実現の面で高度な専門知識を持っています。あなたの最終的な作品は観客を驚嘆させ、真の芸術傑作と見なされます。
 
 テーマやテキスト、ポスターのデザインスタイルを提供します。それらを分析し、驚くべきSVG形式のポスターに変換してください：
 
@@ -761,15 +762,15 @@ const philosophicalCardPrompt = ({
   content,
   style,
   cardFont,
-  lang = "cn",
+  lang = "zh",
 }: {
   content: string;
   style: string;
-  lang?: "cn" | "en" | "jp";
+  lang?: "zh" | "en" | "ja";
   cardFont: string;
 }) => {
   const prompts = {
-    cn: `根据用户输入将主题翻译成英文，然后使用100字以内的简洁语言来分解其深层含义。然后使用HTML创建一个优雅的文本卡来表示这个主题。
+    zh: `根据用户输入将主题翻译成英文，然后使用100字以内的简洁语言来分解其深层含义。然后使用HTML创建一个优雅的文本卡来表示这个主题。
 
 设计要求：
 1.必须使用${cardFont}，不允许加粗。
@@ -807,7 +808,7 @@ Topic: ${content}
 Card Style: ${style}
 
 Directly output the complete HTML file.`,
-    jp: `ユーザー入力に基づいてトピックを英語に翻訳し、100ワード以内の簡潔な言語を使用して深い意味を分解します。次にHTMLを使用して、このトピックを表す優雅なテキストカードを作成します。
+    ja: `ユーザー入力に基づいてトピックを英語に翻訳し、100ワード以内の簡潔な言語を使用して深い意味を分解します。次にHTMLを使用して、このトピックを表す優雅なテキストカードを作成します。
 
 設計要件：
 1.指定されたフォントを使用する必要があります。太字は許可されていません。

@@ -49,7 +49,7 @@ import { generateSVG } from "@/services/generate-svg";
 import { usePosterHistory } from "@/hooks/db/use-poster-history";
 import { genPhilosophicalCard } from "@/services/gen-philosophical-card";
 import { usePhilosophicalHistory } from "@/hooks/db/use-philosophical-history";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { generateQuoteCard } from "@/services/gen-quote";
 import { useGenQuoteHistory } from "@/hooks/db/use-gen-quote-history";
 import { toast } from "sonner";
@@ -109,12 +109,6 @@ const FONTS = [
 ];
 
 const LeftPanel = () => {
-  const [contentType, setContentType] = useState<
-    | "knowledge-card"
-    | "promotional-poster"
-    | "philosophical-card"
-    | "quote-reference"
-  >("knowledge-card");
   const [uiStore, setUiStore] = useAtom(uiStoreAtom);
   const [showQrCode, setShowQrCode] = useState(false);
   const [formStore, setFormStore] = useAtom(formStoreAtom);
@@ -127,6 +121,7 @@ const LeftPanel = () => {
     updatePosterHistory,
   } = usePosterHistory();
 
+  const locale = useLocale(); // This gives you the current language code (e.g., "en", "zh", etc.)
   const t = useTranslations();
 
   const {
@@ -290,7 +285,7 @@ const LeftPanel = () => {
         const res = await generateHTML({
           apiKey: apiKey as string,
           model: knowledgeCard.model as string,
-          lang: "cn",
+          lang: locale as "zh" | "en" | "ja",
           date: knowledgeCard.date as string,
           topic: content,
           style: newStyle,
@@ -358,7 +353,7 @@ const LeftPanel = () => {
         const res = await generateSVG({
           apiKey: apiKey as string,
           model: promotionalPoster.model as string,
-          lang: "cn",
+          lang: locale as "zh" | "en" | "ja",
           content: promotionalPoster.content as string,
           style: newStyle,
           styleType: promotionalPoster.styleType as
@@ -419,7 +414,7 @@ const LeftPanel = () => {
         const res = await genPhilosophicalCard({
           apiKey: apiKey as string,
           model: philosophicalCard.model as string,
-          lang: "cn",
+          lang: locale as "zh" | "en" | "ja",
           content: philosophicalCard.content as string,
           style,
           cardFont: philosophicalCard.cardFont as string,
@@ -736,24 +731,78 @@ const LeftPanel = () => {
               <div className="mt-4 space-y-4 pt-4">
                 <div className="flex items-center justify-between">
                   <div className="flex w-full items-center justify-between">
-                    <FormField
-                      control={form.control}
-                      name="knowledgeCard.model"
-                      render={({ field }) => (
-                        <FormItem className="flex w-full items-center justify-between">
-                          <FormLabel>{t("label.model_select")}</FormLabel>
-                          <FormControl>
-                            <ModelSelect
-                              value={field.value as ModelId}
-                              onChange={field.onChange}
-                              name={field.name}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    {/* <span className="text-sm">模型选择</span> */}
-                    {/* <ModelSelect /> */}
+                    {uiStore.activeCard === "knowledge-card" && (
+                      <FormField
+                        control={form.control}
+                        name="knowledgeCard.model"
+                        render={({ field }) => (
+                          <FormItem className="flex w-full items-center justify-between">
+                            <FormLabel>{t("label.model_select")}</FormLabel>
+                            <FormControl>
+                              <ModelSelect
+                                value={field.value as ModelId}
+                                onChange={field.onChange}
+                                name={field.name}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                    {uiStore.activeCard === "quote-reference" && (
+                      <FormField
+                        control={form.control}
+                        name="quoteReference.model"
+                        render={({ field }) => (
+                          <FormItem className="flex w-full items-center justify-between">
+                            <FormLabel>{t("label.model_select")}</FormLabel>
+                            <FormControl>
+                              <ModelSelect
+                                value={field.value as ModelId}
+                                onChange={field.onChange}
+                                name={field.name}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                    {uiStore.activeCard === "philosophical-card" && (
+                      <FormField
+                        control={form.control}
+                        name="philosophicalCard.model"
+                        render={({ field }) => (
+                          <FormItem className="flex w-full items-center justify-between">
+                            <FormLabel>{t("label.model_select")}</FormLabel>
+                            <FormControl>
+                              <ModelSelect
+                                value={field.value as ModelId}
+                                onChange={field.onChange}
+                                name={field.name}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                    {uiStore.activeCard === "promotional-poster" && (
+                      <FormField
+                        control={form.control}
+                        name="promotionalPoster.model"
+                        render={({ field }) => (
+                          <FormItem className="flex w-full items-center justify-between">
+                            <FormLabel>{t("label.model_select")}</FormLabel>
+                            <FormControl>
+                              <ModelSelect
+                                value={field.value as ModelId}
+                                onChange={field.onChange}
+                                name={field.name}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    )}
                   </div>
                 </div>
                 {uiStore.activeCard === "quote-reference" && (
