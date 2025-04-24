@@ -106,7 +106,7 @@ const ChangeStyleModal: React.FC<ChangeStyleModalProps> = ({
         <div className="flex gap-6">
           {/* Left side - HTML Preview */}
           <div className="w-1/2">
-            <div className="h-[600px] overflow-auto rounded-lg border p-4">
+            <div className="h-[400px] overflow-auto rounded-lg border p-4">
               {data?.html && (
                 <div className="h-full w-full">
                   <iframe
@@ -124,7 +124,7 @@ const ChangeStyleModal: React.FC<ChangeStyleModalProps> = ({
             <h3 className="text-lg font-semibold">{t("label.change_style")}</h3>
             <Textarea
               placeholder={t("label.change_style_placeholder")}
-              className="h-[500px] resize-none"
+              className="h-[200px] resize-none"
               value={stylePrompt}
               onChange={(e) => setStylePrompt(e.target.value)}
             />
