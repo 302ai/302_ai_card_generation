@@ -24,7 +24,8 @@
   "status": {
     "generating": "生成中",
     "generating_failed": "生成失败",
-    "generating_success": "生成成功"
+    "generating_success": "生成成功",
+    "downloading": "下载中"
   },
   "home": {
     "header": {
@@ -75,6 +76,8 @@
   "toast": {
     "task_limit_reached": "已达到任务上限({limit})，请稍后再试",
     "generation_failed": "生成失败，请重试",
+    "download_failed": "下载失败，请重试",
+    "download_success": "下载成功",
     "author_required": "请输入引用署名",
     "card_font_required": "请选择卡片字体",
     "custom_style_required": "请输入自定义风格",

@@ -24,7 +24,8 @@
   "status": {
     "generating": "Generating",
     "generating_failed": "Generating failed",
-    "generating_success": "Generating success"
+    "generating_success": "Generating success",
+    "downloading": "Downloading"
   },
   "home": {
     "header": {
@@ -42,6 +43,8 @@
   "toast": {
     "task_limit_reached": "Task limit reached ({limit}), please try again later",
     "generation_failed": "Generation failed, please try again",
+    "download_failed": "Download failed, please try again",
+    "download_success": "downloaded successfully",
     "author_required": "Please enter the quote signature",
     "card_font_required": "Please select the card font",
     "custom_style_required": "Please enter the custom style",

@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "@/hooks/db/use-gen-history";
 import { format } from "date-fns";
-import { FileDown, Trash, AlertCircle, Loader2 } from "lucide-react";
+import { Download, Trash, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ky from "ky";
 import { env } from "@/env";
@@ -12,6 +12,7 @@ import { useMonitorMessage } from "@/hooks/global/use-monitor-message";
 import { usePosterHistory } from "@/hooks/db/use-poster-history";
 import { useTranslations } from "next-intl";
 import { concurrentTaskCountAtom } from "@/stores/slices/task_store";
+import { toast } from "sonner";
 
 // Utility function to extract SVG content from various formats
 const extractSvgContent = (content: string): string => {
@@ -197,6 +198,9 @@ const PosterHistory = () => {
   // 下载SVG为PNG
   const onDownLoad = async (svgContent: string) => {
     try {
+      // Show toast notification for download start
+      const toastId = toast(t("status.downloading"));
+
       // Create a Blob from the SVG content
       const blob = new Blob([svgContent], { type: "image/svg+xml" });
       const url = URL.createObjectURL(blob);
@@ -215,13 +219,28 @@ const PosterHistory = () => {
           output: string;
         }>();
 
+      // Dismiss the downloading toast
+      toast.dismiss(toastId);
+
       handleDownload(resp.output, "poster.png");
+
+      // Show success notification
+      toast.success(t("toast.download_success"));
     } catch (error) {
       console.error("Error downloading SVG:", error);
+      // Show error notification
+      toast.error(t("toast.download_failed"));
+
       // Fallback to direct SVG download if PNG conversion fails
-      const blob = new Blob([svgContent], { type: "image/svg+xml" });
-      const url = URL.createObjectURL(blob);
-      handleDownload(url, "poster.svg");
+      try {
+        const blob = new Blob([svgContent], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(blob);
+        handleDownload(url, "poster.svg");
+        toast.success(t("toast.download_success"));
+      } catch (fallbackError) {
+        console.error("Fallback SVG download failed:", fallbackError);
+        toast.error(t("toast.download_failed"));
+      }
     }
   };
 
@@ -448,7 +467,7 @@ const PosterHistory = () => {
                     aria-label="下载"
                     className="h-8 w-8"
                   >
-                    <FileDown className="h-4 w-4" />
+                    <Download className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="ghost"

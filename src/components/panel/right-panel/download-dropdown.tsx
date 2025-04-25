@@ -1,5 +1,5 @@
 import React from "react";
-import { Download, FileCode, FileDown, Image } from "lucide-react";
+import { Download, FileCode, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +13,7 @@ import { store } from "@/stores";
 import { useMonitorMessage } from "@/hooks/global/use-monitor-message";
 import ky from "ky";
 import { env } from "@/env";
+import { toast } from "sonner";
 
 interface DownloadDropdownProps {
   html: string;
@@ -30,31 +31,54 @@ const DownloadDropdown = ({
   const { handleDownload } = useMonitorMessage();
 
   const onDownLoadAsPng = async (html: string) => {
-    const resp = await ky
-      .post(`${env.NEXT_PUBLIC_API_URL}/v1/htmltopng`, {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-        json: {
-          htmlCode: html,
-        },
-      })
-      .json<{
-        output: string;
-      }>();
-    handleDownload(resp.output, `${filename}.png`);
+    try {
+      // Show toast notification for download start
+      const toastId = toast(t("status.downloading"));
+
+      const resp = await ky
+        .post(`${env.NEXT_PUBLIC_API_URL}/v1/htmltopng`, {
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+          },
+          json: {
+            htmlCode: html,
+          },
+        })
+        .json<{
+          output: string;
+        }>();
+
+      // Dismiss the downloading toast
+      toast.dismiss(toastId);
+
+      handleDownload(resp.output, `${filename}.png`);
+
+      // Show success notification
+      toast.success(`${t("toast.download_success")}`);
+    } catch (error) {
+      console.error("Failed to download PNG:", error);
+      toast.error(t("toast.download_failed"));
+    }
   };
 
   const onDownloadAsHtml = (html: string) => {
-    const blob = new Blob([html], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${filename}.html`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try {
+      const blob = new Blob([html], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${filename}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      // Show success notification
+      toast.success(`${t("toast.download_success")}`);
+    } catch (error) {
+      console.error("Failed to download HTML:", error);
+      toast.error(t("toast.download_failed"));
+    }
   };
 
   return (

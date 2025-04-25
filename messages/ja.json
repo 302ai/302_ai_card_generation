@@ -37,12 +37,15 @@
   "status": {
     "generating": "生成中",
     "generating_failed": "生成失敗",
-    "generating_success": "生成成功"
+    "generating_success": "生成成功",
+    "downloading": "ダウンロード中"
   },
 
   "toast": {
     "task_limit_reached": "タスク上限({limit})に達しました、後でお試しください",
     "generation_failed": "生成に失敗しました、もう一度お試しください",
+    "download_failed": "ダウンロードに失敗しました、もう一度お試しください",
+    "download_success": "ダウンロードに成功しました",
     "author_required": "引用の署名を入力してください",
     "card_font_required": "カードのフォントを選択してください",
     "custom_style_required": "カスタムスタイルを入力してください",
