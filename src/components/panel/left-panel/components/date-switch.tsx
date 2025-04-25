@@ -11,10 +11,10 @@ import { format, setDate } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
-import { date } from "zod";
-
+import { useTranslations } from "next-intl";
 const DateSwitch = ({ field }: { field: ControllerRenderProps<any, any> }) => {
   const [formStore, setFormStore] = useAtom(formStoreAtom);
+  const t = useTranslations();
   return (
     <div className="flex items-center gap-2">
       {formStore.showDate && (
@@ -31,7 +31,7 @@ const DateSwitch = ({ field }: { field: ControllerRenderProps<any, any> }) => {
               {field.value ? (
                 format(new Date(field.value), "PPP")
               ) : (
-                <span>Pick a date</span>
+                <span>{t("placeholder.pick_a_date")}</span>
               )}
             </Button>
           </PopoverTrigger>

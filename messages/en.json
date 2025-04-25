@@ -54,7 +54,8 @@
     "quote_card": "Please enter the quote or quote...",
     "select_text_position": "Please select the text position",
     "input_content": "Please enter the content",
-    "input_style": "Please enter the card style e.g. simple modern style, simple text layout, simple graphic elements or lines"
+    "input_style": "Please enter the card style e.g. simple modern style, simple text layout, simple graphic elements or lines",
+    "pick_a_date": "Please select a date"
   },
   "label": {
     "model_select": "Model Selection",

@@ -41,7 +41,8 @@
     "quote_card": "请输入语录或名言...",
     "select_text_position": "请选择文字位置",
     "input_content": "请输入内容",
-    "input_style": "请输入卡片风格 e.g. 简约现代风格，文字排版简洁，有简单的图形元素或线条"
+    "input_style": "请输入卡片风格 e.g. 简约现代风格，文字排版简洁，有简单的图形元素或线条",
+    "pick_a_date": "请选择日期"
   },
   "label": {
     "model_select": "模型选择",
