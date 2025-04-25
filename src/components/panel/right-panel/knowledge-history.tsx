@@ -85,6 +85,15 @@ const KnowledgeHistory = () => {
     }
   };
 
+  // Handle deletion with concurrent task counter decrement
+  const handleDelete = (id: string, status: string) => {
+    // Decrement the counter if deleting a pending task
+    if (status === "pending") {
+      setConcurrentTasks((prev) => Math.max(0, prev - 1));
+    }
+    deleteHistory(id);
+  };
+
   // Check for stale pending tasks (older than 5 minutes)
   useEffect(() => {
     if (!history?.items) return;
@@ -146,7 +155,7 @@ const KnowledgeHistory = () => {
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
-                        deleteHistory(item.id);
+                        handleDelete(item.id, item.status);
                       }}
                       className="h-8 w-8"
                     >
@@ -177,7 +186,7 @@ const KnowledgeHistory = () => {
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
-                        deleteHistory(item.id);
+                        handleDelete(item.id, item.status);
                       }}
                       className="h-8 w-8"
                     >
@@ -211,7 +220,7 @@ const KnowledgeHistory = () => {
                     size="icon"
                     onClick={(e) => {
                       e.stopPropagation();
-                      deleteHistory(item.id);
+                      handleDelete(item.id, item.status);
                     }}
                     className="ml-1 h-8 w-8"
                   >

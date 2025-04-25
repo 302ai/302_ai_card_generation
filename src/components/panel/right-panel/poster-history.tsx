@@ -184,6 +184,16 @@ const PosterHistory = () => {
     concurrentTaskCountAtom
   );
   const t = useTranslations();
+
+  // Handle deletion with concurrent task counter decrement
+  const handleDelete = (id: string, status: string) => {
+    // Decrement the counter if deleting a pending task
+    if (status === "pending") {
+      setConcurrentTasks((prev) => Math.max(0, prev - 1));
+    }
+    deletePosterHistory(id);
+  };
+
   // 下载SVG为PNG
   const onDownLoad = async (svgContent: string) => {
     try {
@@ -325,7 +335,7 @@ const PosterHistory = () => {
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
-                        deletePosterHistory(item.id);
+                        handleDelete(item.id, item.status);
                       }}
                       className="h-8 w-8"
                     >
@@ -356,7 +366,7 @@ const PosterHistory = () => {
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
-                        deletePosterHistory(item.id);
+                        handleDelete(item.id, item.status);
                       }}
                       className="h-8 w-8"
                     >
@@ -372,7 +382,38 @@ const PosterHistory = () => {
           const svgContent = extractSvgContent(item.svg || "");
 
           if (!svgContent || !svgContent.includes("<svg")) {
-            return null; // Skip if no valid SVG content
+            // Instead of returning null, show an error card for invalid SVG content
+            return (
+              <div
+                key={item.id}
+                className="flex aspect-[2/3] w-full flex-col items-center justify-center rounded-lg border border-orange-200 bg-white shadow-sm"
+              >
+                <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
+                  <AlertCircle className="h-8 w-8 text-orange-500" />
+                  <p className="text-sm text-orange-500">
+                    {t("status.invalid_svg")}
+                  </p>
+                  <p className="mt-2 text-xs text-gray-500">
+                    {item.svg
+                      ? `${item.svg.substring(0, 50)}...`
+                      : t("status.empty_content")}
+                  </p>
+                  <div className="flex">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(item.id, item.status);
+                      }}
+                      className="h-8 w-8"
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            );
           }
 
           // Normal success state
@@ -414,7 +455,7 @@ const PosterHistory = () => {
                     size="icon"
                     onClick={(e) => {
                       e.stopPropagation();
-                      deletePosterHistory(item.id);
+                      handleDelete(item.id, item.status);
                     }}
                     aria-label="删除"
                     className="ml-1 h-8 w-8"

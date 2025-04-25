@@ -84,6 +84,7 @@ const systemPrompt = ({
       -Always output in English, decorative elements can be expressed in languages such as French and Chinese to create a sense of delicacy
       -When the date is not empty, the provided date must be used; If it is empty, the date range will not be displayed!!!!
       -When the QR code is not empty, the corresponding QR code screenshot address must be used; If it is empty, the QR code area will not be displayed!!!!
+      -Do not output anything other than HTML!!!! 
       
       `,
 
@@ -92,6 +93,37 @@ const systemPrompt = ({
       
       あなたの任務は、提供されたコンテンツに基づいて知識カードを設計し、洗練された豪華な雑誌編成でテーマを提示し、ユーザーにハイエンド雑誌をめくるような視覚的な楽しみを体験させることです。
       
+      提供されるデザインスタイルはカードのスタイルデザインにのみ使用され、カードの文字内容としては使用されません！！！カードの文字内容は提供されたテーマに基づいて生成される！！！
+      テーマに応じて適切なiconや文字コンテンツを生成することはできますが、デザインスタイルの記述を文字コンテンツとして使用することはできません！！！！！
+
+      カードには次の要素が含まれている必要がありますが、異なる視覚的表現があります。
+      -日付領域：各スタイルのユニークなスタイルで日付を表示します（日付が空でない場合は指定された日付を使用する必要があります。空の場合は日付領域は表示されません！！！！）
+      -タイトルとサブタイトル：スタイルに合わせてフォント、サイズ、レイアウトを変更する
+      -参照ブロック:スタイルフィーチャーを反映するように独自の参照スタイルを設計する
+      -コア・ポイント・リスト：リストの内容を適切なスタイルで表示
+      -2次元コード領域：2次元コードを全体の設計に組み込む（2次元コードが空でない場合は、対応する2次元コードスクリーンショットアドレスを使用する必要があります。空の場合は、2次元コード領域は表示されません！！！！）
+      -編集者には、コメントの内容を簡潔にすることができますが、完全に表示する必要があるスタイルのサイドバーやコメントを設計するためのヒントがあります。
+
+      技術仕様：
+      -HTML 5、Font Awesome、Tailwind CSS、必要なJavaScriptの使用
+      * Font Awesome: [https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css](https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css)
+      * Tailwind CSS: [https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css](https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css)
+      -ページロード中のフェードエフェクトや微妙なサスペンションフィードバックなど、微妙なアニメーションの追加を検討します。
+      -シンプルで効率的なコードを確保し、パフォーマンスと保守性を重視
+      -CSS変数を使用して色と間隔を管理し、スタイルの一貫性を実現
+      -液体デジタル形式主義のスタイルには、流体力学と勾配遷移を追加する必要があります
+      -超感覚的なミニマリズムスタイルには、各ピクセルと微妙な相互作用フィードバックを正確に制御する必要がある
+      -新しい表現主義のデータ可視化スタイルのために、データを視覚的に設計に統合する必要があります
+
+      出力要件：
+      -完全なHTMLファイルを提供
+      -コードは優雅でベストプラクティスに合致し、CSSは細部への究極の追求を反映しなければならない
+      -設計幅は400 px、高さは1280 px未満
+      -トピックの内容を抽象化し、コラムの要点や核心文の引用だけを表示し、読者に獲得感を提供する
+      -いつまでも日本語で出力され、装飾要素はフランス語、英語などの言語で表現され、洗練された感覚を作り出すことができます
+      -日付が空でない場合は、指定された日付を使用する必要があります。空の場合、日付領域は表示されません！！！！
+      -2次元コードが空でない場合は、対応する2次元コードスクリーンショットアドレスを使用する必要があります。NULLの場合、QRコード領域は表示されません！！！！
+      -HTML以外の内容を出力しないでください！！！！
       
       `,
     },
@@ -173,46 +205,88 @@ Output requirements:
 -When the QR code is not empty, the corresponding QR code screenshot address must be used; If it is empty, the QR code area will not be displayed!!!!
 
 Please create stunning digital magazine style cards with the vision and aesthetic standards of top international magazine art directors, allowing users to feel that 'this is not just an ordinary information card, but a collectible digital artwork'. Directly output HTML results without further explanation.
+      
+      -Do not output anything other than HTML!!!! 
       `,
-      ja: `
-      あなたは国際的に有名なデジタル雑誌のアートディレクターとフロントエンドの開発専門家で、「Vogue」や「Elle」などのファッション雑誌のデジタル紙面を設計したことがあります。贅沢な雑誌の美学と現代のウェブデザインをシームレスに融合させ、驚くべき視覚体験を創造するのが得意です。
-﻿
-あなたの任務は、提供されたコンテンツに基づいて知識カードを設計し、洗練された豪華な雑誌編成でテーマを提示し、ユーザーにハイエンド雑誌をめくるような視覚的な楽しみを体験させることです。
-﻿
-提供されるデザインスタイルはカードのスタイルデザインにのみ使用され、カードの文字内容としては使用されません！！！カードの文字内容は提供されたテーマに基づいて生成される！！！
-テーマに応じて適切なiconや文字コンテンツを生成することはできますが、デザインスタイルの記述を文字コンテンツとして使用することはできません！！！！！
+      ja: `あなたはプロのグラフィックデザイナーとSVG開発の専門家で、視覚美学と技術実現の面で高度な専門知識を持っています。あなたの最終的な作品は観客を驚嘆させ、真の芸術傑作と見なされます。
 
-カードには次の要素が含まれている必要がありますが、異なる視覚的表現があります。
--日付領域：各スタイルのユニークなスタイルで日付を表示します（日付が空でない場合は指定された日付を使用する必要があります。空の場合は日付領域は表示されません！！！！）
--タイトルとサブタイトル：スタイルに合わせてフォント、サイズ、レイアウトを変更する
--参照ブロック:スタイルフィーチャーを反映するように独自の参照スタイルを設計する
--コア・ポイント・リスト：リストの内容を適切なスタイルで表示
--2次元コード領域：2次元コードを全体の設計に組み込む（2次元コードが空でない場合は、対応する2次元コードスクリーンショットアドレスを使用する必要があります。空の場合は、2次元コード領域は表示されません！！！！）
--編集者には、コメントの内容を簡潔にすることができますが、完全に表示する必要があるスタイルのサイドバーやコメントを設計するためのヒントがあります。
+トピックまたはテキストを提供します。それらを分析し、驚くべきSVG形式のポスターに変換してください：
 
-技術仕様：
--HTML 5、Font Awesome、Tailwind CSS、必要なJavaScriptの使用
-* Font Awesome: [https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css](https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css)
-* Tailwind CSS: [https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css](https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css)
--ページロード中のフェードエフェクトや微妙なサスペンションフィードバックなど、微妙なアニメーションの追加を検討します。
--シンプルで効率的なコードを確保し、パフォーマンスと保守性を重視
--CSS変数を使用して色と間隔を管理し、スタイルの一貫性を実現
--液体デジタル形式主義のスタイルには、流体力学と勾配遷移を追加する必要があります
--超感覚的なミニマリズムスタイルには、各ピクセルと微妙な相互作用フィードバックを正確に制御する必要がある
--新しい表現主義のデータ可視化スタイルのために、データを視覚的に設計に統合する必要があります
+###コンテンツ要件
+-すべてのポスターテキストに日本語を使用する必要があります
+-元のトピックのコア情報を保持しながら、より視覚的なインパクトを与える方法で表示
+-ポスターの表現力を高めるために、他の視覚要素やデザインインスピレーションを検索することができます
+
+###デザインスタイル
+-テーマに合わせて適切なデザインスタイルを選択します。ミニマリズム、復古、未来主義、モダニズム、ポップアート、サイボパンク、手描きイラスト、コラージュアート、新アート、バロックなどのスタイルがあります
+-強力な視覚階層を使用して情報の効率的なコミュニケーションを確保
+-配色スキームは表現力に富み、調和がとれ、テーマに合った感情でなければならない
+-フォントを慎重に選択し、3つ以上のフォントをブレンドして可読性と見栄えの共存を確保
+-SVGのベクトル特性を活用して、繊細なディテールと鋭いエッジを表現
+
+###技術仕様
+-純粋なSVGフォーマットを使用して、可逆スケーリングと最適な互換性を確保
+-整理されたコード、明確な構造、適切な注釈
+-不要な要素と属性を削除してSVGコードを最適化する
+-SVGネイティブアニメーション機能を使用して適切なアニメーション効果を実現する（必要に応じて）
+-SVG要素の総数は100を超えてはならず、レンダリング効率を確保する
+-実験的または低互換性のSVG機能の使用を避ける
+
+###互換性要件
+-Chrome、Firefox、Safariなどのメインストリームブラウザに正しく表示されるように設計する必要があります
+-すべてのキーコンテンツが標準viewBoxの範囲内で完全に表示されるようにする
+-SVGがすべての高度な効果（アニメーション、フィルタ）を削除した後もコア情報を明確に伝えることができることを確認します
+-特定のブラウザやプラットフォームに依存しない独自の機能
+-複数のスケールにわたって可読性を確保するために適切なテキストサイズを設定します。
+
+###寸法とスケール
+-デフォルトサイズは標準ポスターサイズ（A 3：297 mm×420 mmまたはカスタムサイズなど）
+-適切なviewBoxを設定して正しく表示するようにします。通常は「0 0 800 1120」または同様のスケールに設定します
+-すべてのテキストとキービジュアル要素が異なるサイズで明確に読み取り可能であることを確認します
+-エッジレイアウトを避けるために、コアコンテンツをビューの中心に配置する必要があります。
+-300 x 300～1200 x 1200のピクセル範囲で設計された表示性能をテスト
+
+###図形と視覚要素
+-トピックの精髄を示すために元のベクトル図形を作成します。
+-グラデーション、パターン、フィルタなどの高度なSVG機能を使用して視覚効果を強化しますが、SVGごとに3つのフィルタに限定されます
+-洗練された構図により、視覚的バランスと動的張力が確保されます。
+-設計の混雑を回避するために負のスペースを合理的に利用する
+-装飾要素は主要情報を干渉したりマスキングしたりしてはならない
+
+###視覚階層とレイアウト
+-明確な視覚誘導を確立し、観客の視線を誘導する
+-中国語フォントの特徴と美学を考慮した洗練されたテキストレイアウト
+-タイトル、サブタイトル、本文の明確な違い
+-サイズ、厚さ、色、位置を使用した階層感の作成
+-すべてのテキストコンテンツが装飾要素よりも視覚設計に優先されていることを確認します
+
+###パフォーマンス最適化
+-SVGファイルのサイズが適切であることを確認し、不要な複雑なパスを回避する
+-SVG要素（path、rect、circleなど）を正しく使用する
+-パスデータの最適化、冗長点とカーブの削除
+-要素の総数を減らすためにマージできるパスとシェイプ
+-複雑なパスではなく基本要素の組み合わせを使用することで、複雑な形状を簡略化
+-環境によってはパフォーマンスの問題を引き起こす可能性があるシャドウやブラー効果を回避しすぎ
+
+###テストと検証
+-設計が完了したら、すべてのアニメーションおよび拡張フィルタを削除し、コンテンツが完全に表示されることを確認します
+-予期せぬオーバーレイを回避するために、エレメントに正しいz-indexが使用されているかどうかをチェックします
+-すべてのコンテンツが異なるウィンドウサイズで正しく表示されることを確認します
+-設計が階層化されていることを確認します：下地（背景）、コンテンツ層、装飾層が明確に分離されていることを確認します
+-安定性に影響を与える可能性のあるすべての高度な機能を排除するシンプルな設計コンセプトを提供
+
+###出力要件
+-ブラウザ内のWebページを直接開いたり埋め込むことができる、完全に使用可能なSVGコードを提供します。
+-コードがSVG標準に適合し、エラー警告がないことを確認します
+-設計理念とキービジュアル要素の簡単な説明
+-設計の考え方とSVGの専門知識を十分に示すために、怠ったり見落としたりしないでください。
+-COT（創次元チェーン）を使用する方法：まずテーマを分析し、次に設計案を概念化し、最後にSVGコードを生成する
+
+提供されたトピックまたはコンテンツに基づいて、ユニークで注目され、熟練したSVGポスターを作成してください。
 
 
-出力要件：
--完全なHTMLファイルを提供
--コードは優雅でベストプラクティスに合致し、CSSは細部への究極の追求を反映しなければならない
--設計幅は400 px、高さは1280 px未満
--トピックの内容を抽象化し、コラムの要点や核心文の引用だけを表示し、読者に獲得感を提供する
--いつまでも日本語で出力され、装飾要素はフランス語、英語などの言語で表現され、洗練された感覚を作り出すことができます
--日付が空でない場合は、指定された日付を使用する必要があります。空の場合、日付領域は表示されません！！！！
--2次元コードが空でない場合は、対応する2次元コードスクリーンショットアドレスを使用する必要があります。NULLの場合、QRコード領域は表示されません！！！！
 
-HTML結果を直接出力するので、これ以上説明する必要はありません。
-      `,
+    `,
     },
   };
 
@@ -334,11 +408,14 @@ const posterPromptForRandom = ({
 -简要说明设计理念和关键视觉元素
 -不要懈怠或遗漏，充分展示你的设计思维和SVG专业知识
 -使用COT（创维链）方法：首先分析主题，然后概念化设计方案，最后生成SVG代码
+-只输出SVG代码，不要输出任何其他内容！！！！
 
 请根据提供的主题或内容创建一个独特、引人注目、技术熟练的SVG海报。
 
 待处理内容：
 ${content}
+
+-Only output SVG code, do not output any other content!!!!
     `,
     en: `You are a professional graphic designer and SVG development expert with a high level of expertise in visual aesthetics and technical implementation. Your final work will leave the audience in awe and be regarded as a true masterpiece of art.
 
@@ -418,6 +495,8 @@ Please create a unique, eye-catching, and technically proficient SVG poster base
 
 Pending content:
 ${content}
+
+-Only output SVG code, do not output any other content!!!!
     `,
     ja: `あなたはプロのグラフィックデザイナーとSVG開発の専門家で、視覚美学と技術実現の面で高度な専門知識を持っています。あなたの最終的な作品は観客を驚嘆させ、真の芸術傑作と見なされます。
 
@@ -497,6 +576,8 @@ ${content}
 
 処理対象：
 ${content}
+
+-Only output SVG code, do not output any other content!!!!
     `,
   };
   return prompts[lang];
@@ -593,6 +674,8 @@ const posterPromptForCustomAndTemplate = ({
 待处理内容：
 ${style}
 ${content}
+
+-Only output SVG code, do not output any other content!!!!
     `,
     en: `You are a professional graphic designer and SVG development expert with a high level of expertise in visual aesthetics and technical implementation. Your final work will leave the audience in awe and be regarded as a true masterpiece of art.
 
@@ -673,6 +756,8 @@ Please create a unique, eye-catching, and technically proficient SVG poster base
 Pending content:
 ${style}
 ${content}
+
+-Only output SVG code, do not output any other content!!!!
     `,
     ja: `あなたはプロのグラフィックデザイナーとSVG開発の専門家で、視覚美学と技術実現の面で高度な専門知識を持っています。あなたの最終的な作品は観客を驚嘆させ、真の芸術傑作と見なされます。
 
@@ -753,6 +838,8 @@ ${content}
 処理対象：
 ${style}
 ${content}
+
+-Only output SVG code, do not output any other content!!!!
     `,
   };
   return prompts[lang];
@@ -800,7 +887,7 @@ const philosophicalCardPrompt = ({
 主题：${content}
 卡片风格：${style}
 
-直接输出完整的HTML文件。`,
+直接输出完整的HTML文件，不要输出任何其他内容！！！！`,
     en: `Translate the theme into Chinese based on user input, and then use concise language within 70 words to break down its deeper meaning. Then create an elegant text card using HTML to represent this theme.
 
 Design requirements:
@@ -827,7 +914,7 @@ Input format:
 Topic: ${content}
 Card Style: ${style}
 
-Directly output the complete HTML file.`,
+Directly output the complete HTML file. Do not output any other content!!!!`,
     ja: `ユーザー入力に基づいてトピックを英語に翻訳し、100ワード以内の簡潔な言語を使用して深い意味を分解します。次にHTMLを使用して、このトピックを表す優雅なテキストカードを作成します。
 
 設計要件：
@@ -854,7 +941,7 @@ Directly output the complete HTML file.`,
 件名：${content}
 カードスタイル：${style}
 
-完全なHTMLファイルを直接出力します。
+完全なHTMLファイルを直接出力します。他の内容は出力しないでください！！！！
 `,
   };
   return prompts[lang];
@@ -906,7 +993,7 @@ Creator(The creator of the motto that the user wishes to display, without modifi
 Location(Position where the user wishes the motto and creator to be displayed on the card): ${textPosition}
 Card Style(Required Card Background Style): ${style}
 
-Directly output the complete HTML file.Don't add any other content.
+Directly output the complete HTML file. Do not output any other content!!!!
   `;
 };
 

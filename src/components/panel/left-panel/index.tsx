@@ -59,6 +59,7 @@ import {
   concurrentTaskCountAtom,
   MAX_CONCURRENT_TASKS,
 } from "@/stores/slices/task_store";
+import { RefreshCwIcon } from "lucide-react";
 
 const formSchema = z.object({
   knowledgeCard: z.object({
@@ -199,22 +200,22 @@ const LeftPanel = () => {
 
   // Function to fill textarea with example content
   const fillWithExample = useCallback(
-    (content: string) => {
+    (contentKey: string) => {
       if (uiStore.activeTab === "input-based") {
-        form.setValue("knowledgeCard.content", content, {
+        form.setValue("knowledgeCard.content", t(contentKey), {
           shouldValidate: true,
           shouldDirty: true,
           shouldTouch: true,
         });
       } else {
-        form.setValue("knowledgeCard.extractKeyContent", content, {
+        form.setValue("knowledgeCard.extractKeyContent", t(contentKey), {
           shouldValidate: true,
           shouldDirty: true,
           shouldTouch: true,
         });
       }
     },
-    [uiStore.activeTab, form]
+    [uiStore.activeTab, form, t]
   );
 
   const onActiveTabChange = useCallback(
@@ -244,8 +245,6 @@ const LeftPanel = () => {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-
     // Check concurrent task limit
     if (concurrentTasks >= MAX_CONCURRENT_TASKS) {
       toast.error(
@@ -670,23 +669,7 @@ const LeftPanel = () => {
                         onClick={refreshExamples}
                         type="button"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-refresh-cw"
-                        >
-                          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                          <path d="M21 3v5h-5" />
-                          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                          <path d="M3 21v-5h5" />
-                        </svg>
+                        <RefreshCwIcon />
                       </Button>
                       <div className="scrollbar-hide flex max-w-[calc(100%-2rem)] items-center space-x-1 overflow-x-auto">
                         {uiStore.activeTab === "input-based" ? (
@@ -696,10 +679,12 @@ const LeftPanel = () => {
                                 key={`${example.id}-${index}`}
                                 className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
                                 onClick={() =>
-                                  fillWithExample(example.input_based.content)
+                                  fillWithExample(
+                                    example.input_based.contentKey
+                                  )
                                 }
                               >
-                                {example.input_based.title}
+                                {t(example.input_based.titleKey)}
                               </span>
                             ))}
                           </>
@@ -710,10 +695,12 @@ const LeftPanel = () => {
                                 key={`${example.id}-${index}`}
                                 className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
                                 onClick={() =>
-                                  fillWithExample(example.extract_key.content)
+                                  fillWithExample(
+                                    example.extract_key.contentKey
+                                  )
                                 }
                               >
-                                {example.extract_key.title}
+                                {t(example.extract_key.titleKey)}
                               </span>
                             ))}
                           </>

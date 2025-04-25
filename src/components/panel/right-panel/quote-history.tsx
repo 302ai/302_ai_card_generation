@@ -90,6 +90,15 @@ const QuoteHistory = () => {
     concurrentTaskCountAtom
   );
 
+  // Handle deletion with concurrent task counter decrement
+  const handleDelete = (id: string, status: string) => {
+    // Decrement the counter if deleting a pending task
+    if (status === "pending") {
+      setConcurrentTasks((prev) => Math.max(0, prev - 1));
+    }
+    deleteQuoteHistory(id);
+  };
+
   // Format timestamp function
   const formatTimestamp = (timestamp: string | number) => {
     try {
@@ -164,7 +173,7 @@ const QuoteHistory = () => {
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
-                        deleteQuoteHistory(item.id);
+                        handleDelete(item.id, item.status);
                       }}
                       className="h-8 w-8"
                     >
@@ -195,7 +204,7 @@ const QuoteHistory = () => {
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
-                        deleteQuoteHistory(item.id);
+                        handleDelete(item.id, item.status);
                       }}
                       className="h-8 w-8"
                     >
@@ -241,7 +250,7 @@ const QuoteHistory = () => {
                     size="icon"
                     onClick={(e) => {
                       e.stopPropagation();
-                      deleteQuoteHistory(item.id);
+                      handleDelete(item.id, item.status);
                     }}
                     className="ml-1 h-8 w-8"
                   >

@@ -29,7 +29,7 @@ const StyleContent = ({
             control={form.control}
             name={`${type}.style`}
             render={({ field }) => (
-              <div className="grid max-h-[300px] grid-cols-2 gap-2 overflow-y-auto pb-2 pr-1">
+              <div className="grid max-h-[400px] grid-cols-1 gap-4 overflow-y-auto pb-3 pr-1 md:grid-cols-2">
                 {STYLE_LIST[type]?.map((item) => (
                   <div
                     key={item.id}
@@ -42,13 +42,17 @@ const StyleContent = ({
                       field.onChange(item.prompt);
                     }}
                   >
-                    <Image
-                      src={item.url}
-                      alt={item.name}
-                      width={100}
-                      height={100}
-                      className="h-auto w-full rounded-md"
-                    />
+                    <div className="relative aspect-square w-full overflow-hidden rounded-md">
+                      <Image
+                        src={item.url}
+                        alt={item.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 300px"
+                        quality={100}
+                        priority={true}
+                        className="object-contain"
+                      />
+                    </div>
                   </div>
                 ))}
               </div>

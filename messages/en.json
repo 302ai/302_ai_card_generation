@@ -123,6 +123,146 @@
           "label": "Open/Close Tool Information Popup"
         }
       }
+    },
+    "input_based": {
+      "title": "Photography",
+      "content": "The Art of Photography"
+    },
+    "extract_key": {
+      "title": "Life",
+      "content": "The breeze in the mountains gently caresses my face, bringing the fragrance of the soil. Recalling an ancient saying: 'One flower, one world; one leaf, one bodhi.' This makes me understand that every small existence in life is worth cherishing."
+    }
+  },
+  "examples": {
+    "card_1": {
+      "input_based": {
+        "title": "Photography",
+        "content": "The Art of Photography"
+      },
+      "extract_key": {
+        "title": "Life",
+        "content": "The breeze in the mountains gently caresses my face, bringing the fragrance of the soil. Recalling an ancient saying: 'One flower, one world; one leaf, one bodhi.' This makes me understand that every small existence in life is worth cherishing."
+      }
+    },
+    "card_2": {
+      "input_based": {
+        "title": "Calligraphy",
+        "content": "The Beauty of Calligraphy"
+      },
+      "extract_key": {
+        "title": "Breakthrough",
+        "content": "Evening in the fields, waves of rice rolling. I remember my grandfather saying: 'A seed must experience darkness before it can break through the soil.' This tells us that growth is inevitably accompanied by challenges and breakthroughs."
+      }
+    },
+    "card_3": {
+      "input_based": {
+        "title": "Life",
+        "content": "The Wisdom of Life"
+      },
+      "extract_key": {
+        "title": "Inclusiveness",
+        "content": "Standing by the sea watching the tides rise and fall, my heart is incredibly peaceful. The ancients said: 'The sea embraces all rivers; greatness lies in capacity.' This inspires us to face life with an open mind, embracing and accepting different people and things."
+      }
+    },
+    "card_4": {
+      "input_based": {
+        "title": "Life",
+        "content": "The Wisdom of Life"
+      },
+      "extract_key": {
+        "title": "Inclusiveness",
+        "content": "Standing by the sea watching the tides rise and fall, my heart is incredibly peaceful. The ancients said: 'The sea embraces all rivers; greatness lies in capacity.' This inspires us to face life with an open mind, embracing and accepting different people and things."
+      }
+    },
+    "card_5": {
+      "input_based": {
+        "title": "Dream",
+        "content": "The Power of Dreams"
+      },
+      "extract_key": {
+        "title": "Courage",
+        "content": "Walking in the dawn, dewdrops crystal clear. Someone once said: 'Life will not shortchange anyone who strives upward.' This gave me the courage to continue forward when facing difficulties."
+      }
+    },
+    "card_6": {
+      "input_based": {
+        "title": "Time",
+        "content": "The Traces of Time"
+      },
+      "extract_key": {
+        "title": "Action",
+        "content": "Morning sunlight shines through the window into the room, starting a beautiful day. I remember my master saying: 'The best time to plant a tree was ten years ago, the second best is now.' This made me understand that it's never too late to take action."
+      }
+    },
+    "card_7": {
+      "input_based": {
+        "title": "Reading",
+        "content": "The Beauty of Reading"
+      },
+      "extract_key": {
+        "title": "Limitation",
+        "content": "Standing on the mountaintop looking into the distance, the sea of clouds rolling magnificently. Zhuangzi said: 'A frog in a well cannot discuss the ocean; a summer insect cannot discuss ice.' Reminding us to broaden our horizons and break through limitations."
+      }
+    },
+    "card_8": {
+      "input_based": {
+        "title": "Youth",
+        "content": "The Prime of Youth"
+      },
+      "extract_key": {
+        "title": "Test",
+        "content": "Spring rain nourishes the growth of all things. Remember that saying: 'The sharpness of a sword comes from grinding; the fragrance of plum blossoms comes from the bitter cold.' This tells us that success often requires setbacks and tests."
+      }
+    },
+    "card_9": {
+      "input_based": {
+        "title": "Happiness",
+        "content": "The Truth of Happiness"
+      },
+      "extract_key": {
+        "title": "Cultivation",
+        "content": "Spring breeze on my face, looking at the blooming flowers in the yard. The elder often said: 'You reap what you sow.' Every effort in life will bloom and bear fruit at some point in the future."
+      }
+    },
+    "card_10": {
+      "input_based": {
+        "title": "Freedom",
+        "content": "The Realm of Freedom"
+      },
+      "extract_key": {
+        "title": "Life",
+        "content": "The air after rain is especially fresh, making one feel carefree. There's a good saying: 'Life is like a book, the foolish flip through it casually, the wise read it carefully.' This teaches us to feel the beauty of life with our hearts."
+      }
+    },
+    "card_11": {
+      "input_based": {
+        "title": "Travel",
+        "content": "The Meaning of Travel"
+      },
+      "extract_key": {
+        "title": "Adversity",
+        "content": "Walking on the forest path in autumn, leaves falling. Recalling that saying: 'Without experiencing the bone-chilling cold, how can one smell the fragrance of plum blossoms?' The most beautiful scenery in life is often seen after experiencing adversity."
+      }
+    },
+    "card_12": {
+      "input_based": {
+        "title": "Music",
+        "content": "The Revival of Classical Music"
+      },
+      "extract_key": {
+        "title": "Ideal",
+        "content": "Sitting in the study reading, birds chirping happily outside the window. Su Shi said: 'Those who accomplish great things in ancient times not only had extraordinary talent but also unshakable determination.' This encourages me never to give up in pursuing my ideals."
+      }
+    },
+    "card_13": {
+      "input_based": {
+        "title": "Digital",
+        "content": "The Maze of Digital Identity"
+      },
+      "extract_key": {
+        "title": "Strength",
+        "content": "As night falls, the city's neon lights flicker. Remember that saying: 'Nine out of ten things in life don't go as wished; I hope you become strong enough not to need to pour out your grievances.' This teaches us to learn to stay strong in adversity and continue moving forward."
+      }
     }
   }
 }
