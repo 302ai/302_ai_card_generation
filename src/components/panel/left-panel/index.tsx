@@ -892,7 +892,7 @@ const LeftPanel = () => {
                               <SelectContent>
                                 {FONTS.map((font) => (
                                   <SelectItem key={font.name} value={font.name}>
-                                    {font.name}
+                                    {t(font.title)}
                                   </SelectItem>
                                 ))}
                               </SelectContent>

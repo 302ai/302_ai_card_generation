@@ -405,18 +405,14 @@ const PosterHistory = () => {
             return (
               <div
                 key={item.id}
-                className="flex aspect-[2/3] w-full flex-col items-center justify-center rounded-lg border border-orange-200 bg-white shadow-sm"
+                className="flex aspect-[2/3] w-full flex-col items-center justify-center rounded-lg border border-red-200 bg-white shadow-sm"
               >
                 <div className="flex flex-col items-center justify-center space-y-4 p-4 text-center">
-                  <AlertCircle className="h-8 w-8 text-orange-500" />
-                  <p className="text-sm text-orange-500">
-                    {t("status.invalid_svg")}
+                  <AlertCircle className="h-8 w-8 text-red-500" />
+                  <p className="text-sm text-red-500">
+                    {t("status.generating_failed")}
                   </p>
-                  <p className="mt-2 text-xs text-gray-500">
-                    {item.svg
-                      ? `${item.svg.substring(0, 50)}...`
-                      : t("status.empty_content")}
-                  </p>
+
                   <div className="flex">
                     <Button
                       variant="ghost"
