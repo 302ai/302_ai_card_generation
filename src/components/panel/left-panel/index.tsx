@@ -896,9 +896,7 @@ const LeftPanel = () => {
                               onValueChange={field.onChange}
                             >
                               <SelectTrigger>
-                                <SelectValue
-                                  placeholder={t("placeholder.card_font")}
-                                />
+                                <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
                                 {FONTS.map((font) => (
@@ -1011,9 +1009,7 @@ const LeftPanel = () => {
                               onValueChange={field.onChange}
                             >
                               <SelectTrigger>
-                                <SelectValue
-                                  placeholder={t("placeholder.card_font")}
-                                />
+                                <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
                                 {FONTS.map((font) => (
