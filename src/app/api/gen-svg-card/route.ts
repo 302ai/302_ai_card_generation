@@ -44,7 +44,10 @@ export async function POST(request: Request) {
       prompt,
     });
 
-    const stringSVG = result.text;
+    let stringSVG = result.text;
+
+    // Clean SVG string from markdown formatting
+    stringSVG = cleanSvgFromMarkdown(stringSVG);
 
     return Response.json({ stringSVG });
   } catch (error) {
@@ -79,4 +82,28 @@ export async function POST(request: Request) {
       { status: errorCode }
     );
   }
+}
+
+/**
+ * Cleans SVG string from markdown formatting
+ * @param svgString - The SVG string that might contain markdown
+ * @returns Cleaned SVG string
+ */
+function cleanSvgFromMarkdown(svgString: string): string {
+  // Remove markdown code blocks (```svg and ```)
+  svgString = svgString.replace(/```svg\n?/g, "").replace(/```\n?/g, "");
+
+  // Ensure the string starts with <svg
+  const svgStartIndex = svgString.indexOf("<svg");
+  if (svgStartIndex > 0) {
+    svgString = svgString.substring(svgStartIndex);
+  }
+
+  // Ensure the string ends properly with </svg>
+  const svgEndIndex = svgString.lastIndexOf("</svg>");
+  if (svgEndIndex !== -1 && svgEndIndex < svgString.length - 6) {
+    svgString = svgString.substring(0, svgEndIndex + 6);
+  }
+
+  return svgString;
 }
