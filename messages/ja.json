@@ -47,7 +47,9 @@
     "content_required": "内容を入力してください",
     "change_style_required": "スタイル説明を入力してください",
     "poster_content_required": "ポスター内容を入力してください",
-    "philosophy_content_required": "哲学テーマを入力してください"
+    "philosophy_content_required": "哲学テーマを入力してください",
+    "qr_code_required": "QRコード内容を入力してください",
+    "date_required": "日付を選択してください"
   },
   "placeholder": {
     "based_on_input": "トピックや記事を入力してください。AIは入力に基づいてカードを生成します...",

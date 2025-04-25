@@ -79,7 +79,9 @@
     "content_required": "请输入内容",
     "change_style_required": "请输入样式描述",
     "poster_content_required": "请输入海报内容",
-    "philosophy_content_required": "请输入哲学主题内容"
+    "philosophy_content_required": "请输入哲学主题内容",
+    "qr_code_required": "请输入二维码内容",
+    "date_required": "请选择日期"
   },
   "select": {
     "not_display": "不展示",

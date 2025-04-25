@@ -244,6 +244,8 @@ const LeftPanel = () => {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+
     // Check concurrent task limit
     if (concurrentTasks >= MAX_CONCURRENT_TASKS) {
       toast.error(
@@ -280,6 +282,17 @@ const LeftPanel = () => {
         if (!knowledgeCard.model) {
           toast.error(t("toast.model_required"));
           return;
+        }
+        if (formStore.showDate && !knowledgeCard.date) {
+          toast.error(t("toast.date_required"));
+          return;
+        }
+
+        if (formStore.qrType === "genrate" || formStore.qrType === "upload") {
+          if (!knowledgeCard.qrCode) {
+            toast.error(t("toast.qr_code_required"));
+            return;
+          }
         }
 
         let newStyle = knowledgeCard.style as string;

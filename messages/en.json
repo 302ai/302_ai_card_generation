@@ -44,7 +44,9 @@
     "text_position_required": "Please select the text position",
     "quote_content_required": "Please enter the quote content",
     "content_required": "Please enter the content",
-    "change_style_required": "Please enter the style description"
+    "change_style_required": "Please enter the style description",
+    "qr_code_required": "Please enter the QR code content",
+    "date_required": "Please select the date"
   },
   "placeholder": {
     "based_on_input": "Please enter the theme or article, AI generates cards based on the input...",
