@@ -60,6 +60,8 @@ import {
   MAX_CONCURRENT_TASKS,
 } from "@/stores/slices/task_store";
 import { RefreshCwIcon } from "lucide-react";
+import ky from "ky";
+import { env } from "@/env";
 
 const formSchema = z.object({
   knowledgeCard: z.object({
@@ -264,6 +266,7 @@ const LeftPanel = () => {
           return;
         }
 
+        // QR code validation only - don't process upload yet
         if (formStore.qrType === "genrate" || formStore.qrType === "upload") {
           if (!knowledgeCard.qrCode) {
             toast.error(t("toast.qr_code_required"));
@@ -289,6 +292,85 @@ const LeftPanel = () => {
           newStyle = knowledgeCard.customStyle as string;
           if (!newStyle || newStyle.trim() === "") {
             toast.error(t("toast.custom_style_required"));
+            return;
+          }
+        }
+
+        // All validations passed - now handle QR code upload if needed
+        if (
+          formStore.qrType === "genrate" &&
+          knowledgeCard.qrCode &&
+          !knowledgeCard.qrCode.startsWith("http")
+        ) {
+          try {
+            // Get the SVG element
+            const svgElement = document.querySelector(
+              ".qr-code-generated svg"
+            ) as SVGSVGElement;
+            if (svgElement) {
+              const svgData = new XMLSerializer().serializeToString(svgElement);
+              const canvas = document.createElement("canvas");
+              const ctx = canvas.getContext("2d");
+              const img = new Image();
+
+              // Set canvas dimensions
+              canvas.width = 200;
+              canvas.height = 200;
+
+              // Create a Promise to handle the async conversion
+              const blobUrl = await new Promise<string>((resolve, reject) => {
+                img.onload = () => {
+                  ctx?.drawImage(img, 0, 0);
+
+                  // Convert canvas to blob
+                  canvas.toBlob(async (blob) => {
+                    if (!blob) {
+                      reject(new Error("Failed to convert QR code to blob"));
+                      return;
+                    }
+
+                    // Create FormData and upload
+                    const formData = new FormData();
+                    formData.append("file", blob, `qrcode-${Date.now()}.png`);
+
+                    try {
+                      const response = await ky
+                        .post(
+                          `${env.NEXT_PUBLIC_AUTH_API_URL}/gpt/api/upload/gpt/image`,
+                          {
+                            body: formData,
+                          }
+                        )
+                        .json<{
+                          code: number;
+                          msg: string;
+                          data: {
+                            url: string;
+                          };
+                        }>();
+
+                      if (response.code === 0) {
+                        resolve(response.data.url);
+                      } else {
+                        reject(new Error(`Upload failed: ${response.msg}`));
+                      }
+                    } catch (error) {
+                      reject(error);
+                    }
+                  }, "image/png");
+                };
+
+                img.onerror = reject;
+                img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
+              });
+
+              // Only update the knowledgeCard.qrCode value for submission
+              // Don't update the form field's value to prevent displaying the URL in textarea
+              knowledgeCard.qrCode = blobUrl;
+            }
+          } catch (error) {
+            console.error("Failed to convert and upload QR code:", error);
+            toast.error(t("toast.qr_code_upload_failed"));
             return;
           }
         }
