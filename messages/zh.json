@@ -9,6 +9,12 @@
     },
     "title": "需要分享码"
   },
+  "fonts": {
+    "huiwenmingchao": "汇文明朝字体",
+    "xingshu": "行书",
+    "songti": "宋体",
+    "heiti": "黑体"
+  },
   "action": {
     "download_as_png": "下载为PNG",
     "download_as_html": "下载为HTML",

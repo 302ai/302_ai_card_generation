@@ -101,18 +101,22 @@ const FONTS = [
   {
     name: "行书",
     value: "/fonts/行书.otf",
+    title: "fonts.xingshu",
   },
   {
     name: "宋体",
     value: "/fonts/宋体.otf",
+    title: "fonts.songti",
   },
   {
     name: "汇文明朝体",
     value: "/fonts/汇文明朝体.ttf",
+    title: "fonts.huiwenmingchao",
   },
   {
     name: "黑体",
     value: "/fonts/黑体.otf",
+    title: "fonts.heiti",
   },
 ];
 
@@ -1001,7 +1005,7 @@ const LeftPanel = () => {
                               <SelectContent>
                                 {FONTS.map((font) => (
                                   <SelectItem key={font.name} value={font.name}>
-                                    {font.name}
+                                    {t(font.title)}
                                   </SelectItem>
                                 ))}
                               </SelectContent>

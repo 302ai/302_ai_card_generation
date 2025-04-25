@@ -9,6 +9,12 @@
     },
     "title": "Need to share code"
   },
+  "fonts": {
+    "huiwenmingchao": "Huiwen Mincho Font",
+    "xingshu": "Running Script",
+    "songti": "Song Font",
+    "heiti": "Heiti Font"
+  },
   "action": {
     "download_as_png": "Download as PNG",
     "download_as_html": "Download as HTML",

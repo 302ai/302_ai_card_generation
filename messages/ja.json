@@ -9,6 +9,12 @@
     },
     "title": "コードを共有する必要がある"
   },
+  "fonts": {
+    "huiwenmingchao": "汇文明朝体",
+    "xingshu": "行書",
+    "songti": "宋体",
+    "heiti": "黒体"
+  },
   "action": {
     "download_as_png": "PNGとしてダウンロード",
     "download_as_html": "HTMLとしてダウンロード",
