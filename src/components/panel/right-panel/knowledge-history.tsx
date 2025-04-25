@@ -121,7 +121,7 @@ const KnowledgeHistory = () => {
   return (
     <>
       {/* 卡片网格布局 */}
-      <div className="grid w-full grid-cols-3 gap-4 p-4">
+      <div className="grid w-full grid-cols-1 gap-4 p-4 sm:grid-cols-2 md:grid-cols-3">
         {history?.items.map((item, index) => {
           // Handle loading state
           if (item.status === "pending") {
@@ -148,6 +148,7 @@ const KnowledgeHistory = () => {
                         e.stopPropagation();
                         deleteHistory(item.id);
                       }}
+                      className="h-8 w-8"
                     >
                       <Trash className="h-4 w-4" />
                     </Button>
@@ -178,6 +179,7 @@ const KnowledgeHistory = () => {
                         e.stopPropagation();
                         deleteHistory(item.id);
                       }}
+                      className="h-8 w-8"
                     >
                       <Trash className="h-4 w-4" />
                     </Button>
@@ -195,13 +197,14 @@ const KnowledgeHistory = () => {
               key={item.id}
             >
               <div className="flex items-center justify-between p-2">
-                <span className="text-sm text-gray-500">
+                <span className="max-w-[60%] truncate text-xs text-gray-500 sm:text-sm">
                   {formatTimestamp(item.createdAt)}
                 </span>
-                <div className="flex">
+                <div className="flex items-center">
                   <DownloadDropdown
                     html={sanitizeHtml(item.html)}
                     filename="knowledge-card"
+                    className="h-8"
                   />
                   <Button
                     variant="ghost"
@@ -210,6 +213,7 @@ const KnowledgeHistory = () => {
                       e.stopPropagation();
                       deleteHistory(item.id);
                     }}
+                    className="ml-1 h-8 w-8"
                   >
                     <Trash className="h-4 w-4" />
                   </Button>

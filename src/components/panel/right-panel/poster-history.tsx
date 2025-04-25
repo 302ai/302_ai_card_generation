@@ -300,7 +300,7 @@ const PosterHistory = () => {
       <style>{customAnimationStyles}</style>
 
       {/* SVG 卡片网格布局 */}
-      <div className="grid w-full grid-cols-3 gap-4 p-4">
+      <div className="grid w-full grid-cols-1 gap-4 p-4 sm:grid-cols-2 md:grid-cols-3">
         {posterHistory?.items.map((item, index) => {
           // Handle loading state
           if (item.status === "pending") {
@@ -316,10 +316,10 @@ const PosterHistory = () => {
                   </p>
                 </div>
                 <div className="flex w-full items-center justify-between p-2">
-                  <span className="text-sm text-gray-500">
+                  <span className="max-w-[60%] truncate text-xs text-gray-500 sm:text-sm">
                     {formatTimestamp(item.createdAt)}
                   </span>
-                  <div className="flex">
+                  <div className="flex items-center">
                     <Button
                       variant="ghost"
                       size="icon"
@@ -327,6 +327,7 @@ const PosterHistory = () => {
                         e.stopPropagation();
                         deletePosterHistory(item.id);
                       }}
+                      className="h-8 w-8"
                     >
                       <Trash className="h-4 w-4" />
                     </Button>
@@ -357,6 +358,7 @@ const PosterHistory = () => {
                         e.stopPropagation();
                         deletePosterHistory(item.id);
                       }}
+                      className="h-8 w-8"
                     >
                       <Trash className="h-4 w-4" />
                     </Button>
@@ -391,10 +393,10 @@ const PosterHistory = () => {
               </div>
 
               <div className="flex items-center justify-between border-t p-2">
-                <span className="text-sm text-gray-500">
+                <span className="max-w-[60%] truncate text-xs text-gray-500 sm:text-sm">
                   {formatTimestamp(item.createdAt)}
                 </span>
-                <div className="flex">
+                <div className="flex items-center">
                   <Button
                     variant="ghost"
                     size="icon"
@@ -403,6 +405,7 @@ const PosterHistory = () => {
                       onDownLoad(svgContent);
                     }}
                     aria-label="下载"
+                    className="h-8 w-8"
                   >
                     <FileDown className="h-4 w-4" />
                   </Button>
@@ -414,6 +417,7 @@ const PosterHistory = () => {
                       deletePosterHistory(item.id);
                     }}
                     aria-label="删除"
+                    className="ml-1 h-8 w-8"
                   >
                     <Trash className="h-4 w-4" />
                   </Button>

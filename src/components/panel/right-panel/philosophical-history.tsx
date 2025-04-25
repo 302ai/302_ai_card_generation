@@ -145,7 +145,7 @@ const PhilosophicalCardHistory = () => {
   return (
     <>
       {/* 卡片网格布局 */}
-      <div className="grid w-full grid-cols-3 gap-4 p-4">
+      <div className="grid w-full grid-cols-1 gap-4 p-4 sm:grid-cols-2 md:grid-cols-3">
         {philosophicalHistory?.items.map((item, index) => {
           // Handle loading state
           if (item.status === "pending") {
@@ -161,10 +161,10 @@ const PhilosophicalCardHistory = () => {
                   </p>
                 </div>
                 <div className="flex w-full items-center justify-between p-2">
-                  <span className="text-sm text-gray-500">
+                  <span className="max-w-[60%] truncate text-xs text-gray-500 sm:text-sm">
                     {formatTimestamp(item.createdAt)}
                   </span>
-                  <div className="flex">
+                  <div className="flex items-center">
                     <Button
                       variant="ghost"
                       size="icon"
@@ -172,6 +172,7 @@ const PhilosophicalCardHistory = () => {
                         e.stopPropagation();
                         deletePhilosophicalHistory(item.id);
                       }}
+                      className="h-8 w-8"
                     >
                       <Trash className="h-4 w-4" />
                     </Button>
@@ -202,6 +203,7 @@ const PhilosophicalCardHistory = () => {
                         e.stopPropagation();
                         deletePhilosophicalHistory(item.id);
                       }}
+                      className="h-8 w-8"
                     >
                       <Trash className="h-4 w-4" />
                     </Button>
@@ -219,10 +221,10 @@ const PhilosophicalCardHistory = () => {
               key={item.id}
             >
               <div className="flex items-center justify-between p-2">
-                <span className="text-sm text-gray-500">
+                <span className="max-w-[60%] truncate text-xs text-gray-500 sm:text-sm">
                   {formatTimestamp(item.createdAt)}
                 </span>
-                <div className="flex">
+                <div className="flex items-center">
                   <Button
                     variant="ghost"
                     size="icon"
@@ -231,12 +233,14 @@ const PhilosophicalCardHistory = () => {
                       setSelectedHtml(sanitizeHtml(item.html));
                       setStyleModalOpen(true);
                     }}
+                    className="h-8 w-8"
                   >
                     <WandSparkles className="h-4 w-4" />
                   </Button>
                   <DownloadDropdown
                     html={sanitizeHtml(item.html)}
                     filename="philosophical-card"
+                    className="h-8"
                   />
                   <Button
                     variant="ghost"
@@ -245,6 +249,7 @@ const PhilosophicalCardHistory = () => {
                       e.stopPropagation();
                       deletePhilosophicalHistory(item.id);
                     }}
+                    className="ml-1 h-8 w-8"
                   >
                     <Trash className="h-4 w-4" />
                   </Button>

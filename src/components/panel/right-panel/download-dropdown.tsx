@@ -17,11 +17,13 @@ import { env } from "@/env";
 interface DownloadDropdownProps {
   html: string;
   filename?: string;
+  className?: string;
 }
 
 const DownloadDropdown = ({
   html,
   filename = "knowledge-card",
+  className,
 }: DownloadDropdownProps) => {
   const t = useTranslations();
   const { apiKey } = store.get(appConfigAtom);
@@ -64,6 +66,7 @@ const DownloadDropdown = ({
           onClick={(e) => {
             e.stopPropagation();
           }}
+          className={className}
         >
           <Download className="h-4 w-4" />
         </Button>
