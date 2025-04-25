@@ -18,7 +18,6 @@ export async function POST(request: Request) {
       content,
       style,
       author,
-      cardFont,
       textPosition,
     }: {
       apiKey: string;
@@ -26,7 +25,6 @@ export async function POST(request: Request) {
       content: string;
       style: string;
       author: string;
-      cardFont: string;
       textPosition: string;
     } = await request.json();
     const ai302 = createAI302({
@@ -44,7 +42,6 @@ export async function POST(request: Request) {
             author,
             textPosition,
             style,
-            cardFont,
           }),
         },
       ],

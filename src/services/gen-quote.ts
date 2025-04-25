@@ -10,7 +10,6 @@ interface GenerateQuoteCardParams {
   author: string;
   textPosition: string;
   style: string;
-  cardFont: string;
 }
 
 interface GenerateQuoteCardResult {
@@ -24,7 +23,6 @@ export const generateQuoteCard = async ({
   author,
   textPosition,
   style,
-  cardFont,
 }: GenerateQuoteCardParams) => {
   try {
     const res = await ky.post("/api/gen-quote-card", {
@@ -36,7 +34,6 @@ export const generateQuoteCard = async ({
         author,
         textPosition,
         style,
-        cardFont,
       },
     });
     return res.json<GenerateQuoteCardResult>();

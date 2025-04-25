@@ -9,7 +9,6 @@ interface GenerateHTMLParams {
   lang: "zh" | "en" | "ja";
   style: string;
   content: string;
-  cardFont: string;
 }
 
 interface GenerateHTMLResult {
@@ -22,7 +21,6 @@ export const genPhilosophicalCard = async ({
   lang,
   style,
   content,
-  cardFont,
 }: GenerateHTMLParams) => {
   try {
     const res = await ky.post("/api/gen-philosophical-card", {
@@ -33,7 +31,6 @@ export const genPhilosophicalCard = async ({
         lang,
         content,
         style,
-        cardFont,
       },
     });
     return res.json<GenerateHTMLResult>();

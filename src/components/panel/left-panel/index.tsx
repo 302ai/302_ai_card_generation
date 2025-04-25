@@ -82,7 +82,6 @@ const formSchema = z.object({
   quoteReference: z.object({
     model: z.string().optional(),
     author: z.string().optional(),
-    cardFont: z.string().optional(),
     textPosition: z.string().optional(),
     content: z.string().optional(),
     style: z.string().optional(),
@@ -92,33 +91,9 @@ const formSchema = z.object({
     model: z.string().optional(),
     content: z.string().optional(),
     style: z.string().optional(),
-    cardFont: z.string().optional(),
     customStyle: z.string().optional(),
   }),
 });
-
-const FONTS = [
-  {
-    name: "行书",
-    value: "/fonts/行书.otf",
-    title: "fonts.xingshu",
-  },
-  {
-    name: "宋体",
-    value: "/fonts/宋体.otf",
-    title: "fonts.songti",
-  },
-  {
-    name: "汇文明朝体",
-    value: "/fonts/汇文明朝体.ttf",
-    title: "fonts.huiwenmingchao",
-  },
-  {
-    name: "黑体",
-    value: "/fonts/黑体.otf",
-    title: "fonts.heiti",
-  },
-];
 
 const LeftPanel = () => {
   const [uiStore, setUiStore] = useAtom(uiStoreAtom);
@@ -166,11 +141,9 @@ const LeftPanel = () => {
       },
       philosophicalCard: {
         model: "claude-3-7-sonnet-20250219",
-        cardFont: "汇文明朝体",
       },
       quoteReference: {
         model: "claude-3-7-sonnet-20250219",
-        cardFont: "汇文明朝体",
         textPosition: "left",
       },
     },
@@ -462,7 +435,6 @@ const LeftPanel = () => {
           lang: locale as "zh" | "en" | "ja",
           content: philosophicalCard.content as string,
           style,
-          cardFont: philosophicalCard.cardFont as string,
         });
         await updatePhilosophicalHistory(historyId, {
           html: res.html,
@@ -530,7 +502,6 @@ const LeftPanel = () => {
           model: quoteReference.model as string,
           content: quoteReference.content as string,
           author: quoteReference.author as string,
-          cardFont: quoteReference.cardFont as string,
           textPosition: quoteReference.textPosition as string,
           style,
         });
@@ -875,35 +846,6 @@ const LeftPanel = () => {
 
                     <FormField
                       control={form.control}
-                      name="quoteReference.cardFont"
-                      render={({ field }) => (
-                        <FormItem className="flex w-full items-center justify-between">
-                          <FormLabel className="w-full">
-                            {t("label.card_font")}
-                          </FormLabel>
-                          <FormControl>
-                            <Select
-                              value={field.value}
-                              onValueChange={field.onChange}
-                            >
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {FONTS.map((font) => (
-                                  <SelectItem key={font.name} value={font.name}>
-                                    {t(font.title)}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
                       name="quoteReference.textPosition"
                       render={({ field }) => (
                         <FormItem className="flex w-full items-center justify-between">
@@ -984,38 +926,7 @@ const LeftPanel = () => {
                     />
                   </>
                 )}
-                {uiStore.activeCard === "philosophical-card" && (
-                  <div>
-                    <FormField
-                      control={form.control}
-                      name="philosophicalCard.cardFont"
-                      render={({ field }) => (
-                        <FormItem className="flex w-full items-center justify-between">
-                          <FormLabel className="w-full">
-                            {t("label.card_font")}
-                          </FormLabel>
-                          <FormControl>
-                            <Select
-                              value={field.value}
-                              onValueChange={field.onChange}
-                            >
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {FONTS.map((font) => (
-                                  <SelectItem key={font.name} value={font.name}>
-                                    {t(font.title)}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                )}
+
                 <div className="flex items-center">
                   <span className="flex-1">{t("label.style_setting")}</span>
                   <StyleTab />

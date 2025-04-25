@@ -18,14 +18,12 @@ export async function POST(request: Request) {
       content,
       lang,
       style,
-      cardFont,
     }: {
       apiKey: string;
       model: string;
       lang: "zh" | "en" | "ja";
       content: string;
       style: string;
-      cardFont: string;
     } = await request.json();
     const ai302 = createAI302({
       apiKey,
@@ -37,7 +35,7 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "user",
-          content: philosophicalCardPrompt({ content, style, cardFont, lang }),
+          content: philosophicalCardPrompt({ content, style, lang }),
         },
       ],
     });

@@ -81,10 +81,6 @@ const HtmlPreview = ({ html, children, title }: HtmlPreviewProps) => {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
-              @font-face { font-family: '行书'; src: url('/fonts/行书.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
-              @font-face { font-family: '宋体'; src: url('/fonts/宋体.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
-              @font-face { font-family: '汇文明朝体'; src: url('/fonts/汇文明朝体.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
-              @font-face { font-family: '黑体'; src: url('/fonts/黑体.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
               html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
               body { display: block; position: relative; }
               .content-container { width: 400px; max-height: 100%; overflow: hidden; mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%); transform-origin: top center; transform: scale(calc(100% / 400 * 100%)); }
@@ -148,10 +144,6 @@ const HtmlPreview = ({ html, children, title }: HtmlPreviewProps) => {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
-            @font-face { font-family: '行书'; src: url('/fonts/行书.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
-            @font-face { font-family: '宋体'; src: url('/fonts/宋体.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
-            @font-face { font-family: '汇文明朝体'; src: url('/fonts/汇文明朝体.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
-            @font-face { font-family: '黑体'; src: url('/fonts/黑体.otf') format('opentype'); font-weight: normal; font-style: normal; font-display: swap; }
             html { scroll-behavior: smooth; }
             body {
               margin: 0;

@@ -123,7 +123,7 @@ const systemPrompt = ({
       -いつまでも日本語で出力され、装飾要素はフランス語、英語などの言語で表現され、洗練された感覚を作り出すことができます
       -日付が空でない場合は、指定された日付を使用する必要があります。空の場合、日付領域は表示されません！！！！
       -2次元コードが空でない場合は、対応する2次元コードスクリーンショットアドレスを使用する必要があります。NULLの場合、QRコード領域は表示されません！！！！
-      -HTML以外の内容を出力しないでください！！！！
+      -HTML以外の内容を出力しないでください！！！
       
       `,
     },
@@ -283,9 +283,7 @@ Please create stunning digital magazine style cards with the vision and aestheti
 -COT（創次元チェーン）を使用する方法：まずテーマを分析し、次に設計案を概念化し、最後にSVGコードを生成する
 
 提供されたトピックまたはコンテンツに基づいて、ユニークで注目され、熟練したSVGポスターを作成してください。
-
-
-
+SVGコードのみを出力し、他のコンテンツは出力しないでください！！！！
     `,
     },
   };
@@ -577,7 +575,7 @@ ${content}
 処理対象：
 ${content}
 
--Only output SVG code, do not output any other content!!!!
+-SVGコードのみを出力し、他のコンテンツは出力しないでください！！！！
     `,
   };
   return prompts[lang];
@@ -848,34 +846,19 @@ ${content}
 const philosophicalCardPrompt = ({
   content,
   style,
-  cardFont,
   lang = "zh",
 }: {
   content: string;
   style: string;
   lang?: "zh" | "en" | "ja";
-  cardFont: string;
 }) => {
-  // Determine the correct file extension and format based on the font name
-  const fileExtension = cardFont === "汇文明朝体" ? "ttf" : "otf";
-  const formatType = fileExtension === "ttf" ? "truetype" : "opentype";
-
   const prompts = {
     zh: `根据用户输入将主题翻译成英文，然后使用100字以内的简洁语言来分解其深层含义。然后使用HTML创建一个优雅的文本卡来表示这个主题。
 
 设计要求：
-1.必须使用${cardFont}字体，不允许加粗。在CSS中使用font-family: '${cardFont}';来指定。请在HTML的<head>部分添加以下@font-face声明：
-@font-face {
-  font-family: '${cardFont}';
-  src: url('/fonts/${cardFont}.${fileExtension}') format('${formatType}');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-2.主题的字体应该特别大。
-3.卡片大小约为350px宽，450px高，有适当的边距。
-4.必须使用提供的卡片背景风格
+1.主题的字体应该特别大。
+2.卡片大小约为350px宽，450px高，有适当的边距。
+3.必须使用提供的卡片背景风格
 
 卡片结构：
 1.顶级用户输入的中文主题
@@ -891,18 +874,9 @@ const philosophicalCardPrompt = ({
     en: `Translate the theme into Chinese based on user input, and then use concise language within 70 words to break down its deeper meaning. Then create an elegant text card using HTML to represent this theme.
 
 Design requirements:
-1. The provided font '${cardFont}' must be used and bolding is not allowed. Specify this using font-family: '${cardFont}'; in your CSS. Add the following @font-face declaration in the <head> section of your HTML:
-@font-face {
-  font-family: '${cardFont}';
-  src: url('/fonts/${cardFont}.${fileExtension}') format('${formatType}');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-2. The font of the theme should be particularly large.
-3. The card size is approximately 350px wide and 450px high, with appropriate margins.
-4. The provided card background style must be used
+1. The font of the theme should be particularly large.
+2. The card size is approximately 350px wide and 450px high, with appropriate margins.
+3. The provided card background style must be used
 
 Card structure:
 1. English themes inputted by top users
@@ -918,18 +892,9 @@ Directly output the complete HTML file. Do not output any other content!!!!`,
     ja: `ユーザー入力に基づいてトピックを英語に翻訳し、100ワード以内の簡潔な言語を使用して深い意味を分解します。次にHTMLを使用して、このトピックを表す優雅なテキストカードを作成します。
 
 設計要件：
-1.指定された'${cardFont}'フォントを使用する必要があります。太字は許可されていません。CSSでfont-family: '${cardFont}';を使用して指定してください。HTMLの<head>セクションに次の@font-face宣言を追加してください：
-@font-face {
-  font-family: '${cardFont}';
-  src: url('/fonts/${cardFont}.${fileExtension}') format('${formatType}');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-2.テーマのフォントは特に大きいはずです。
-3.カードの大きさは幅約350 px、高さ450 pxで、適切なマージンがある。
-4.提供されたカード背景スタイルを使用しなければならない
+1.テーマのフォントは特に大きいはずです。
+2.カードの大きさは幅約350 px、高さ450 pxで、適切なマージンがある。
+3.提供されたカード背景スタイルを使用しなければならない
 
 カード構造：
 1.トップユーザーが入力した日本語トピック
@@ -952,35 +917,20 @@ const quoteReferenceCardPrompt = ({
   author,
   textPosition,
   style,
-  cardFont,
 }: {
   content: string;
   style: string;
   author: string;
   textPosition: string;
-  cardFont: string;
 }) => {
-  // Determine the correct file extension and format based on the font name
-  const fileExtension = cardFont === "汇文明朝体" ? "ttf" : "otf";
-  const formatType = fileExtension === "ttf" ? "truetype" : "opentype";
-
   return `
   Create an elegant text card using HTML based on user input to display the motto and creator.
 
 Design requirements:
-1. The provided font '${cardFont}' must be used and bolding is not allowed. Specify this using font-family: '${cardFont}'; in your CSS. Add the following @font-face declaration in the <head> section of your HTML:
-@font-face {
-  font-family: '${cardFont}';
-  src: url('/fonts/${cardFont}.${fileExtension}') format('${formatType}');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-2. The font of the motto should be particularly large
-3. The card size is approximately 350px wide and 350px high, with appropriate margins
-4. The provided card background style must be used
-5. The display position of the motto and creator on the card must be adjusted according to the provided location, including left alignment, center alignment, and right alignment
+1. The font of the motto should be particularly large
+2. The card size is approximately 350px wide and 350px high, with appropriate margins
+3. The provided card background style must be used
+4. The display position of the motto and creator on the card must be adjusted according to the provided location, including left alignment, center alignment, and right alignment
 
 Card structure:
 1. Display the creator on the next line of the motto, and add the symbol "-" before the creator
