@@ -345,9 +345,6 @@ const PosterHistory = () => {
                   </p>
                 </div>
                 <div className="flex w-full items-center justify-end p-2">
-                  <span className="max-w-[60%] truncate text-xs text-gray-500 sm:text-sm">
-                    {formatTimestamp(item.createdAt)}
-                  </span>
                   <div className="flex items-center">
                     <Button
                       variant="ghost"
@@ -448,11 +445,8 @@ const PosterHistory = () => {
                 />
               </div>
 
-              <div className="flex items-center justify-between border-t p-2">
-                <span className="max-w-[60%] truncate text-xs text-gray-500 sm:text-sm">
-                  {formatTimestamp(item.createdAt)}
-                </span>
-                <div className="flex items-center">
+              <div className="flex items-center justify-end border-t p-2">
+                <div className="flex items-center justify-end">
                   <Button
                     variant="ghost"
                     size="icon"
