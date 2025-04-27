@@ -81,6 +81,18 @@ export const usePhilosophicalHistory = (page = 1) => {
     []
   );
 
+  const updatePhilosophicalHistoryUrl = useCallback(
+    async (historyId: string, url: string) => {
+      await db.philosophicalCardHistory
+        .where("id")
+        .equals(historyId)
+        .modify((history: History) => {
+          history.url = url;
+        });
+    },
+    []
+  );
+
   return {
     philosophicalHistory,
     addPhilosophicalHistory,
@@ -88,5 +100,6 @@ export const usePhilosophicalHistory = (page = 1) => {
     deletePhilosophicalHistory,
     updatePhilosophicalHistoryHtml,
     updatePhilosophicalHistoryStatus,
+    updatePhilosophicalHistoryUrl,
   };
 };

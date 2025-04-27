@@ -3,6 +3,7 @@ export type History = {
   html: string;
   status: "pending" | "success" | "failed";
   createdAt: number;
+  url?: string;
 };
 
 export type SvgHistory = {

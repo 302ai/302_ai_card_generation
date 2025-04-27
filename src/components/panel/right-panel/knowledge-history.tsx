@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "@/hooks/db/use-gen-history";
 import { format } from "date-fns";
-import { Trash, AlertCircle, Loader2 } from "lucide-react";
+import { Trash, AlertCircle, Loader2, RocketIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import HtmlPreview from "./html-preview";
 import { useTranslations } from "next-intl";
 import DownloadDropdown from "./download-dropdown";
 import { useAtom } from "jotai";
 import { concurrentTaskCountAtom } from "@/stores/slices/task_store";
-
+import ky from "ky";
+import { appConfigAtom } from "@/stores/slices/config_store";
+import { store } from "@/stores";
+import { toast } from "sonner";
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
   try {
@@ -64,7 +67,8 @@ const sanitizeHtml = (htmlContent: string): string => {
 };
 
 const KnowledgeHistory = () => {
-  const { history, deleteHistory, updateHistoryStatus } = useHistory();
+  const { history, deleteHistory, updateHistoryStatus, updateHistoryUrl } =
+    useHistory();
   const [isEnlarged, setIsEnlarged] = useState(false);
   const [selectedHtml, setSelectedHtml] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -73,6 +77,7 @@ const KnowledgeHistory = () => {
     concurrentTaskCountAtom
   );
   const t = useTranslations();
+  const { apiKey } = store.get(appConfigAtom);
 
   // Format timestamp function
   const formatTimestamp = (timestamp: string | number) => {
@@ -127,6 +132,32 @@ const KnowledgeHistory = () => {
     return () => clearInterval(intervalId);
   }, [history?.items, setConcurrentTasks, updateHistoryStatus]);
 
+  const handleDeploy = async (id: string, html: string) => {
+    const formData = new FormData();
+    if (apiKey) {
+      formData.append("apiKey", apiKey);
+    }
+    formData.append("htmlCode", html);
+
+    try {
+      const loadingToast = toast.loading(t("toast.deploying"));
+      const response = await ky.post("/api/deploy-html", {
+        body: formData,
+      });
+      const data = (await response.json()) as { url?: string };
+      toast.dismiss(loadingToast);
+      if (data.url) {
+        // Update status or show success notification if needed
+        updateHistoryUrl(id, data.url);
+        toast.success(t("toast.deploy_success"));
+      }
+    } catch (error) {
+      toast.dismiss(); // Dismiss any loading toasts
+      toast.error(t("toast.deploy_failed"));
+      console.error("Deploy failed:", error);
+    }
+  };
+
   return (
     <>
       {/* 卡片网格布局 */}
@@ -146,9 +177,6 @@ const KnowledgeHistory = () => {
                   </p>
                 </div>
                 <div className="flex w-full items-center justify-between p-2">
-                  <span className="text-sm text-gray-500">
-                    {formatTimestamp(item.createdAt)}
-                  </span>
                   <div className="flex">
                     <Button
                       variant="ghost"
@@ -206,10 +234,30 @@ const KnowledgeHistory = () => {
               key={item.id}
             >
               <div className="flex items-center justify-between p-2">
-                <span className="max-w-[60%] truncate text-xs text-gray-500 sm:text-sm">
-                  {formatTimestamp(item.createdAt)}
+                <span className="max-w-[60%] truncate text-xs sm:text-sm">
+                  {item?.url && (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      {item.url}
+                    </a>
+                  )}
                 </span>
                 <div className="flex items-center">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeploy(item.id, sanitizeHtml(item.html));
+                    }}
+                    className="ml-1 h-8 w-8"
+                  >
+                    <RocketIcon className="h-4 w-4" />
+                  </Button>
                   <DownloadDropdown
                     html={sanitizeHtml(item.html)}
                     filename="knowledge-card"

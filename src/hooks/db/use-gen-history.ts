@@ -89,6 +89,14 @@ export const useHistory = (page = 1) => {
     []
   );
 
+  const updateHistoryUrl = useCallback(async (id: string, url: string) => {
+    await db.history
+      .where("id")
+      .equals(id)
+      .modify((history: History) => {
+        history.url = url;
+      });
+  }, []);
   return {
     genHistory,
     history,
@@ -97,5 +105,6 @@ export const useHistory = (page = 1) => {
     deleteHistory,
     updateHistoryHtml,
     updateHistoryStatus,
+    updateHistoryUrl,
   };
 };

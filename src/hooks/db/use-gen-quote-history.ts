@@ -91,6 +91,18 @@ export const useGenQuoteHistory = (page = 1) => {
     []
   );
 
+  const updateQuoteHistoryUrl = useCallback(
+    async (historyId: string, url: string) => {
+      await db.quoteHistory
+        .where("id")
+        .equals(historyId)
+        .modify((history: History) => {
+          history.url = url;
+        });
+    },
+    []
+  );
+
   return {
     genQuoteHistory,
     quoteHistory,
@@ -99,5 +111,6 @@ export const useGenQuoteHistory = (page = 1) => {
     deleteQuoteHistory,
     updateQuoteHistoryHtml,
     updateQuoteHistoryStatus,
+    updateQuoteHistoryUrl,
   };
 };

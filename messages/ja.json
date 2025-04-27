@@ -23,7 +23,7 @@
   },
   "home": {
     "header": {
-      "title": "AI AIカード生成"
+      "title": "AIカード生成"
     }
   },
   "switch_title": {
@@ -57,7 +57,10 @@
     "poster_content_required": "ポスター内容を入力してください",
     "philosophy_content_required": "哲学テーマを入力してください",
     "qr_code_required": "QRコード内容を入力してください",
-    "date_required": "日付を選択してください"
+    "date_required": "日付を選択してください",
+    "deploy_failed": "デプロイに失敗しました、もう一度お試しください",
+    "deploy_success": "デプロイに成功しました",
+    "deploying": "デプロイ中..."
   },
   "placeholder": {
     "based_on_input": "トピックや記事を入力してください。AIは入力に基づいてカードを生成します...",

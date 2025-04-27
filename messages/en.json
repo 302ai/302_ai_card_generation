@@ -54,7 +54,10 @@
     "content_required": "Please enter the content",
     "change_style_required": "Please enter the style description",
     "qr_code_required": "Please enter the QR code content",
-    "date_required": "Please select the date"
+    "date_required": "Please select the date",
+    "deploy_failed": "Deploy failed, please try again",
+    "deploy_success": "Deploy successfully",
+    "deploying": "Deploying..."
   },
   "placeholder": {
     "based_on_input": "Please enter the theme or article, AI generates cards based on the input...",

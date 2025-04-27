@@ -10,10 +10,10 @@ class HistoryDB extends Dexie {
   constructor() {
     super("history-db");
     this.version(1).stores({
-      history: "id, html, status, createdAt, image",
+      history: "id, html, status, createdAt, image, url",
       posterHistory: "id, svg, status, createdAt, image",
-      philosophicalCardHistory: "id, html, status, createdAt, image",
-      quoteHistory: "id, html, status, createdAt, image",
+      philosophicalCardHistory: "id, html, status, createdAt, image, url",
+      quoteHistory: "id, html, status, createdAt, image, url",
     });
   }
 }
