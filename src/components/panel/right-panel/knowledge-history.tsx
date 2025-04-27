@@ -176,8 +176,8 @@ const KnowledgeHistory = () => {
                     {t("status.generating")}...
                   </p>
                 </div>
-                <div className="flex w-full items-center justify-between p-2">
-                  <div className="flex">
+                <div className="flex w-full items-center justify-end p-2">
+                  <div className="flex justify-end">
                     <Button
                       variant="ghost"
                       size="icon"
@@ -187,7 +187,7 @@ const KnowledgeHistory = () => {
                       }}
                       className="h-8 w-8"
                     >
-                      <Trash className="h-4 w-4" />
+                      <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                     </Button>
                   </div>
                 </div>
@@ -218,7 +218,7 @@ const KnowledgeHistory = () => {
                       }}
                       className="h-8 w-8"
                     >
-                      <Trash className="h-4 w-4" />
+                      <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                     </Button>
                   </div>
                 </div>
@@ -256,7 +256,7 @@ const KnowledgeHistory = () => {
                     }}
                     className="ml-1 h-8 w-8"
                   >
-                    <RocketIcon className="h-4 w-4" />
+                    <RocketIcon className="h-4 w-4 text-blue-500 dark:text-blue-400" />
                   </Button>
                   <DownloadDropdown
                     html={sanitizeHtml(item.html)}
@@ -272,7 +272,7 @@ const KnowledgeHistory = () => {
                     }}
                     className="ml-1 h-8 w-8"
                   >
-                    <Trash className="h-4 w-4" />
+                    <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                   </Button>
                 </div>
               </div>

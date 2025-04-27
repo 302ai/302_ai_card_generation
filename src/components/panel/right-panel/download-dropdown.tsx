@@ -92,7 +92,7 @@ const DownloadDropdown = ({
           }}
           className={className}
         >
-          <Download className="h-4 w-4" />
+          <Download className="h-4 w-4 text-green-500 dark:text-green-400" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

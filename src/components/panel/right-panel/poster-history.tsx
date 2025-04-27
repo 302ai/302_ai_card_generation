@@ -344,7 +344,7 @@ const PosterHistory = () => {
                     {t("status.generating")}...
                   </p>
                 </div>
-                <div className="flex w-full items-center justify-between p-2">
+                <div className="flex w-full items-center justify-end p-2">
                   <span className="max-w-[60%] truncate text-xs text-gray-500 sm:text-sm">
                     {formatTimestamp(item.createdAt)}
                   </span>
@@ -358,7 +358,7 @@ const PosterHistory = () => {
                       }}
                       className="h-8 w-8"
                     >
-                      <Trash className="h-4 w-4" />
+                      <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                     </Button>
                   </div>
                 </div>
@@ -389,7 +389,7 @@ const PosterHistory = () => {
                       }}
                       className="h-8 w-8"
                     >
-                      <Trash className="h-4 w-4" />
+                      <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                     </Button>
                   </div>
                 </div>
@@ -423,7 +423,7 @@ const PosterHistory = () => {
                       }}
                       className="h-8 w-8"
                     >
-                      <Trash className="h-4 w-4" />
+                      <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                     </Button>
                   </div>
                 </div>
@@ -463,7 +463,7 @@ const PosterHistory = () => {
                     aria-label="下载"
                     className="h-8 w-8"
                   >
-                    <Download className="h-4 w-4" />
+                    <Download className="h-4 w-4 text-green-500 dark:text-green-400" />
                   </Button>
                   <Button
                     variant="ghost"
@@ -475,7 +475,7 @@ const PosterHistory = () => {
                     aria-label="删除"
                     className="ml-1 h-8 w-8"
                   >
-                    <Trash className="h-4 w-4" />
+                    <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                   </Button>
                 </div>
               </div>

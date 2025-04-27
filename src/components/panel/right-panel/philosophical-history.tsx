@@ -198,8 +198,8 @@ const PhilosophicalCardHistory = () => {
                     {t("status.generating")}...
                   </p>
                 </div>
-                <div className="flex w-full items-center justify-between p-2">
-                  <div className="flex items-center">
+                <div className="flex w-full items-center justify-end p-2">
+                  <div className="flex items-center justify-end">
                     <Button
                       variant="ghost"
                       size="icon"
@@ -209,7 +209,7 @@ const PhilosophicalCardHistory = () => {
                       }}
                       className="h-8 w-8"
                     >
-                      <Trash className="h-4 w-4" />
+                      <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                     </Button>
                   </div>
                 </div>
@@ -240,7 +240,7 @@ const PhilosophicalCardHistory = () => {
                       }}
                       className="h-8 w-8"
                     >
-                      <Trash className="h-4 w-4" />
+                      <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                     </Button>
                   </div>
                 </div>
@@ -278,7 +278,7 @@ const PhilosophicalCardHistory = () => {
                     }}
                     className="h-8 w-8"
                   >
-                    <RocketIcon className="h-4 w-4" />
+                    <RocketIcon className="h-4 w-4 text-blue-500 dark:text-blue-400" />
                   </Button>
                   <Button
                     variant="ghost"
@@ -290,7 +290,7 @@ const PhilosophicalCardHistory = () => {
                     }}
                     className="h-8 w-8"
                   >
-                    <WandSparkles className="h-4 w-4" />
+                    <WandSparkles className="h-4 w-4 text-purple-500 dark:text-purple-400" />
                   </Button>
                   <DownloadDropdown
                     html={sanitizeHtml(item.html)}
@@ -306,7 +306,7 @@ const PhilosophicalCardHistory = () => {
                     }}
                     className="ml-1 h-8 w-8"
                   >
-                    <Trash className="h-4 w-4" />
+                    <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                   </Button>
                 </div>
               </div>
