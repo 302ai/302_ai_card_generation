@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "@/hooks/db/use-gen-history";
 import { format } from "date-fns";
-import { Download, Trash, AlertCircle, Loader2 } from "lucide-react";
+import { Download, Trash, AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ky from "ky";
 import { env } from "@/env";
@@ -11,8 +11,12 @@ import { store } from "@/stores";
 import { useMonitorMessage } from "@/hooks/global/use-monitor-message";
 import { usePosterHistory } from "@/hooks/db/use-poster-history";
 import { useTranslations } from "next-intl";
-import { concurrentTaskCountAtom } from "@/stores/slices/task_store";
+import {
+  concurrentTaskCountAtom,
+  MAX_CONCURRENT_TASKS,
+} from "@/stores/slices/task_store";
 import { toast } from "sonner";
+import { generateSVG } from "@/services/generate-svg";
 
 // Utility function to extract SVG content from various formats
 const extractSvgContent = (content: string): string => {
@@ -173,8 +177,13 @@ const customAnimationStyles = `
 `;
 
 const PosterHistory = () => {
-  const { posterHistory, deletePosterHistory, updatePosterHistoryStatus } =
-    usePosterHistory();
+  const {
+    posterHistory,
+    deletePosterHistory,
+    updatePosterHistoryStatus,
+    updatePosterHistorySvg,
+    updatePosterHistory,
+  } = usePosterHistory();
   const [isEnlarged, setIsEnlarged] = useState(false);
   const [selectedSvg, setSelectedSvg] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -323,6 +332,28 @@ const PosterHistory = () => {
     return () => clearInterval(intervalId);
   }, [posterHistory?.items, setConcurrentTasks, updatePosterHistoryStatus]);
 
+  const handleRetry = async (values: any) => {
+    if (concurrentTasks >= MAX_CONCURRENT_TASKS) {
+      toast.error(
+        t("toast.task_limit_reached", { limit: MAX_CONCURRENT_TASKS })
+      );
+      return;
+    }
+
+    try {
+      setConcurrentTasks((prev) => prev + 1);
+      updatePosterHistoryStatus(values.historyId, "pending");
+      const res = await generateSVG(values);
+      updatePosterHistoryStatus(values.historyId, "success");
+      updatePosterHistorySvg(values.historyId, res.stringSVG, "success");
+    } catch (error) {
+      console.error("Retry generation failed:", error);
+      updatePosterHistoryStatus(values.historyId, "failed");
+    } finally {
+      setConcurrentTasks((prev) => Math.max(0, prev - 1));
+    }
+  };
+
   return (
     <>
       {/* 添加自定义动画CSS */}
@@ -377,6 +408,17 @@ const PosterHistory = () => {
                   </p>
 
                   <div className="flex">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRetry(item.values);
+                      }}
+                      className="h-8 w-8"
+                    >
+                      <RefreshCw className="h-4 w-4 text-primary" />
+                    </Button>
                     <Button
                       variant="ghost"
                       size="icon"

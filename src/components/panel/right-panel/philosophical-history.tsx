@@ -9,6 +9,7 @@ import {
   AlertCircle,
   Loader2,
   RocketIcon,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ky from "ky";
@@ -23,8 +24,12 @@ import { modalStoreAtom } from "@/stores/slices/modal_store";
 import ChangeStyleModal from "./change-style-modal";
 import { useTranslations } from "next-intl";
 import DownloadDropdown from "./download-dropdown";
-import { concurrentTaskCountAtom } from "@/stores/slices/task_store";
+import {
+  concurrentTaskCountAtom,
+  MAX_CONCURRENT_TASKS,
+} from "@/stores/slices/task_store";
 import { toast } from "sonner";
+import { genPhilosophicalCard } from "@/services/gen-philosophical-card";
 
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
@@ -86,6 +91,8 @@ const PhilosophicalCardHistory = () => {
     deletePhilosophicalHistory,
     updatePhilosophicalHistoryStatus,
     updatePhilosophicalHistoryUrl,
+    updatePhilosophicalHistoryHtml,
+    updatePhilosophicalHistory,
   } = usePhilosophicalHistory();
   const { apiKey } = store.get(appConfigAtom);
   const { handleDownload } = useMonitorMessage();
@@ -140,6 +147,33 @@ const PhilosophicalCardHistory = () => {
       toast.dismiss(); // Dismiss any loading toasts
       toast.error(t("toast.deploy_failed"));
       console.error("Deploy failed:", error);
+    }
+  };
+
+  const handleRetry = async (values: any) => {
+    if (concurrentTasks >= MAX_CONCURRENT_TASKS) {
+      toast.error(
+        t("toast.task_limit_reached", { limit: MAX_CONCURRENT_TASKS })
+      );
+      return;
+    }
+
+    try {
+      setConcurrentTasks((prev) => prev + 1);
+      updatePhilosophicalHistoryStatus(values.historyId, "pending");
+      const res = await genPhilosophicalCard(values);
+      updatePhilosophicalHistoryStatus(values.historyId, "success");
+      updatePhilosophicalHistory(values.historyId, {
+        html: res.html,
+        status: "success",
+      });
+      toast.success(t("toast.generation_success"));
+    } catch (error) {
+      console.error("Retry generation failed:", error);
+      updatePhilosophicalHistoryStatus(values.historyId, "failed");
+      toast.error(t("toast.generation_failed"));
+    } finally {
+      setConcurrentTasks((prev) => Math.max(0, prev - 1));
     }
   };
 
@@ -231,6 +265,17 @@ const PhilosophicalCardHistory = () => {
                   </p>
 
                   <div className="flex">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRetry(item.values);
+                      }}
+                      className="h-8 w-8"
+                    >
+                      <RefreshCw className="h-4 w-4 text-red-500 dark:text-red-400" />
+                    </Button>
                     <Button
                       variant="ghost"
                       size="icon"

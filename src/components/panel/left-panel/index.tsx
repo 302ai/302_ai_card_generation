@@ -234,10 +234,11 @@ const LeftPanel = () => {
 
     let historyId: string | undefined;
     let taskStarted = false;
+    let submittingValues: any = {};
     let updateStatusFunction:
       | ((
           id: string,
-          data: { status: "pending" | "success" | "failed" }
+          data: { status: "pending" | "success" | "failed"; values: any }
         ) => Promise<void>)
       | undefined;
 
@@ -378,14 +379,12 @@ const LeftPanel = () => {
         // Validation passed, start the task
         taskStarted = true;
         setConcurrentTasks((prev) => prev + 1);
+
         historyId = await addHistory({
           html: "",
           status: "pending",
         });
-        updateStatusFunction = async (id, data) =>
-          await updateHistory(id, { ...data, html: "" });
-
-        const res = await generateHTML({
+        submittingValues = {
           apiKey: apiKey as string,
           model: knowledgeCard.model as string,
           lang: locale as "zh" | "en" | "ja",
@@ -394,7 +393,12 @@ const LeftPanel = () => {
           style: newStyle,
           qrCode: knowledgeCard.qrCode as string,
           type: uiStore.activeTab,
-        });
+          actionType: uiStore.activeCard,
+        };
+        updateStatusFunction = async (id, data) =>
+          await updateHistory(id, { ...data, html: "" });
+        const res = await generateHTML(submittingValues);
+        // Simulate error for testing
         await updateHistory(historyId, {
           html: res.html,
           status: "success",
@@ -442,6 +446,15 @@ const LeftPanel = () => {
         // Validation passed, start the task
         taskStarted = true;
         setConcurrentTasks((prev) => prev + 1);
+        submittingValues = {
+          apiKey: apiKey as string,
+          model: promotionalPoster.model as string,
+          lang: locale as "zh" | "en" | "ja",
+          content: promotionalPoster.content as string,
+          style: newStyle,
+          styleType: formStore.style as "random" | "template" | "custom",
+          actionType: uiStore.activeCard,
+        };
         historyId = await addPosterHistory({
           svg: "",
           status: "pending",
@@ -449,14 +462,7 @@ const LeftPanel = () => {
         updateStatusFunction = async (id, data) =>
           await updatePosterHistory(id, { ...data, svg: "" });
 
-        const res = await generateSVG({
-          apiKey: apiKey as string,
-          model: promotionalPoster.model as string,
-          lang: locale as "zh" | "en" | "ja",
-          content: promotionalPoster.content as string,
-          style: newStyle,
-          styleType: formStore.style as "random" | "template" | "custom",
-        });
+        const res = await generateSVG(submittingValues);
         await updatePosterHistory(historyId, {
           svg: res.stringSVG,
           status: "success",
@@ -504,6 +510,15 @@ const LeftPanel = () => {
         // Validation passed, start the task
         taskStarted = true;
         setConcurrentTasks((prev) => prev + 1);
+        submittingValues = {
+          apiKey: apiKey as string,
+          model: philosophicalCard.model as string,
+          lang: locale as "zh" | "en" | "ja",
+          content: philosophicalCard.content as string,
+          style,
+          actionType: uiStore.activeCard,
+        };
+
         historyId = await addPhilosophicalHistory({
           html: "",
           status: "pending",
@@ -511,13 +526,7 @@ const LeftPanel = () => {
         updateStatusFunction = async (id, data) =>
           await updatePhilosophicalHistory(id, { ...data, html: "" });
 
-        const res = await genPhilosophicalCard({
-          apiKey: apiKey as string,
-          model: philosophicalCard.model as string,
-          lang: locale as "zh" | "en" | "ja",
-          content: philosophicalCard.content as string,
-          style,
-        });
+        const res = await genPhilosophicalCard(submittingValues);
         await updatePhilosophicalHistory(historyId, {
           html: res.html,
           status: "success",
@@ -572,21 +581,22 @@ const LeftPanel = () => {
         // Validation passed, start the task
         taskStarted = true;
         setConcurrentTasks((prev) => prev + 1);
-        historyId = await addQuoteHistory({
-          html: "",
-          status: "pending",
-        });
-        updateStatusFunction = async (id, data) =>
-          await updateQuoteHistory(id, { ...data, html: "" });
-
-        const res = await generateQuoteCard({
+        submittingValues = {
           apiKey: apiKey as string,
           model: quoteReference.model as string,
           content: quoteReference.content as string,
           author: quoteReference.author as string,
           textPosition: quoteReference.textPosition as string,
           style,
+          actionType: uiStore.activeCard,
+        };
+        historyId = await addQuoteHistory({
+          html: "",
+          status: "pending",
         });
+        updateStatusFunction = async (id, data) =>
+          await updateQuoteHistory(id, { ...data, html: "" });
+        const res = await generateQuoteCard(submittingValues);
         await updateQuoteHistory(historyId, {
           html: res.html,
           status: "success",
@@ -599,7 +609,10 @@ const LeftPanel = () => {
       // If the task has started and we have historyId and update function, update record to failed
       if (taskStarted && historyId !== undefined && updateStatusFunction) {
         try {
-          await updateStatusFunction(historyId, { status: "failed" });
+          await updateStatusFunction(historyId, {
+            status: "failed",
+            values: { ...submittingValues, historyId },
+          });
         } catch (updateError) {
           console.error(
             "Failed to update history status to failed:",

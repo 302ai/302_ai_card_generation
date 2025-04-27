@@ -1,17 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "@/hooks/db/use-gen-history";
 import { format } from "date-fns";
-import { Trash, AlertCircle, Loader2, RocketIcon } from "lucide-react";
+import {
+  Trash,
+  AlertCircle,
+  Loader2,
+  RocketIcon,
+  RefreshCw,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import HtmlPreview from "./html-preview";
 import { useTranslations } from "next-intl";
 import DownloadDropdown from "./download-dropdown";
 import { useAtom } from "jotai";
-import { concurrentTaskCountAtom } from "@/stores/slices/task_store";
+import {
+  concurrentTaskCountAtom,
+  MAX_CONCURRENT_TASKS,
+} from "@/stores/slices/task_store";
 import ky from "ky";
 import { appConfigAtom } from "@/stores/slices/config_store";
 import { store } from "@/stores";
 import { toast } from "sonner";
+import { generateHTML } from "@/services/gen-html";
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
   try {
@@ -67,8 +77,13 @@ const sanitizeHtml = (htmlContent: string): string => {
 };
 
 const KnowledgeHistory = () => {
-  const { history, deleteHistory, updateHistoryStatus, updateHistoryUrl } =
-    useHistory();
+  const {
+    history,
+    deleteHistory,
+    updateHistoryStatus,
+    updateHistoryUrl,
+    updateHistoryHtml,
+  } = useHistory();
   const [isEnlarged, setIsEnlarged] = useState(false);
   const [selectedHtml, setSelectedHtml] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -158,6 +173,28 @@ const KnowledgeHistory = () => {
     }
   };
 
+  const handleRetry = async (values: any) => {
+    if (concurrentTasks >= MAX_CONCURRENT_TASKS) {
+      toast.error(
+        t("toast.task_limit_reached", { limit: MAX_CONCURRENT_TASKS })
+      );
+      return;
+    }
+
+    try {
+      setConcurrentTasks((prev) => prev + 1);
+      updateHistoryStatus(values.historyId, "pending");
+      const res = await generateHTML(values);
+      updateHistoryStatus(values.historyId, "success");
+      updateHistoryHtml(values.historyId, res.html, "success");
+    } catch (error) {
+      console.error("Retry generation failed:", error);
+      updateHistoryStatus(values.historyId, "failed");
+    } finally {
+      setConcurrentTasks((prev) => Math.max(0, prev - 1));
+    }
+  };
+
   return (
     <>
       {/* 卡片网格布局 */}
@@ -209,6 +246,17 @@ const KnowledgeHistory = () => {
                   </p>
 
                   <div className="flex">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRetry(item.values);
+                      }}
+                      className="h-8 w-8"
+                    >
+                      <RefreshCw className="h-4 w-4 text-primary" />
+                    </Button>
                     <Button
                       variant="ghost"
                       size="icon"

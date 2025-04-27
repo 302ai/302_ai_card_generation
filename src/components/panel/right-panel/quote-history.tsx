@@ -9,6 +9,7 @@ import {
   Loader2,
   WandSparkles,
   RocketIcon,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ky from "ky";
@@ -21,8 +22,12 @@ import HtmlPreview from "./html-preview";
 import { useTranslations } from "next-intl";
 import ChangeStyleModal from "./change-style-modal";
 import DownloadDropdown from "./download-dropdown";
-import { concurrentTaskCountAtom } from "@/stores/slices/task_store";
+import {
+  concurrentTaskCountAtom,
+  MAX_CONCURRENT_TASKS,
+} from "@/stores/slices/task_store";
 import { toast } from "sonner";
+import { generateQuoteCard } from "@/services/gen-quote";
 
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
@@ -84,6 +89,8 @@ const QuoteHistory = () => {
     deleteQuoteHistory,
     updateQuoteHistoryStatus,
     updateQuoteHistoryUrl,
+    updateQuoteHistoryHtml,
+    updateQuoteHistory,
   } = useGenQuoteHistory();
   const { apiKey } = store.get(appConfigAtom);
   const { handleDownload } = useMonitorMessage();
@@ -175,6 +182,30 @@ const QuoteHistory = () => {
     }
   };
 
+  const handleRetry = async (values: any) => {
+    if (concurrentTasks >= MAX_CONCURRENT_TASKS) {
+      toast.error(
+        t("toast.task_limit_reached", { limit: MAX_CONCURRENT_TASKS })
+      );
+      return;
+    }
+
+    try {
+      setConcurrentTasks((prev) => prev + 1);
+      updateQuoteHistoryStatus(values.historyId, "pending");
+      const res = await generateQuoteCard(values);
+      updateQuoteHistoryStatus(values.historyId, "success");
+      updateQuoteHistoryHtml(values.historyId, res.html, "success");
+      toast.success(t("toast.generation_success"));
+    } catch (error) {
+      console.error("Retry generation failed:", error);
+      updateQuoteHistoryStatus(values.historyId, "failed");
+      toast.error(t("toast.generation_failed"));
+    } finally {
+      setConcurrentTasks((prev) => Math.max(0, prev - 1));
+    }
+  };
+
   return (
     <>
       {/* 添加自定义动画CSS */}
@@ -228,6 +259,17 @@ const QuoteHistory = () => {
                   </p>
 
                   <div className="flex">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRetry(item.values);
+                      }}
+                      className="h-8 w-8"
+                    >
+                      <RefreshCw className="h-4 w-4 text-red-500 dark:text-red-400" />
+                    </Button>
                     <Button
                       variant="ghost"
                       size="icon"
