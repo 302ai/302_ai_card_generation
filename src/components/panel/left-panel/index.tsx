@@ -46,12 +46,9 @@ import { historyStoreAtom } from "@/stores/slices/history_store";
 import { useHistory } from "@/hooks/db/use-gen-history";
 import { STYLES_LIST } from "@/constants/random-styles";
 import { generateSVG } from "@/services/generate-svg";
-import { usePosterHistory } from "@/hooks/db/use-poster-history";
 import { genPhilosophicalCard } from "@/services/gen-philosophical-card";
-import { usePhilosophicalHistory } from "@/hooks/db/use-philosophical-history";
 import { useLocale, useTranslations } from "next-intl";
 import { generateQuoteCard } from "@/services/gen-quote";
-import { useGenQuoteHistory } from "@/hooks/db/use-gen-quote-history";
 import { toast } from "sonner";
 import { STYLE_LIST } from "@/constants/style";
 import { generationStoreAtom } from "@/stores/slices/generation_store";
@@ -106,30 +103,10 @@ const LeftPanel = () => {
     concurrentTaskCountAtom
   );
   const { addHistory, updateHistory, updateHistoryStatus } = useHistory();
-  const {
-    addPosterHistory,
-    updatePosterHistorySvg,
-    updatePosterHistoryStatus,
-    updatePosterHistory,
-  } = usePosterHistory();
 
   const locale = useLocale();
   const t = useTranslations();
   const [generationStore, setGenerationStore] = useAtom(generationStoreAtom);
-
-  const {
-    addPhilosophicalHistory,
-    updatePhilosophicalHistoryHtml,
-    updatePhilosophicalHistoryStatus,
-    updatePhilosophicalHistory,
-  } = usePhilosophicalHistory();
-
-  const {
-    addQuoteHistory,
-    updateQuoteHistoryHtml,
-    updateQuoteHistory,
-    updateQuoteHistoryStatus,
-  } = useGenQuoteHistory();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -455,16 +432,16 @@ const LeftPanel = () => {
           styleType: formStore.style as "random" | "template" | "custom",
           actionType: uiStore.activeCard,
         };
-        historyId = await addPosterHistory({
-          svg: "",
+        historyId = await addHistory({
+          html: "",
           status: "pending",
         });
         updateStatusFunction = async (id, data) =>
-          await updatePosterHistory(id, { ...data, svg: "" });
+          await updateHistory(id, { ...data, html: "" });
 
         const res = await generateSVG(submittingValues);
-        await updatePosterHistory(historyId, {
-          svg: res.stringSVG,
+        await updateHistory(historyId, {
+          html: res.stringSVG,
           status: "success",
         });
       } else if (uiStore.activeCard === "philosophical-card") {
@@ -519,15 +496,15 @@ const LeftPanel = () => {
           actionType: uiStore.activeCard,
         };
 
-        historyId = await addPhilosophicalHistory({
+        historyId = await addHistory({
           html: "",
           status: "pending",
         });
         updateStatusFunction = async (id, data) =>
-          await updatePhilosophicalHistory(id, { ...data, html: "" });
+          await updateHistory(id, { ...data, html: "" });
 
         const res = await genPhilosophicalCard(submittingValues);
-        await updatePhilosophicalHistory(historyId, {
+        await updateHistory(historyId, {
           html: res.html,
           status: "success",
         });
@@ -590,14 +567,14 @@ const LeftPanel = () => {
           style,
           actionType: uiStore.activeCard,
         };
-        historyId = await addQuoteHistory({
+        historyId = await addHistory({
           html: "",
           status: "pending",
         });
         updateStatusFunction = async (id, data) =>
-          await updateQuoteHistory(id, { ...data, html: "" });
+          await updateHistory(id, { ...data, html: "" });
         const res = await generateQuoteCard(submittingValues);
-        await updateQuoteHistory(historyId, {
+        await updateHistory(historyId, {
           html: res.html,
           status: "success",
         });
