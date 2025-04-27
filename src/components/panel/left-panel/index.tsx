@@ -44,7 +44,12 @@ import { store } from "@/stores";
 import { generateHTML } from "@/services/gen-html";
 import { historyStoreAtom } from "@/stores/slices/history_store";
 import { useHistory } from "@/hooks/db/use-gen-history";
-import { STYLES_LIST } from "@/constants/random-styles";
+import {
+  PHILOSOPHICAL_STYLES,
+  QUOTE_STYLES,
+  STYLES_LIST,
+  POSTER_STYLES,
+} from "@/constants/random-styles";
 import { generateSVG } from "@/services/generate-svg";
 import { genPhilosophicalCard } from "@/services/gen-philosophical-card";
 import { useLocale, useTranslations } from "next-intl";
@@ -138,21 +143,77 @@ const LeftPanel = () => {
     typeof CardExamples
   >([]);
 
+  // State for displayed examples for other card types
+  const [displayedPhilosophicalExamples, setDisplayedPhilosophicalExamples] =
+    useState<typeof PHILOSOPHICAL_STYLES>([]);
+  const [displayedQuoteExamples, setDisplayedQuoteExamples] = useState<
+    typeof QUOTE_STYLES
+  >([]);
+  const [displayedPosterExamples, setDisplayedPosterExamples] = useState<
+    typeof POSTER_STYLES
+  >([]);
+
   // Get random examples from the CardExamples array
   const getRandomExamples = useCallback(() => {
     const shuffled = [...CardExamples].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 4); // Get only 4 examples
   }, []);
 
+  // Get random philosophical examples
+  const getRandomPhilosophicalExamples = useCallback(() => {
+    const shuffled = [...PHILOSOPHICAL_STYLES].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 4); // Get only 4 examples
+  }, []);
+
+  // Get random quote examples
+  const getRandomQuoteExamples = useCallback(() => {
+    const shuffled = [...QUOTE_STYLES].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 4); // Get only 4 examples
+  }, []);
+
+  // Get random poster examples
+  const getRandomPosterExamples = useCallback(() => {
+    const shuffled = [...POSTER_STYLES].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 4); // Get only 4 examples
+  }, []);
+
   // Initialize examples on component mount and when active tab changes
   useEffect(() => {
-    refreshExamples();
+    refreshAllExamples();
   }, []);
 
   // Function to refresh examples
   const refreshExamples = useCallback(() => {
     setDisplayedExamples(getRandomExamples());
   }, [getRandomExamples]);
+
+  // Function to refresh philosophical examples
+  const refreshPhilosophicalExamples = useCallback(() => {
+    setDisplayedPhilosophicalExamples(getRandomPhilosophicalExamples());
+  }, [getRandomPhilosophicalExamples]);
+
+  // Function to refresh quote examples
+  const refreshQuoteExamples = useCallback(() => {
+    setDisplayedQuoteExamples(getRandomQuoteExamples());
+  }, [getRandomQuoteExamples]);
+
+  // Function to refresh poster examples
+  const refreshPosterExamples = useCallback(() => {
+    setDisplayedPosterExamples(getRandomPosterExamples());
+  }, [getRandomPosterExamples]);
+
+  // Function to refresh all examples
+  const refreshAllExamples = useCallback(() => {
+    refreshExamples();
+    refreshPhilosophicalExamples();
+    refreshQuoteExamples();
+    refreshPosterExamples();
+  }, [
+    refreshExamples,
+    refreshPhilosophicalExamples,
+    refreshQuoteExamples,
+    refreshPosterExamples,
+  ]);
 
   // Function to fill textarea with example content
   const fillWithExample = useCallback(
@@ -172,6 +233,42 @@ const LeftPanel = () => {
       }
     },
     [uiStore.activeTab, form, t]
+  );
+
+  // New function to fill promotional poster content
+  const fillPromotionalContent = useCallback(
+    (content: string) => {
+      form.setValue("promotionalPoster.content", content, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    },
+    [form]
+  );
+
+  // New function to fill philosophical card content
+  const fillPhilosophicalContent = useCallback(
+    (content: string) => {
+      form.setValue("philosophicalCard.content", content, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    },
+    [form]
+  );
+
+  // New function to fill quote reference content
+  const fillQuoteContent = useCallback(
+    (content: string) => {
+      form.setValue("quoteReference.content", content, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    },
+    [form]
   );
 
   const onActiveTabChange = useCallback(
@@ -360,6 +457,8 @@ const LeftPanel = () => {
         historyId = await addHistory({
           html: "",
           status: "pending",
+          type: "html",
+          tab: uiStore.activeCard,
         });
         submittingValues = {
           apiKey: apiKey as string,
@@ -435,6 +534,8 @@ const LeftPanel = () => {
         historyId = await addHistory({
           html: "",
           status: "pending",
+          type: "svg",
+          tab: uiStore.activeCard,
         });
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
@@ -499,6 +600,8 @@ const LeftPanel = () => {
         historyId = await addHistory({
           html: "",
           status: "pending",
+          type: "html",
+          tab: uiStore.activeCard,
         });
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
@@ -570,6 +673,8 @@ const LeftPanel = () => {
         historyId = await addHistory({
           html: "",
           status: "pending",
+          type: "html",
+          tab: uiStore.activeCard,
         });
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
@@ -774,6 +879,34 @@ const LeftPanel = () => {
                         </FormItem>
                       )}
                     />
+                    <div className="flex justify-end">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 flex-shrink-0"
+                        onClick={refreshPosterExamples}
+                        type="button"
+                      >
+                        <RefreshCwIcon />
+                      </Button>
+                      <div className="scrollbar-hide flex max-w-[calc(100%-2rem)] items-center space-x-1 overflow-x-auto">
+                        {displayedPosterExamples.map((example) => (
+                          <span
+                            key={example.id}
+                            className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
+                            onClick={() =>
+                              fillPromotionalContent(
+                                t(
+                                  `styles.POSTER_STYLES.${example.name}.description`
+                                )
+                              )
+                            }
+                          >
+                            {t(`styles.POSTER_STYLES.${example.name}.title`)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
                 {uiStore.activeCard === "quote-reference" && (
@@ -794,6 +927,34 @@ const LeftPanel = () => {
                         </FormItem>
                       )}
                     />
+                    <div className="flex justify-end">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 flex-shrink-0"
+                        onClick={refreshQuoteExamples}
+                        type="button"
+                      >
+                        <RefreshCwIcon />
+                      </Button>
+                      <div className="scrollbar-hide flex max-w-[calc(100%-2rem)] items-center space-x-1 overflow-x-auto">
+                        {displayedQuoteExamples.map((example) => (
+                          <span
+                            key={example.id}
+                            className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
+                            onClick={() =>
+                              fillQuoteContent(
+                                t(
+                                  `styles.QUOTE_STYLES.${example.name}.description`
+                                )
+                              )
+                            }
+                          >
+                            {t(`styles.QUOTE_STYLES.${example.name}.title`)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
                 {uiStore.activeCard === "philosophical-card" && (
@@ -814,6 +975,36 @@ const LeftPanel = () => {
                         </FormItem>
                       )}
                     />
+                    <div className="flex justify-end">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 flex-shrink-0"
+                        onClick={refreshPhilosophicalExamples}
+                        type="button"
+                      >
+                        <RefreshCwIcon />
+                      </Button>
+                      <div className="scrollbar-hide flex max-w-[calc(100%-2rem)] items-center space-x-1 overflow-x-auto">
+                        {displayedPhilosophicalExamples.map((example) => (
+                          <span
+                            key={example.id}
+                            className="flex-shrink-0 cursor-pointer whitespace-nowrap rounded bg-gray-100 px-1.5 py-0.5 text-xs hover:bg-gray-200"
+                            onClick={() =>
+                              fillPhilosophicalContent(
+                                t(
+                                  `styles.PHILOSOPHICAL_STYLES.${example.name}.description`
+                                )
+                              )
+                            }
+                          >
+                            {t(
+                              `styles.PHILOSOPHICAL_STYLES.${example.name}.title`
+                            )}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

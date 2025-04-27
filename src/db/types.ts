@@ -5,6 +5,12 @@ export type History = {
   createdAt: number;
   url?: string;
   values?: Record<string, any>;
+  type: "html" | "svg";
+  tab:
+    | "knowledge-card"
+    | "promotional-poster"
+    | "quote-reference"
+    | "philosophical-card";
 };
 
 export type SvgHistory = {
@@ -13,6 +19,8 @@ export type SvgHistory = {
   status: "pending" | "success" | "failed";
   createdAt: number;
   values?: Record<string, any>;
+  type: "";
+  tab: "";
 };
 
 export type AddHistory = Omit<History, "id" | "createdAt">;

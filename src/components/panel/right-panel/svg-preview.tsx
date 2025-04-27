@@ -117,6 +117,7 @@ const customAnimationStyles = `
     width: 100%;
     height: 100%;
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: center;
     background-color: white;
@@ -140,8 +141,8 @@ const customAnimationStyles = `
     justify-content: center;
     
     /* 设置较大的默认尺寸 */
-    min-width: 600px;
-    min-height: 800px;
+    min-width: 400px;
+    min-height: 600px;
     
     /* 保持海报宽高比 */
     aspect-ratio: 800 / 1120;
@@ -155,7 +156,7 @@ const customAnimationStyles = `
     /* 关键：确保 SVG 不会超出其容器 */
     max-width: 100%;
     max-height: 100%;
-    min-width: 600px; /* 设置最小宽度 */
+    min-width: 400px; /* 设置最小宽度 */
     width: 100%; /* 填充容器宽度 */
     
     /* 视觉样式 */
@@ -215,10 +216,10 @@ const SvgPreview = ({
       <style>{customAnimationStyles}</style>
 
       <div
-        className="flex aspect-[2/3] w-full cursor-pointer flex-col rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-md"
+        className="flex aspect-[2/3] w-full cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-md"
         onClick={handlePreviewClick}
       >
-        <div className="svg-container flex w-full flex-grow items-center justify-center p-2">
+        <div className="svg-container flex w-full flex-1 items-center justify-center p-2">
           <div
             className="flex h-full w-full items-center justify-center overflow-hidden"
             dangerouslySetInnerHTML={{ __html: svgContent }}

@@ -9,6 +9,134 @@
     },
     "title": "コードを共有する必要がある"
   },
+  "styles": {
+    "POSTER_STYLES": {
+      "environment_protection": {
+        "title": "環境保護",
+        "description": "コミュニティ環境保護活動スケジュール"
+      },
+      "literature": {
+        "title": "文学",
+        "description": "国際ブックフェアイベント告知"
+      },
+      "art": {
+        "title": "芸術",
+        "description": "市立美術館展覧会オープン通知"
+      },
+      "health": {
+        "title": "健康",
+        "description": "中央病院健康診断週間プロモーション"
+      },
+      "science_and_technology": {
+        "title": "科学技術",
+        "description": "全国イノベーション・起業コンテストプレビュー"
+      },
+      "music": {
+        "title": "音楽",
+        "description": "芽音楽祭グランドオープニング"
+      },
+      "perform": {
+        "title": "パフォーマンス",
+        "description": "人民大劇場公演招待"
+      },
+      "motion": {
+        "title": "スポーツ",
+        "description": "市立スタジアム年次マラソン招待"
+      },
+      "delicious_food": {
+        "title": "料理",
+        "description": "国際食文化週間試食イベント"
+      },
+      "education": {
+        "title": "教育",
+        "description": "大学公開講座シリーズ"
+      }
+    },
+    "PHILOSOPHICAL_STYLES": {
+      "significance": {
+        "title": "意味",
+        "description": "意味"
+      },
+      "peace": {
+        "title": "平和",
+        "description": "平和は内なる静けさから始まる"
+      },
+      "grow_up": {
+        "title": "成長",
+        "description": "最も深い痛みの中にも成長の機会がある"
+      },
+      "attitude": {
+        "title": "心構え",
+        "description": "すべての制限は心から始まる"
+      },
+      "love": {
+        "title": "愛",
+        "description": "愛は世界をより良くする唯一の力"
+      },
+      "courage": {
+        "title": "勇気",
+        "description": "自分の内面を見つめることが真の勇気"
+      },
+      "change": {
+        "title": "変化",
+        "description": "変化だけが永遠"
+      },
+      "persist_in": {
+        "title": "忍耐",
+        "description": "人生の奇跡はしばしば粘り強い努力から生まれる"
+      },
+      "wisdom": {
+        "title": "知恵",
+        "description": "知恵の究極の目的は蓄積ではなく応用にある"
+      },
+      "study": {
+        "title": "学習",
+        "description": "なぜ私たちは学ぶのか？"
+      }
+    },
+    "QUOTE_STYLES": {
+      "hope": {
+        "title": "希望",
+        "description": "夜明け前が最も暗い"
+      },
+      "happiness": {
+        "title": "幸福",
+        "description": "幸福は自分次第"
+      },
+      "reflect": {
+        "title": "内省",
+        "description": "検証されていない人生は生きる価値がない"
+      },
+      "think": {
+        "title": "思考",
+        "description": "我思う、ゆえに我あり"
+      },
+      "motivate": {
+        "title": "動機づけ",
+        "description": "希望は強力な動機付けのツール"
+      },
+      "dream": {
+        "title": "夢",
+        "description": "夢のない人生は色あせている"
+      },
+      "power": {
+        "title": "力",
+        "description": "てこを一つ与えてくれれば、世界を動かしてみせよう"
+      },
+      "opportunity": {
+        "title": "機会",
+        "description": "困難の中に機会が隠されている"
+      },
+      "courage": {
+        "title": "勇気",
+        "description": "私たちが恐れるべきものは恐怖そのものだけ"
+      },
+      "tough": {
+        "title": "回復力",
+        "description": "殺さないものは私たちを強くする"
+      }
+    }
+  },
   "fonts": {
     "huiwenmingchao": "汇文明朝体",
     "xingshu": "行書",
@@ -80,10 +208,10 @@
     "style_setting": "スタイル設定",
     "quote_signature": "語録署名",
     "text_position": "テキスト位置",
-    "knowledge_card_preview": "知識カードプレビュー",
-    "philosophical_card_preview": "哲理カードプレビュー",
-    "quote_card_preview": "引用カードプレビュー",
-    "poster_preview": "宣伝ポスタープレビュー",
+    "knowledge-card": "知識カードプレビュー",
+    "philosophical-card": "哲理カードプレビュー",
+    "quote-reference": "引用カードプレビュー",
+    "promotional-poster": "宣伝ポスタープレビュー",
     "change_style": "スタイルを変更する",
     "change_style_placeholder": "変更したいスタイルを入力してください...",
     "generate_new_style": "新しいスタイルを生成する",

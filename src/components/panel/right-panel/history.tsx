@@ -303,7 +303,7 @@ const History = () => {
             return (
               <SvgPreview
                 svg={item.html}
-                title={t("label.svg_preview")}
+                title={t(`label.${item.tab}`)}
                 key={item.id}
               >
                 <div className="flex items-center justify-between p-2">
@@ -314,6 +314,9 @@ const History = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-500 hover:underline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
                       >
                         {item.url}
                       </a>
@@ -335,6 +338,7 @@ const History = () => {
                       html={sanitizeHtml(item.html)}
                       filename="knowledge-card"
                       className="h-8"
+                      type={item.type}
                     />
                     <Button
                       variant="ghost"
@@ -355,7 +359,7 @@ const History = () => {
             return (
               <HtmlPreview
                 html={sanitizeHtml(item.html)}
-                title={t("label.knowledge_card_preview")}
+                title={t(`label.${item.tab}`)}
                 key={item.id}
               >
                 <div className="flex items-center justify-between p-2">
@@ -366,6 +370,9 @@ const History = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-500 hover:underline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
                       >
                         {item.url}
                       </a>
@@ -387,6 +394,7 @@ const History = () => {
                       html={sanitizeHtml(item.html)}
                       filename="knowledge-card"
                       className="h-8"
+                      type={item.type}
                     />
                     <Button
                       variant="ghost"

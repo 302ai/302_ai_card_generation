@@ -278,7 +278,7 @@ const KnowledgeHistory = () => {
           return (
             <HtmlPreview
               html={sanitizeHtml(item.html)}
-              title={t("label.knowledge_card_preview")}
+              title={t(`label.${item.tab}`)}
               key={item.id}
             >
               <div className="flex items-center justify-between p-2">
@@ -310,6 +310,7 @@ const KnowledgeHistory = () => {
                     html={sanitizeHtml(item.html)}
                     filename="knowledge-card"
                     className="h-8"
+                    type={item.type}
                   />
                   <Button
                     variant="ghost"

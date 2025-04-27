@@ -8,7 +8,7 @@ class HistoryDB extends Dexie {
   constructor() {
     super("history-db");
     this.version(1).stores({
-      history: "id, html, status, createdAt, image, url, values",
+      history: "id, html, status, createdAt, image, url, values,type",
     });
   }
 }

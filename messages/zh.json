@@ -9,6 +9,134 @@
     },
     "title": "需要分享码"
   },
+  "styles": {
+    "POSTER_STYLES": {
+      "environment_protection": {
+        "title": "环境保护",
+        "description": "社区环保行动日程"
+      },
+      "literature": {
+        "title": "文学",
+        "description": "国际书展活动公告"
+      },
+      "art": {
+        "title": "艺术",
+        "description": "城市美术馆展览开幕通知"
+      },
+      "health": {
+        "title": "健康",
+        "description": "中心医院健康检查周宣传"
+      },
+      "science_and_technology": {
+        "title": "科技",
+        "description": "全国创新创业大赛预告"
+      },
+      "music": {
+        "title": "音乐",
+        "description": "蓓蕾音乐节隆重揭幕"
+      },
+      "perform": {
+        "title": "演出",
+        "description": "人民大剧院演出邀请"
+      },
+      "motion": {
+        "title": "运动",
+        "description": "市立体育馆年度马拉松邀请"
+      },
+      "delicious_food": {
+        "title": "美食",
+        "description": "国际美食文化周品鉴活动"
+      },
+      "education": {
+        "title": "教育",
+        "description": "大学公开课程系列讲座"
+      }
+    },
+    "PHILOSOPHICAL_STYLES": {
+      "significance": {
+        "title": "意义",
+        "description": "意义"
+      },
+      "peace": {
+        "title": "平和",
+        "description": "和平始于内心的宁静"
+      },
+      "grow_up": {
+        "title": "成长",
+        "description": "最深的痛苦中也蕴含着成长的机会"
+      },
+      "attitude": {
+        "title": "心态",
+        "description": "所有的限制都始于头脑"
+      },
+      "love": {
+        "title": "爱",
+        "description": "爱是唯一能让世界变得更好的力量"
+      },
+      "courage": {
+        "title": "勇气",
+        "description": "审视自己的内心才是真正的勇敢"
+      },
+      "change": {
+        "title": "变革",
+        "description": "改变是永恒的唯一"
+      },
+      "persist_in": {
+        "title": "坚持",
+        "description": "生活中的奇迹往往源于坚持不懈的努力"
+      },
+      "wisdom": {
+        "title": "智慧",
+        "description": "智慧的最终目的在于应用而非积累"
+      },
+      "study": {
+        "title": "学习",
+        "description": "我们为何而学习？"
+      }
+    },
+    "QUOTE_STYLES": {
+      "hope": {
+        "title": "希望",
+        "description": "日出之前总是最黑暗的时刻"
+      },
+      "happiness": {
+        "title": "幸福",
+        "description": "幸福取决于我们自己"
+      },
+      "reflect": {
+        "title": "反思",
+        "description": "未经审视的生活不值得过"
+      },
+      "think": {
+        "title": "思考",
+        "description": "我思故我在"
+      },
+      "motivate": {
+        "title": "激励",
+        "description": "希望是一个强有力的激励工具"
+      },
+      "dream": {
+        "title": "梦想",
+        "description": "没有梦想的人生是苍白的"
+      },
+      "power": {
+        "title": "力量",
+        "description": "给我一个支点，我就能撬动整个地球"
+      },
+      "opportunity": {
+        "title": "机遇",
+        "description": "困难中蕴藏着机遇"
+      },
+      "courage": {
+        "title": "勇气",
+        "description": "我们唯一值得恐惧的就是恐惧本身"
+      },
+      "tough": {
+        "title": "坚韧",
+        "description": "那些杀不死我们的，使我们更强大"
+      }
+    }
+  },
   "fonts": {
     "huiwenmingchao": "汇文明朝字体",
     "xingshu": "行书",
@@ -58,10 +186,10 @@
     "style_setting": "风格设置",
     "quote_signature": "语录署名",
     "text_position": "文字位置",
-    "knowledge_card_preview": "知识卡片预览",
-    "philosophical_card_preview": "哲理卡片预览",
-    "quote_card_preview": "语录引用预览",
-    "poster_preview": "宣传海报预览",
+    "knowledge-card": "知识卡片预览",
+    "philosophical-card": "哲理卡片预览",
+    "quote-reference": "语录引用预览",
+    "promotional-poster": "宣传海报预览",
     "change_style": "修改风格",
     "change_style_placeholder": "请输入你想要的风格描述...",
     "generate_new_style": "生成新样式",

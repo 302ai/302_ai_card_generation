@@ -160,3 +160,132 @@ export const STYLES_LIST = [
     description: `采用德国表现主义风格设计，体现20世纪初期德国表现主义运动的强烈情感表达。背景应使用深色调如深蓝、黑色或暗红色，创造戏剧性氛围。必须使用强烈的明暗对比和扭曲变形的形态，线条应锐利且富有动感，呈现出内在情绪的外化。排版应不规则且具表现力，文字可呈现倾斜或不稳定感，标题应使用粗犷、锐利的哥特式字体或手写风格字体。色彩应强烈且具象征性，偏好使用黑色、深红、黄色和深绿等高对比度组合。图像处理应添加木刻版画效果，强调粗犷的线条和夸张的明暗对比。阴影是关键元素，应使用长而尖锐的投影创造紧张感和不安氛围。可添加象征性元素如尖塔、扭曲的人物剪影或锯齿状山脉。整体设计应呈现出强烈的情感张力和心理深度，仿佛一页来自德国表现主义电影《卡里加里博士的小屋》的场景设计或卡尔·施密特-罗特卢夫(Karl Schmidt-Rottluff)的木刻版画，体现"情感真实大于形式真实"的艺术理念。`,
   },
 ];
+
+export const POSTER_STYLES = [
+  {
+    id: 1,
+    name: "environment_protection",
+  },
+  {
+    id: 2,
+    name: "literature",
+  },
+  {
+    id: 3,
+    name: "art",
+  },
+  {
+    id: 4,
+    name: "health",
+  },
+  {
+    id: 5,
+    name: "science_and_technology",
+  },
+  {
+    id: 6,
+    name: "music",
+  },
+  {
+    id: 7,
+    name: "perform",
+  },
+  {
+    id: 8,
+    name: "motion",
+  },
+  {
+    id: 9,
+    name: "delicious_food",
+  },
+  {
+    id: 10,
+    name: "education",
+  },
+];
+
+export const PHILOSOPHICAL_STYLES = [
+  {
+    id: 1,
+    name: "significance",
+  },
+  {
+    id: 2,
+    name: "peace",
+  },
+  {
+    id: 3,
+    name: "grow_up",
+  },
+  {
+    id: 4,
+    name: "attitude",
+  },
+  {
+    id: 5,
+    name: "love",
+  },
+  {
+    id: 6,
+    name: "courage",
+  },
+  {
+    id: 7,
+    name: "change",
+  },
+  {
+    id: 8,
+    name: "persist_in",
+  },
+  {
+    id: 9,
+    name: "wisdom",
+  },
+  {
+    id: 10,
+    name: "study",
+  },
+];
+
+export const QUOTE_STYLES = [
+  {
+    id: 1,
+    name: "hope",
+  },
+  {
+    id: 2,
+    name: "happiness",
+  },
+  {
+    id: 3,
+    name: "reflect",
+  },
+  {
+    id: 4,
+    name: "think",
+  },
+  {
+    id: 5,
+    name: "motivate",
+  },
+  {
+    id: 6,
+    name: "dream",
+  },
+  {
+    id: 7,
+    name: "power",
+  },
+  {
+    id: 8,
+    name: "opportunity",
+  },
+  {
+    id: 9,
+    name: "courage",
+  },
+  {
+    id: 10,
+    name: "tough",
+  },
+];

@@ -9,6 +9,134 @@
     },
     "title": "Need to share code"
   },
+  "styles": {
+    "POSTER_STYLES": {
+      "environment_protection": {
+        "title": "Environmental Protection",
+        "description": "Community Environmental Protection Action Schedule"
+      },
+      "literature": {
+        "title": "Literature",
+        "description": "International Book Fair Event Announcement"
+      },
+      "art": {
+        "title": "Art",
+        "description": "City Art Gallery Exhibition Opening Notice"
+      },
+      "health": {
+        "title": "Health",
+        "description": "Central Hospital Health Check Week Promotion"
+      },
+      "science_and_technology": {
+        "title": "Science and Technology",
+        "description": "National Innovation and Entrepreneurship Competition Preview"
+      },
+      "music": {
+        "title": "Music",
+        "description": "Bud Music Festival Grand Opening"
+      },
+      "perform": {
+        "title": "Performance",
+        "description": "People's Grand Theater Performance Invitation"
+      },
+      "motion": {
+        "title": "Sports",
+        "description": "Municipal Stadium Annual Marathon Invitation"
+      },
+      "delicious_food": {
+        "title": "Cuisine",
+        "description": "International Food Culture Week Tasting Event"
+      },
+      "education": {
+        "title": "Education",
+        "description": "University Open Course Series Lectures"
+      }
+    },
+    "PHILOSOPHICAL_STYLES": {
+      "significance": {
+        "title": "Meaning",
+        "description": "Meaning"
+      },
+      "peace": {
+        "title": "Peace",
+        "description": "Peace begins with inner tranquility"
+      },
+      "grow_up": {
+        "title": "Growth",
+        "description": "Even in the deepest pain lies an opportunity for growth"
+      },
+      "attitude": {
+        "title": "Mindset",
+        "description": "All limitations begin in the mind"
+      },
+      "love": {
+        "title": "Love",
+        "description": "Love is the only power that can make the world better"
+      },
+      "courage": {
+        "title": "Courage",
+        "description": "Examining one's inner self is true bravery"
+      },
+      "change": {
+        "title": "Change",
+        "description": "Change is the only constant"
+      },
+      "persist_in": {
+        "title": "Perseverance",
+        "description": "Life's miracles often come from persistent effort"
+      },
+      "wisdom": {
+        "title": "Wisdom",
+        "description": "The ultimate purpose of wisdom is application, not accumulation"
+      },
+      "study": {
+        "title": "Learning",
+        "description": "Why do we learn?"
+      }
+    },
+    "QUOTE_STYLES": {
+      "hope": {
+        "title": "Hope",
+        "description": "It is always darkest before dawn"
+      },
+      "happiness": {
+        "title": "Happiness",
+        "description": "Happiness depends on ourselves"
+      },
+      "reflect": {
+        "title": "Reflection",
+        "description": "The unexamined life is not worth living"
+      },
+      "think": {
+        "title": "Thinking",
+        "description": "I think, therefore I am"
+      },
+      "motivate": {
+        "title": "Motivation",
+        "description": "Hope is a powerful motivational tool"
+      },
+      "dream": {
+        "title": "Dream",
+        "description": "A life without dreams is pale"
+      },
+      "power": {
+        "title": "Power",
+        "description": "Give me a lever and I will move the world"
+      },
+      "opportunity": {
+        "title": "Opportunity",
+        "description": "Opportunities are hidden in difficulties"
+      },
+      "courage": {
+        "title": "Courage",
+        "description": "The only thing we have to fear is fear itself"
+      },
+      "tough": {
+        "title": "Resilience",
+        "description": "What doesn't kill us makes us stronger"
+      }
+    }
+  },
   "fonts": {
     "huiwenmingchao": "Huiwen Mincho Font",
     "xingshu": "Running Script",
@@ -77,10 +205,10 @@
     "style_setting": "Style Setting",
     "quote_signature": "Quote Signature",
     "text_position": "Text Position",
-    "knowledge_card_preview": "Knowledge Card Preview",
-    "philosophical_card_preview": "Philosophical Card Preview",
-    "quote_card_preview": "Quote Card Preview",
-    "poster_preview": "Poster Preview",
+    "knowledge-card": "Knowledge Card Preview",
+    "philosophical-card": "Philosophical Card Preview",
+    "quote-reference": "Quote Card Preview",
+    "promotional-poster": "Poster Preview",
     "change_style": "Change Style",
     "change_style_placeholder": "Please enter the style description you want to change...",
     "generate_new_style": "Generate New Style",
