@@ -34,7 +34,7 @@ export default function Home() {
       <div className="container relative mx-auto flex h-full w-full max-w-[1550px] flex-row items-start rounded-lg border bg-background px-6 py-4 shadow-sm">
         {isMobile ? (
           <>
-            <div className="flex flex-col">
+            <div className="flex w-full flex-col items-center">
               <LeftPanel />
               <RightPanel />
             </div>
