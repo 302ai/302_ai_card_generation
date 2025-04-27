@@ -13,6 +13,7 @@ type ConfigState = {
   shareCode?: string;
   // Whether to hide the brand.
   hideBrand?: boolean;
+  region?: string;
 };
 
 export const appConfigAtom = atomWithStorage<ConfigState>(
@@ -24,6 +25,7 @@ export const appConfigAtom = atomWithStorage<ConfigState>(
     isChina: env.NEXT_PUBLIC_IS_CHINA,
     shareCode: "",
     hideBrand: env.NEXT_PUBLIC_HIDE_BRAND,
+    region: "1",
   },
   createJSONStorage(() =>
     typeof window !== "undefined"

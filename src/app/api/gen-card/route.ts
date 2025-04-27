@@ -78,15 +78,16 @@ export async function POST(request: Request) {
     logger.error(error);
     if (error instanceof APICallError) {
       const resp = error.responseBody;
+
       return Response.json(resp, { status: 500 });
     }
-
     // Handle different types of errors
-    let errorMessage = "Failed to generate prompt";
+    let errorMessage = "Failed to generate image";
     let errorCode = 500;
 
     if (error instanceof Error) {
       errorMessage = error.message;
+      // You can add specific error code mapping here if needed
       if ("code" in error && typeof (error as any).code === "number") {
         errorCode = (error as any).code;
       }
@@ -95,11 +96,11 @@ export async function POST(request: Request) {
     return Response.json(
       {
         error: {
-          errCode: errorCode,
+          err_code: errorCode,
           message: errorMessage,
-          messageCn: "生成提示词失败",
-          messageEn: "Failed to generate prompt",
-          messageJa: "画像の生成に失敗しました",
+          message_cn: "生成图片失败",
+          message_en: "Failed to generate image",
+          message_ja: "画像の生成に失敗しました",
           type: "IMAGE_GENERATION_ERROR",
         },
       },
