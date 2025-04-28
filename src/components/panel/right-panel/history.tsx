@@ -7,6 +7,7 @@ import {
   Loader2,
   RocketIcon,
   RefreshCw,
+  WandSparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import HtmlPreview from "./html-preview";
@@ -23,6 +24,7 @@ import { store } from "@/stores";
 import { toast } from "sonner";
 import { generateHTML } from "@/services/gen-html";
 import SvgPreview from "./svg-preview";
+import ChangeStyleModal from "./change-style-modal";
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
   try {
@@ -88,7 +90,8 @@ const History = () => {
   const [isEnlarged, setIsEnlarged] = useState(false);
   const [selectedHtml, setSelectedHtml] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [modalShow, setModalShow] = useState(false);
+  const [styleModalOpen, setStyleModalOpen] = useState(false);
+
   const [concurrentTasks, setConcurrentTasks] = useAtom(
     concurrentTaskCountAtom
   );
@@ -140,14 +143,14 @@ const History = () => {
   const handleDeploy = async (id: string, html: string) => {
     // Check if the content is just an SVG and wrap it if needed
     let processedHtml = html;
-
+    const historyItem = history?.items.find((item) => item.id === id);
     // If it's only an SVG, wrap it in a proper HTML document with div
     if (html.trim().startsWith("<svg") && html.trim().endsWith("</svg>")) {
       processedHtml = `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>SVG Content</title>
+    <title>${historyItem?.content}</title>
 </head>
 <body>
     <div style="display:flex;justify-content:center">${html}</div>
@@ -390,6 +393,21 @@ const History = () => {
                     >
                       <RocketIcon className="h-4 w-4 text-blue-500 dark:text-blue-400" />
                     </Button>
+                    {(item.tab === "philosophical-card" ||
+                      item.tab === "quote-reference") && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedHtml(sanitizeHtml(item.html));
+                          setStyleModalOpen(true);
+                        }}
+                        className="h-8 w-8"
+                      >
+                        <WandSparkles className="h-4 w-4 text-purple-500 dark:text-purple-400" />
+                      </Button>
+                    )}
                     <DownloadDropdown
                       html={sanitizeHtml(item.html)}
                       filename="knowledge-card"
@@ -413,6 +431,11 @@ const History = () => {
             );
           }
         })}
+        <ChangeStyleModal
+          open={styleModalOpen}
+          onOpenChange={setStyleModalOpen}
+          data={{ html: selectedHtml || "" }}
+        />
       </div>
     </>
   );

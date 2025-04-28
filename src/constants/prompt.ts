@@ -355,7 +355,8 @@ const posterPromptForRandom = ({
 -通过删除不必要的元素和属性来优化SVG代码
 -使用SVG原生动画功能实现适当的动画效果（如果需要）
 -SVG元素的总数不应超过100，以确保渲染效率
--避免使用实验性或低兼容性的SVG功能
+-避免使用实验性或低兼容性的SVG功能\
+-如果包含linearGradient，它的id必须是随机的！！！
 
 ##兼容性要求
 -设计必须在Chrome、Firefox、Safari等主流浏览器中正确显示
@@ -438,6 +439,7 @@ Please let me provide you with a theme or a paragraph. Please analyze them and c
 -Use SVG native animation features to achieve appropriate animation effects (if needed)
 -The total number of SVG elements should not exceed 100 to ensure rendering efficiency
 -Avoid using experimental or low compatibility SVG features
+-If it contains linearGradient, its id must be random!
 
 ##Compatibility requirements
 -The design must be displayed correctly in mainstream browsers such as Chrome, Firefox, Safari, etc
@@ -519,7 +521,7 @@ ${content}
 -SVGネイティブアニメーション機能を使用して適切なアニメーション効果を実現する（必要に応じて）
 -SVG要素の総数は100を超えてはならず、レンダリング効率を確保する
 -実験的または低互換性のSVG機能の使用を避ける
-
+-linearGradientのidは必ずランダムにしてください！！！
 ###互換性要件
 -Chrome、Firefox、Safariなどのメインストリームブラウザに正しく表示されるように設計する必要があります
 -すべてのキーコンテンツが標準viewBoxの範囲内で完全に表示されるようにする
@@ -615,6 +617,7 @@ const posterPromptForCustomAndTemplate = ({
 -使用SVG原生动画功能实现适当的动画效果（如果需要）
 -SVG元素的总数不应超过100，以确保渲染效率
 -避免使用实验性或低兼容性的SVG功能
+-如果包含linearGradient，它的id必须是随机的！！！
 
 ##兼容性要求
 -设计必须在Chrome、Firefox、Safari等主流浏览器中正确显示
@@ -698,6 +701,7 @@ I will provide you with a theme or a paragraph of text, as well as the design st
 -Use SVG native animation features to achieve appropriate animation effects (if needed)
 -The total number of SVG elements should not exceed 100 to ensure rendering efficiency
 -Avoid using experimental or low compatibility SVG features
+-If it contains linearGradient, its id must be random!
 
 ##Compatibility requirements
 -The design must be displayed correctly in mainstream browsers such as Chrome, Firefox, Safari, etc
@@ -780,6 +784,7 @@ ${content}
 -SVGネイティブアニメーション機能を使用して適切なアニメーション効果を実現する（必要に応じて）
 -SVG要素の総数は100を超えてはならず、レンダリング効率を確保する
 -実験的または低互換性のSVG機能の使用を避ける
+-linearGradientのidは必ずランダムにしてください！！！
 
 ###互換性要件
 -Chrome、Firefox、Safariなどのメインストリームブラウザに正しく表示されるように設計する必要があります

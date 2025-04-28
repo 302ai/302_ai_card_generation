@@ -11,16 +11,7 @@ export type History = {
     | "promotional-poster"
     | "quote-reference"
     | "philosophical-card";
-};
-
-export type SvgHistory = {
-  id: string;
-  svg: string;
-  status: "pending" | "success" | "failed";
-  createdAt: number;
-  values?: Record<string, any>;
-  type: "";
-  tab: "";
+  content: string;
 };
 
 export type AddHistory = Omit<History, "id" | "createdAt">;

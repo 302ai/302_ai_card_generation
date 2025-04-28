@@ -1,6 +1,6 @@
 import Dexie, { Table } from "dexie";
 
-import { History, SvgHistory } from "./types";
+import { History } from "./types";
 
 class HistoryDB extends Dexie {
   history!: Table<History>;
@@ -8,7 +8,8 @@ class HistoryDB extends Dexie {
   constructor() {
     super("history-db");
     this.version(1).stores({
-      history: "id, html, status, createdAt, image, url, values,type",
+      history:
+        "id, html, status, createdAt, image, url, values,type,tab,content",
     });
   }
 }

@@ -6,13 +6,12 @@ import HtmlPreview from "./html-preview";
 import { store } from "@/stores";
 import { appConfigAtom } from "@/stores/slices/config_store";
 import { generateHTML } from "@/services/change-style";
-import { usePhilosophicalHistory } from "@/hooks/db/use-philosophical-history";
 import { useTranslations } from "next-intl";
 import { formStoreAtom } from "@/stores/slices/form_store";
 import { useAtom } from "jotai";
 import { toast } from "sonner";
 import { uiStoreAtom } from "@/stores/slices/ui_store";
-import { useGenQuoteHistory } from "@/hooks/db/use-gen-quote-history";
+import { useHistory } from "@/hooks/db/use-gen-history";
 
 interface ChangeStyleModalProps {
   open: boolean;
@@ -29,9 +28,8 @@ const ChangeStyleModal: React.FC<ChangeStyleModalProps> = ({
 }) => {
   const [stylePrompt, setStylePrompt] = useState("");
   const { apiKey } = store.get(appConfigAtom);
-  const { addPhilosophicalHistory, updatePhilosophicalHistory } =
-    usePhilosophicalHistory();
-  const { addQuoteHistory, updateQuoteHistory } = useGenQuoteHistory();
+
+  const { addHistory, updateHistory } = useHistory();
   const t = useTranslations();
   const [uiStore, setUiStore] = useAtom(uiStoreAtom);
 
@@ -53,18 +51,13 @@ const ChangeStyleModal: React.FC<ChangeStyleModalProps> = ({
     let historyId = "";
 
     try {
-      // Add loading card based on active card type
-      if (uiStore.activeCard === "philosophical-card") {
-        historyId = await addPhilosophicalHistory({
-          html: "",
-          status: "pending",
-        });
-      } else if (uiStore.activeCard === "quote-reference") {
-        historyId = await addQuoteHistory({
-          html: "",
-          status: "pending",
-        });
-      }
+      historyId = await addHistory({
+        html: "",
+        status: "pending",
+        type: "html",
+        tab: uiStore.activeCard,
+        content: stylePrompt,
+      });
       onOpenChange(false);
       const res = await generateHTML({
         apiKey: apiKey as string,
@@ -73,21 +66,12 @@ const ChangeStyleModal: React.FC<ChangeStyleModalProps> = ({
       });
 
       // Update history based on active card type
-      const updateHistory =
-        uiStore.activeCard === "philosophical-card"
-          ? updatePhilosophicalHistory
-          : updateQuoteHistory;
 
       await updateHistory(historyId, {
         html: res.html,
         status: "success",
       });
     } catch (error) {
-      const updateHistory =
-        uiStore.activeCard === "philosophical-card"
-          ? updatePhilosophicalHistory
-          : updateQuoteHistory;
-
       await updateHistory(historyId, {
         status: "failed",
       });

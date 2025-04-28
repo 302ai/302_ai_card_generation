@@ -459,6 +459,7 @@ const LeftPanel = () => {
           status: "pending",
           type: "html",
           tab: uiStore.activeCard,
+          content,
         });
         submittingValues = {
           apiKey: apiKey as string,
@@ -536,6 +537,7 @@ const LeftPanel = () => {
           status: "pending",
           type: "svg",
           tab: uiStore.activeCard,
+          content: promotionalPoster.content as string,
         });
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
@@ -602,6 +604,7 @@ const LeftPanel = () => {
           status: "pending",
           type: "html",
           tab: uiStore.activeCard,
+          content: philosophicalCard.content as string,
         });
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
@@ -675,6 +678,7 @@ const LeftPanel = () => {
           status: "pending",
           type: "html",
           tab: uiStore.activeCard,
+          content: quoteReference.content as string,
         });
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
