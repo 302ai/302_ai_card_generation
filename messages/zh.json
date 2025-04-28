@@ -55,7 +55,7 @@
     "PHILOSOPHICAL_STYLES": {
       "significance": {
         "title": "意义",
-        "description": "意义"
+        "description": "人活着是为了什么？"
       },
       "peace": {
         "title": "平和",
@@ -97,43 +97,53 @@
     "QUOTE_STYLES": {
       "hope": {
         "title": "希望",
-        "description": "日出之前总是最黑暗的时刻"
+        "description": "日出之前总是最黑暗的时刻",
+        "author": "托马斯·富勒"
       },
       "happiness": {
         "title": "幸福",
-        "description": "幸福取决于我们自己"
+        "description": "幸福取决于我们自己",
+        "author": "亚里士多德"
       },
       "reflect": {
         "title": "反思",
-        "description": "未经审视的生活不值得过"
+        "description": "未经审视的生活不值得过",
+        "author": "苏格拉底"
       },
       "think": {
         "title": "思考",
-        "description": "我思故我在"
+        "description": "我思故我在",
+        "author": "笛卡尔"
       },
       "motivate": {
         "title": "激励",
-        "description": "希望是一个强有力的激励工具"
+        "description": "希望是一个强有力的激励工具",
+        "author": "尼克·维加纳特"
       },
       "dream": {
         "title": "梦想",
-        "description": "没有梦想的人生是苍白的"
+        "description": "没有梦想的人生是苍白的",
+        "author": "卡尔·桑德堡"
       },
       "power": {
         "title": "力量",
-        "description": "给我一个支点，我就能撬动整个地球"
+        "description": "给我一个支点，我就能撬动整个地球",
+        "author": "阿基米德"
       },
       "opportunity": {
         "title": "机遇",
-        "description": "困难中蕴藏着机遇"
+        "description": "困难中蕴藏着机遇",
+        "author": "爱因斯坦"
       },
       "courage": {
         "title": "勇气",
-        "description": "我们唯一值得恐惧的就是恐惧本身"
+        "description": "我们唯一值得恐惧的就是恐惧本身",
+        "author": "富兰克林·罗斯福"
       },
       "tough": {
         "title": "坚韧",
-        "description": "那些杀不死我们的，使我们更强大"
+        "description": "那些杀不死我们的，使我们更强大",
+        "author": "尼采"
       }
     }
   },

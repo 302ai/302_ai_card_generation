@@ -55,7 +55,7 @@
     "PHILOSOPHICAL_STYLES": {
       "significance": {
         "title": "意味",
-        "description": "意味"
+        "description": "人が生きているのは何のためですか。"
       },
       "peace": {
         "title": "平和",
@@ -97,43 +97,53 @@
     "QUOTE_STYLES": {
       "hope": {
         "title": "希望",
-        "description": "夜明け前が最も暗い"
+        "description": "夜明け前が最も暗い",
+        "author": "トーマス・フラー"
       },
       "happiness": {
         "title": "幸福",
-        "description": "幸福は自分次第"
+        "description": "幸福は自分次第",
+        "author": "アリストテレス"
       },
       "reflect": {
         "title": "内省",
-        "description": "検証されていない人生は生きる価値がない"
+        "description": "検証されていない人生は生きる価値がない",
+        "author": "ソクラテス"
       },
       "think": {
         "title": "思考",
-        "description": "我思う、ゆえに我あり"
+        "description": "我思う、ゆえに我あり",
+        "author": "デカルト"
       },
       "motivate": {
         "title": "動機づけ",
-        "description": "希望は強力な動機付けのツール"
+        "description": "希望は強力な動機付けのツール",
+        "author": "ニック・ブイチチ"
       },
       "dream": {
         "title": "夢",
-        "description": "夢のない人生は色あせている"
+        "description": "夢のない人生は色あせている",
+        "author": "カール・サンドバーグ"
       },
       "power": {
         "title": "力",
-        "description": "てこを一つ与えてくれれば、世界を動かしてみせよう"
+        "description": "てこを一つ与えてくれれば、世界を動かしてみせよう",
+        "author": "アルキメデス"
       },
       "opportunity": {
         "title": "機会",
-        "description": "困難の中に機会が隠されている"
+        "description": "困難の中に機会が隠されている",
+        "author": "アインシュタイン"
       },
       "courage": {
         "title": "勇気",
-        "description": "私たちが恐れるべきものは恐怖そのものだけ"
+        "description": "私たちが恐れるべきものは恐怖そのものだけ",
+        "author": "フランクリン・ルーズベルト"
       },
       "tough": {
         "title": "回復力",
-        "description": "殺さないものは私たちを強くする"
+        "description": "殺さないものは私たちを強くする",
+        "author": "ニーチェ"
       }
     }
   },

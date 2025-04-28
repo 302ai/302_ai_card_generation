@@ -237,36 +237,48 @@ const LeftPanel = () => {
 
   // New function to fill promotional poster content
   const fillPromotionalContent = useCallback(
-    (content: string) => {
+    (content: string, metadata?: string) => {
       form.setValue("promotionalPoster.content", content, {
         shouldValidate: true,
         shouldDirty: true,
         shouldTouch: true,
       });
+
+      // Handle additional metadata if needed in the future
     },
     [form]
   );
 
   // New function to fill philosophical card content
   const fillPhilosophicalContent = useCallback(
-    (content: string) => {
+    (content: string, metadata?: string) => {
       form.setValue("philosophicalCard.content", content, {
         shouldValidate: true,
         shouldDirty: true,
         shouldTouch: true,
       });
+
+      // Handle additional metadata if needed in the future
     },
     [form]
   );
 
   // New function to fill quote reference content
   const fillQuoteContent = useCallback(
-    (content: string) => {
+    (content: string, author?: string) => {
       form.setValue("quoteReference.content", content, {
         shouldValidate: true,
         shouldDirty: true,
         shouldTouch: true,
       });
+
+      if (author) {
+        form.setValue("quoteReference.author", author, {
+          shouldValidate: true,
+          shouldDirty: true,
+          shouldTouch: true,
+        });
+      }
     },
     [form]
   );
@@ -866,7 +878,7 @@ const LeftPanel = () => {
                   </div>
                 )}
                 {uiStore.activeCard === "promotional-poster" && (
-                  <div>
+                  <div className="space-y-2">
                     <FormField
                       control={form.control}
                       name="promotionalPoster.content"
@@ -883,7 +895,7 @@ const LeftPanel = () => {
                         </FormItem>
                       )}
                     />
-                    <div className="flex justify-end">
+                    <div className="flex items-center justify-end space-x-1 text-sm text-gray-500">
                       <Button
                         variant="ghost"
                         size="icon"
@@ -902,7 +914,8 @@ const LeftPanel = () => {
                               fillPromotionalContent(
                                 t(
                                   `styles.POSTER_STYLES.${example.name}.description`
-                                )
+                                ),
+                                t(`styles.POSTER_STYLES.${example.name}.title`)
                               )
                             }
                           >
@@ -914,7 +927,7 @@ const LeftPanel = () => {
                   </div>
                 )}
                 {uiStore.activeCard === "quote-reference" && (
-                  <div>
+                  <div className="space-y-2">
                     <FormField
                       control={form.control}
                       name="quoteReference.content"
@@ -931,7 +944,7 @@ const LeftPanel = () => {
                         </FormItem>
                       )}
                     />
-                    <div className="flex justify-end">
+                    <div className="flex items-center justify-end space-x-1 text-sm text-gray-500">
                       <Button
                         variant="ghost"
                         size="icon"
@@ -950,7 +963,8 @@ const LeftPanel = () => {
                               fillQuoteContent(
                                 t(
                                   `styles.QUOTE_STYLES.${example.name}.description`
-                                )
+                                ),
+                                t(`styles.QUOTE_STYLES.${example.name}.author`)
                               )
                             }
                           >
@@ -962,7 +976,7 @@ const LeftPanel = () => {
                   </div>
                 )}
                 {uiStore.activeCard === "philosophical-card" && (
-                  <div>
+                  <div className="space-y-2">
                     <FormField
                       control={form.control}
                       name="philosophicalCard.content"
@@ -979,7 +993,7 @@ const LeftPanel = () => {
                         </FormItem>
                       )}
                     />
-                    <div className="flex justify-end">
+                    <div className="flex items-center justify-end space-x-1 text-sm text-gray-500">
                       <Button
                         variant="ghost"
                         size="icon"
@@ -998,6 +1012,9 @@ const LeftPanel = () => {
                               fillPhilosophicalContent(
                                 t(
                                   `styles.PHILOSOPHICAL_STYLES.${example.name}.description`
+                                ),
+                                t(
+                                  `styles.PHILOSOPHICAL_STYLES.${example.name}.title`
                                 )
                               )
                             }

@@ -55,7 +55,7 @@
     "PHILOSOPHICAL_STYLES": {
       "significance": {
         "title": "Meaning",
-        "description": "Meaning"
+        "description": "What is the purpose of human existence?"
       },
       "peace": {
         "title": "Peace",
@@ -97,43 +97,53 @@
     "QUOTE_STYLES": {
       "hope": {
         "title": "Hope",
-        "description": "It is always darkest before dawn"
+        "description": "It is always darkest before dawn",
+        "author": "Thomas Fuller"
       },
       "happiness": {
         "title": "Happiness",
-        "description": "Happiness depends on ourselves"
+        "description": "Happiness depends on ourselves",
+        "author": "Aristotle"
       },
       "reflect": {
         "title": "Reflection",
-        "description": "The unexamined life is not worth living"
+        "description": "The unexamined life is not worth living",
+        "author": "Socrates"
       },
       "think": {
         "title": "Thinking",
-        "description": "I think, therefore I am"
+        "description": "I think, therefore I am",
+        "author": "Descartes"
       },
       "motivate": {
         "title": "Motivation",
-        "description": "Hope is a powerful motivational tool"
+        "description": "Hope is a powerful motivational tool",
+        "author": "Nick Vujicic"
       },
       "dream": {
         "title": "Dream",
-        "description": "A life without dreams is pale"
+        "description": "A life without dreams is pale",
+        "author": "Carl Sandburg"
       },
       "power": {
         "title": "Power",
-        "description": "Give me a lever and I will move the world"
+        "description": "Give me a lever and I will move the world",
+        "author": "Archimedes"
       },
       "opportunity": {
         "title": "Opportunity",
-        "description": "Opportunities are hidden in difficulties"
+        "description": "Opportunities are hidden in difficulties",
+        "author": "Einstein"
       },
       "courage": {
         "title": "Courage",
-        "description": "The only thing we have to fear is fear itself"
+        "description": "The only thing we have to fear is fear itself",
+        "author": "Franklin Roosevelt"
       },
       "tough": {
         "title": "Resilience",
-        "description": "What doesn't kill us makes us stronger"
+        "description": "What doesn't kill us makes us stronger",
+        "author": "Nietzsche"
       }
     }
   },
