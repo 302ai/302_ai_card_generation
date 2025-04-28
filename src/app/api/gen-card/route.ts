@@ -75,22 +75,23 @@ export async function POST(request: Request) {
 
     return Response.json({ html });
   } catch (error) {
-    logger.error(error);
+    // logger.error(error);
     if (error instanceof APICallError) {
+      // console.log("APICallError", error);
+
       const resp = error.responseBody;
 
       return Response.json(resp, { status: 500 });
     }
     // Handle different types of errors
-    let errorMessage = "Failed to generate image";
-    let errorCode = 500;
+    const errorMessage = "Failed to generate image";
+    const errorCode = 500;
 
     if (error instanceof Error) {
-      errorMessage = error.message;
-      // You can add specific error code mapping here if needed
-      if ("code" in error && typeof (error as any).code === "number") {
-        errorCode = (error as any).code;
-      }
+      console.log("error", error);
+
+      const resp = (error as any)?.responseBody as any; // You can add specific error code mapping here if needed
+      return Response.json(resp, { status: 500 });
     }
 
     return Response.json(

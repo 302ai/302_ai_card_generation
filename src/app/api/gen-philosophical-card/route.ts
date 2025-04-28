@@ -72,31 +72,33 @@ export async function POST(request: Request) {
 
     return Response.json({ html });
   } catch (error) {
-    logger.error(error);
+    // logger.error(error);
     if (error instanceof APICallError) {
+      // console.log("APICallError", error);
+
       const resp = error.responseBody;
+
       return Response.json(resp, { status: 500 });
     }
-
     // Handle different types of errors
-    let errorMessage = "Failed to generate prompt";
-    let errorCode = 500;
+    const errorMessage = "Failed to generate image";
+    const errorCode = 500;
 
     if (error instanceof Error) {
-      errorMessage = error.message;
-      if ("code" in error && typeof (error as any).code === "number") {
-        errorCode = (error as any).code;
-      }
+      console.log("error", error);
+
+      const resp = (error as any)?.responseBody as any; // You can add specific error code mapping here if needed
+      return Response.json(resp, { status: 500 });
     }
 
     return Response.json(
       {
         error: {
-          errCode: errorCode,
+          err_code: errorCode,
           message: errorMessage,
-          messageCn: "生成提示词失败",
-          messageEn: "Failed to generate prompt",
-          messageJa: "画像の生成に失敗しました",
+          message_cn: "生成图片失败",
+          message_en: "Failed to generate image",
+          message_ja: "画像の生成に失敗しました",
           type: "IMAGE_GENERATION_ERROR",
         },
       },
