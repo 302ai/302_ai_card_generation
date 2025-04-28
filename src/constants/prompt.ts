@@ -27,9 +27,8 @@ const systemPrompt = ({
       -编者有话说/提示：设计一个风格合适的侧边栏或注释，注释内容可以简洁，但必须完整显示
       
       技术规格：
-      -使用HTML5、Font Awesome、Tailwind CSS和必要的JavaScript
+      -使用HTML5、Font Awesome、CSS和必要的JavaScript
       * Font Awesome: [https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css](https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css)
-      * Tailwind CSS: [https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css](https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css)
       * 中文字体: [https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap)
       -考虑添加微妙的动画，例如页面加载过程中的淡入效果或微妙的悬停反馈
       -确保代码简洁高效，注重性能和可维护性
@@ -66,9 +65,8 @@ const systemPrompt = ({
       -Editor's note/tip: Design a stylish sidebar or annotation that can be concise, but must be fully displayed
       
       Technical specifications:
-      -Use HTML5, Font Awesome, Tailwind CSS, and necessary JavaScript
+      -Use HTML5, Font Awesome, CSS, and necessary JavaScript
       * Font Awesome: [ https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css ]( https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css )
-      * Tailwind CSS: [ https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css ]( https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css )
       -Consider adding subtle animations, such as fade in effects during page loading or subtle hover feedback
       -Ensure concise and efficient code, focus on performance and maintainability
       -Use CSS variables to manage colors and spacing for style consistency
@@ -105,9 +103,8 @@ const systemPrompt = ({
       -編集者には、コメントの内容を簡潔にすることができますが、完全に表示する必要があるスタイルのサイドバーやコメントを設計するためのヒントがあります。
 
       技術仕様：
-      -HTML 5、Font Awesome、Tailwind CSS、必要なJavaScriptの使用
+      -HTML 5、Font Awesome、CSS、必要なJavaScriptの使用
       * Font Awesome: [https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css](https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css)
-      * Tailwind CSS: [https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css](https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css)
       -ページロード中のフェードエフェクトや微妙なサスペンションフィードバックなど、微妙なアニメーションの追加を検討します。
       -シンプルで効率的なコードを確保し、パフォーマンスと保守性を重視
       -CSS変数を使用して色と間隔を管理し、スタイルの一貫性を実現
@@ -143,9 +140,8 @@ const systemPrompt = ({
 -编者有话说/提示：设计一个风格合适的侧边栏或注释，注释内容可以简洁，但必须完整显示
 
 技术规格：
--使用HTML5、Font Awesome、Tailwind CSS和必要的JavaScript
+-使用HTML5、Font Awesome、CSS和必要的JavaScript
 * Font Awesome: [https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css](https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css)
-* Tailwind CSS: [https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css](https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css)
 * 中文字体: [https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap)
 -考虑添加微妙的动画，例如页面加载过程中的淡入效果或微妙的悬停反馈
 -确保代码简洁高效，注重性能和可维护性
@@ -184,9 +180,8 @@ The card should contain the following elements, but with different visual repres
 -Editor's note/tip: Design a stylish sidebar or annotation that can be concise, but must be fully displayed
 
 Technical specifications:
--Use HTML5, Font Awesome, Tailwind CSS, and necessary JavaScript
+-Use HTML5, Font Awesome, CSS, and necessary JavaScript
 * Font Awesome: [ https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css ]( https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css )
-* Tailwind CSS: [ https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css ]( https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css )
 -Consider adding subtle animations, such as fade in effects during page loading or subtle hover feedback
 -Ensure concise and efficient code, focus on performance and maintainability
 -Use CSS variables to manage colors and spacing for style consistency
