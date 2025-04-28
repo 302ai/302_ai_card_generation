@@ -118,16 +118,16 @@ const LeftPanel = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       knowledgeCard: {
-        model: "claude-3-7-sonnet-20250219",
+        model: "claude-3-5-sonnet-20241022",
       },
       promotionalPoster: {
-        model: "claude-3-7-sonnet-20250219",
+        model: "claude-3-5-sonnet-20241022",
       },
       philosophicalCard: {
-        model: "claude-3-7-sonnet-20250219",
+        model: "claude-3-5-sonnet-20241022",
       },
       quoteReference: {
-        model: "claude-3-7-sonnet-20250219",
+        model: "claude-3-5-sonnet-20241022",
         textPosition: "left",
       },
     },
