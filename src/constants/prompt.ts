@@ -40,7 +40,7 @@ const systemPrompt = ({
       输出要求：
       -提供完整的HTML文件
       -生成代码必须严格遵循以下架构！！！：
-      <!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → </html>
+      <!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → </body> → </html>
       -代码应该优雅，符合最佳实践，CSS应该反映对细节的终极追求
       -设计宽度为400px，高度不超过1280px
       -整体div盒子必须在页面中居中显示
@@ -80,7 +80,7 @@ const systemPrompt = ({
       Output requirements:
       -Provide a complete HTML file
       -Generated code must strictly follow this architecture!!!:
-      <!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → </html>
+      <!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → </body> → </html>
       -Code should be elegant, in line with best practices, and CSS should reflect the ultimate pursuit of detail
       -Design width of 400px, height not exceeding 1280px
       -The entire div container must be centered on the page
@@ -121,7 +121,7 @@ const systemPrompt = ({
       出力要件：
       -完全なHTMLファイルを提供
       -生成コードは必ず以下の構造に従うこと!!!：
-      <!DOCTYPE> → <html> → <head>(5つのメタデータを含む) → <style> → <body>(6つの主要モジュールを含む) → </html>
+      <!DOCTYPE> → <html> → <head>(5つのメタデータを含む) → <style> → <body>(6つの主要モジュールを含む) → </body> → </html>
       -コードは優雅でベストプラクティスに合致し、CSSは細部への究極の追求を反映しなければならない
       -設計幅は400 px、高さは1280 px未満
       -全体のdivコンテナはページ中央に配置する必要があります
@@ -164,7 +164,7 @@ const systemPrompt = ({
 输出要求：
 -提供完整的HTML文件
 -生成代码必须严格遵循以下架构！！！：
-<!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → </html>
+<!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → </body> → </html>
 -代码应该优雅，符合最佳实践，CSS应该反映对细节的终极追求
 -设计宽度为400px，高度不超过1280px
 -整体div盒子必须在页面中居中显示
@@ -205,7 +205,7 @@ Technical specifications:
 Output requirements:
 -Provide a complete HTML file
 -Generated code must strictly follow this architecture!!!:
-<!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → </html>
+<!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → </body> → </html>
 -Code should be elegant, in line with best practices, and CSS should reflect the ultimate pursuit of detail
 -Design width of 400px, height not exceeding 1280px
 -The entire div container must be centered on the page
@@ -238,10 +238,6 @@ Please create stunning digital magazine style cards with the vision and aestheti
 -純粋なSVGフォーマットを使用して、可逆スケーリングと最適な互換性を確保
 -整理されたコード、明確な構造、適切な注釈
 -不要な要素と属性を削除してSVGコードを最適化する
--SVGネイティブアニメーション機能を使用して適切なアニメーション効果を実現する（必要に応じて）
--SVG要素の総数は100を超えてはならず、レンダリング効率を確保する
--実験的または低互換性のSVG機能の使用を避ける
--linearGradientのidは必ずランダムにしてください！！！
 ###互換性要件
 -Chrome、Firefox、Safariなどのメインストリームブラウザに正しく表示されるように設計する必要があります
 -すべてのキーコンテンツが標準viewBoxの範囲内で完全に表示されるようにする
@@ -288,7 +284,7 @@ Please create stunning digital magazine style cards with the vision and aestheti
 ###出力要件
 -ブラウザ内のWebページを直接開いたり埋め込むことができる、完全に使用可能なSVGコードを提供します。
 -生成コードは必ず以下の構造に従うこと!!!：
-<!DOCTYPE> → <html> → <head>(5つのメタデータを含む) → <style> → <body>(6つの主要モジュールを含む) → </html>
+<!DOCTYPE> → <html> → <head>(5つのメタデータを含む) → <style> → <body>(6つの主要モジュールを含む) → </body> → </html>
 -コードがSVG標準に適合し、エラー警告がないことを確認します
 -簡単な説明とキービジュアル要素
 -不要懈怠または見落とし、設計の考え方とSVGの専門知識を十分に示すために、怠ったり見落としたりしないでください。
@@ -578,7 +574,7 @@ ${content}
 ###出力要件
 -ブラウザ内のWebページを直接開いたり埋め込むことができる、完全に使用可能なSVGコードを提供します。
 -生成コードは必ず以下の構造に従うこと!!!：
-<!DOCTYPE> → <html> → <head>(5つのメタデータを含む) → <style> → <body>(6つの主要モジュールを含む) → </html>
+<!DOCTYPE> → <html> → <head>(5つのメタデータを含む) → <style> → <body>(6つの主要モジュールを含む) → </body> → </html>
 -コードがSVG標準に適合し、エラー警告がないことを確認します
 -簡単な説明とキービジュアル要素
 -不要懈怠または見落とし、設計の考え方とSVGの専門知識を十分に示すために、怠ったり見落としたりしないでください。
@@ -881,7 +877,7 @@ const philosophicalCardPrompt = ({
 卡片风格：${style}
 
 直接输出完整的HTML文件，生成代码必须严格遵循以下架构！！！：
-<!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → </html>
+<!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → </body> → </html>
 不要输出任何其他内容！！！！`,
     en: `Translate the theme into Chinese based on user input, and then use concise language within 70 words to break down its deeper meaning. Then create an elegant text card using HTML to represent this theme.
 
@@ -901,7 +897,7 @@ Topic: ${content}
 Card Style: ${style}
 
 Directly output the complete HTML file. Generated code must strictly follow this architecture!!!:
-<!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → </html>
+<!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → </body> → </html>
 Do not output any other content!!!!`,
     ja: `ユーザー入力に基づいてトピックを英語に翻訳し、100ワード以内の簡潔な言語を使用して深い意味を分解します。次にHTMLを使用して、このトピックを表す優雅なテキストカードを作成します。
 
@@ -921,7 +917,7 @@ Do not output any other content!!!!`,
 カードスタイル：${style}
 
 完全なHTMLファイルを直接出力します。生成コードは必ず以下の構造に従うこと!!!：
-<!DOCTYPE> → <html> → <head>(5つのメタデータを含む) → <style> → <body>(6つの主要モジュールを含む) → </html>
+<!DOCTYPE> → <html> → <head>(5つのメタデータを含む) → <style> → <body>(6つの主要モジュールを含む) → </body> → </html>
 他の内容は出力しないでください！！！！`,
   };
   return prompts[lang];
@@ -959,7 +955,7 @@ Location(Position where the user wishes the motto and creator to be displayed on
 Card Style(Required Card Background Style): ${style}
 
 Directly output the complete HTML file. Generated code must strictly follow this architecture!!!:
-<!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → </html>
+<!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → </body> → </html>
 Do not output any other content!!!!
   `;
 };
@@ -973,7 +969,7 @@ const changeStylePrompt = ({
 }) => {
   return `
   要求：只输出修改后的html代码，生成代码必须严格遵循以下架构！！！：
-  <!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → </html>
+  <!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → </body> → </html>
   不要输出任何其他内容！！！！
   修改为${content}风格的卡片，html代码为：
   ${html}
