@@ -37,6 +37,13 @@ export const genPhilosophicalCard = async ({
     textDelta?: string;
     logprobs?: LanguageModelV1LogProbs;
   }>({ type: "text-delta", textDelta: "" });
+  console.log({
+    model,
+    lang,
+    style,
+    content,
+  });
+
   try {
     const ai302 = createAI302({
       apiKey,

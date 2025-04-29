@@ -208,7 +208,8 @@
   "button": {
     "generate": "生成",
     "generating_with_count": "生成中({count}/{limit})",
-    "generating_limit_reached": "已达上限({count}/{limit})"
+    "generating_limit_reached": "已达上限({count}/{limit})",
+    "generating": "生成中"
   },
   "toast": {
     "task_limit_reached": "已达到任务上限({limit})，请稍后再试",

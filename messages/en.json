@@ -227,7 +227,8 @@
   "button": {
     "generate": "Generate",
     "generating_with_count": "Generating ({count}/{limit})",
-    "generating_limit_reached": "Limit reached ({count}/{limit})"
+    "generating_limit_reached": "Limit reached ({count}/{limit})",
+    "generating": "Generating"
   },
   "select": {
     "not_display": "Not Display",

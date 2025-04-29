@@ -230,7 +230,8 @@
   "button": {
     "generate": "生成する",
     "generating_with_count": "生成中({count}/{limit})",
-    "generating_limit_reached": "上限に達しました({count}/{limit})"
+    "generating_limit_reached": "上限に達しました({count}/{limit})",
+    "generating": "生成中"
   },
   "select": {
     "not_display": "表示しない",

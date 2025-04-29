@@ -313,14 +313,6 @@ const LeftPanel = () => {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Prevent rapid clicks by setting isSubmitting to true
-    setIsSubmitting(true);
-
-    // Set a timeout to re-enable the button after 2 seconds
-    setTimeout(() => {
-      setIsSubmitting(false);
-    }, 2000);
-
     // Check concurrent task limit
     if (concurrentTasks >= MAX_CONCURRENT_TASKS) {
       toast.error(
@@ -394,7 +386,15 @@ const LeftPanel = () => {
           }
         }
 
-        // All validations passed - now handle QR code upload if needed
+        // All validations passed - now set isSubmitting to true
+        setIsSubmitting(true);
+
+        // Set a timeout to re-enable the button after 2 seconds
+        setTimeout(() => {
+          setIsSubmitting(false);
+        }, 2000);
+
+        // Now handle QR code upload if needed
         if (
           formStore.qrType === "genrate" &&
           knowledgeCard.qrCode &&
@@ -579,6 +579,14 @@ const LeftPanel = () => {
           }
         }
 
+        // All validations passed - now set isSubmitting to true
+        setIsSubmitting(true);
+
+        // Set a timeout to re-enable the button after 2 seconds
+        setTimeout(() => {
+          setIsSubmitting(false);
+        }, 2000);
+
         // Validation passed, start the task
         taskStarted = true;
         setConcurrentTasks((prev) => prev + 1);
@@ -677,6 +685,14 @@ const LeftPanel = () => {
           }
         }
 
+        // All validations passed - now set isSubmitting to true
+        setIsSubmitting(true);
+
+        // Set a timeout to re-enable the button after 2 seconds
+        setTimeout(() => {
+          setIsSubmitting(false);
+        }, 2000);
+
         // Validation passed, start the task
         taskStarted = true;
         setConcurrentTasks((prev) => prev + 1);
@@ -698,7 +714,7 @@ const LeftPanel = () => {
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
         try {
-          const res = await generateHTML({
+          const res = await genPhilosophicalCard({
             ...submittingValues,
             apiKey: apiKey as string,
           });
@@ -787,6 +803,14 @@ const LeftPanel = () => {
           }
         }
 
+        // All validations passed - now set isSubmitting to true
+        setIsSubmitting(true);
+
+        // Set a timeout to re-enable the button after 2 seconds
+        setTimeout(() => {
+          setIsSubmitting(false);
+        }, 2000);
+
         // Validation passed, start the task
         taskStarted = true;
         setConcurrentTasks((prev) => prev + 1);
@@ -809,7 +833,7 @@ const LeftPanel = () => {
           await updateHistory(id, { ...data, html: "" });
 
         try {
-          const res = await generateHTML({
+          const res = await generateQuoteCard({
             ...submittingValues,
             apiKey: apiKey as string,
           });

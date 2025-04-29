@@ -61,6 +61,12 @@ export const generateSVG = async ({
   style,
   styleType,
 }: GenerateSVGParams) => {
+  console.log({
+    content,
+    style,
+    styleType,
+  });
+
   const stream = createStreamableValue<{
     type: string;
     textDelta?: string;
@@ -94,18 +100,22 @@ export const generateSVG = async ({
 
     (async () => {
       try {
-        const prompt =
-          styleType === "random"
-            ? posterPromptForRandom({ lang, content })
-            : posterPromptForCustomAndTemplate({
-                lang,
-                content,
-                style,
-              });
-
         const { fullStream } = streamText({
+          system:
+            styleType === "random"
+              ? posterPromptForRandom({ lang, content })
+              : posterPromptForCustomAndTemplate({
+                  lang,
+                  content,
+                  style,
+                }),
           model: ai302(model),
-          prompt,
+          messages: [
+            {
+              role: "user",
+              content: style,
+            },
+          ],
         });
 
         const onGetResult = async (
