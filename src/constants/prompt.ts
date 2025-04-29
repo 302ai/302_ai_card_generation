@@ -30,7 +30,7 @@ const systemPrompt = ({
       -使用HTML5、Font Awesome、CSS和必要的JavaScript
       * Font Awesome: [https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css](https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css)
       * 中文字体: [https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap)
-      -考虑添加微妙的动画，例如页面加载过程中的淡入效果或微妙的悬停反馈
+      -考虑添加微妙的悬停反馈
       -确保代码简洁高效，注重性能和可维护性
       -使用CSS变量来管理颜色和间距，以实现样式一致性
       -对于液体数字形式主义风格，必须添加流体动力学和梯度过渡
@@ -39,8 +39,11 @@ const systemPrompt = ({
       
       输出要求：
       -提供完整的HTML文件
+      -生成代码必须严格遵循以下架构！！！：
+      <!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → </html>
       -代码应该优雅，符合最佳实践，CSS应该反映对细节的终极追求
       -设计宽度为400px，高度不超过1280px
+      -整体div盒子必须在页面中居中显示
       -对主题内容进行抽象和提炼，只显示专栏要点或核心句子引用，为读者提供获得感
       -永远用中文输出，装饰元素可以用法语、英语等语言来表达，以创造一种精致感
       -当日期不为空时，必须使用提供的日期；如果为空，则不会显示日期区域！！！！
@@ -67,7 +70,7 @@ const systemPrompt = ({
       Technical specifications:
       -Use HTML5, Font Awesome, CSS, and necessary JavaScript
       * Font Awesome: [ https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css ]( https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css )
-      -Consider adding subtle animations, such as fade in effects during page loading or subtle hover feedback
+      -Consider adding subtle hover feedback
       -Ensure concise and efficient code, focus on performance and maintainability
       -Use CSS variables to manage colors and spacing for style consistency
       -For the liquid digital formalism style, fluid dynamics and gradient transitions must be added
@@ -76,8 +79,11 @@ const systemPrompt = ({
       
       Output requirements:
       -Provide a complete HTML file
+      -Generated code must strictly follow this architecture!!!:
+      <!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → </html>
       -Code should be elegant, in line with best practices, and CSS should reflect the ultimate pursuit of detail
       -Design width of 400px, height not exceeding 1280px
+      -The entire div container must be centered on the page
       -Abstracting and refining the theme content, only displaying column key points or core sentence references, providing readers with a sense of gain
       -Always output in English, decorative elements can be expressed in languages such as French and Chinese to create a sense of delicacy
       -When the date is not empty, the provided date must be used; If it is empty, the date range will not be displayed!!!!
@@ -105,7 +111,7 @@ const systemPrompt = ({
       技術仕様：
       -HTML 5、Font Awesome、CSS、必要なJavaScriptの使用
       * Font Awesome: [https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css](https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css)
-      -ページロード中のフェードエフェクトや微妙なサスペンションフィードバックなど、微妙なアニメーションの追加を検討します。
+      -微妙なサスペンションフィードバックの追加を検討します。
       -シンプルで効率的なコードを確保し、パフォーマンスと保守性を重視
       -CSS変数を使用して色と間隔を管理し、スタイルの一貫性を実現
       -液体デジタル形式主義のスタイルには、流体力学と勾配遷移を追加する必要があります
@@ -114,8 +120,11 @@ const systemPrompt = ({
 
       出力要件：
       -完全なHTMLファイルを提供
+      -生成コードは必ず以下の構造に従うこと!!!：
+      <!DOCTYPE> → <html> → <head>(5つのメタデータを含む) → <style> → <body>(6つの主要モジュールを含む) → </html>
       -コードは優雅でベストプラクティスに合致し、CSSは細部への究極の追求を反映しなければならない
       -設計幅は400 px、高さは1280 px未満
+      -全体のdivコンテナはページ中央に配置する必要があります
       -トピックの内容を抽象化し、コラムの要点や核心文の引用だけを表示し、読者に獲得感を提供する
       -いつまでも日本語で出力され、装飾要素はフランス語、英語などの言語で表現され、洗練された感覚を作り出すことができます
       -日付が空でない場合は、指定された日付を使用する必要があります。空の場合、日付領域は表示されません！！！！
@@ -143,7 +152,7 @@ const systemPrompt = ({
 -使用HTML5、Font Awesome、CSS和必要的JavaScript
 * Font Awesome: [https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css](https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css)
 * 中文字体: [https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap](https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap)
--考虑添加微妙的动画，例如页面加载过程中的淡入效果或微妙的悬停反馈
+-考虑添加微妙的悬停反馈
 -确保代码简洁高效，注重性能和可维护性
 -使用CSS变量来管理颜色和间距，以实现样式一致性
 -对于液体数字形式主义风格，必须添加流体动力学和梯度过渡
@@ -154,8 +163,11 @@ const systemPrompt = ({
 
 输出要求：
 -提供完整的HTML文件
+-生成代码必须严格遵循以下架构！！！：
+<!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → </html>
 -代码应该优雅，符合最佳实践，CSS应该反映对细节的终极追求
 -设计宽度为400px，高度不超过1280px
+-整体div盒子必须在页面中居中显示
 -对主题内容进行抽象和提炼，只显示专栏要点或核心句子引用，为读者提供获得感
 -永远用中文输出，装饰元素可以用法语、英语等语言来表达，以创造一种精致感
 -当日期不为空时，必须使用提供的日期；如果为空，则不会显示日期区域！！！！
@@ -182,7 +194,7 @@ The card should contain the following elements, but with different visual repres
 Technical specifications:
 -Use HTML5, Font Awesome, CSS, and necessary JavaScript
 * Font Awesome: [ https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css ]( https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css )
--Consider adding subtle animations, such as fade in effects during page loading or subtle hover feedback
+-Consider adding subtle hover feedback
 -Ensure concise and efficient code, focus on performance and maintainability
 -Use CSS variables to manage colors and spacing for style consistency
 -For the liquid digital formalism style, fluid dynamics and gradient transitions must be added
@@ -192,8 +204,11 @@ Technical specifications:
 
 Output requirements:
 -Provide a complete HTML file
+-Generated code must strictly follow this architecture!!!:
+<!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → </html>
 -Code should be elegant, in line with best practices, and CSS should reflect the ultimate pursuit of detail
 -Design width of 400px, height not exceeding 1280px
+-The entire div container must be centered on the page
 -Abstracting and refining the theme content, only displaying column key points or core sentence references, providing readers with a sense of gain
 -Always output in English, decorative elements can be expressed in languages such as French and Chinese to create a sense of delicacy
 -When the date is not empty, the provided date must be used; If it is empty, the date range will not be displayed!!!!
@@ -226,7 +241,7 @@ Please create stunning digital magazine style cards with the vision and aestheti
 -SVGネイティブアニメーション機能を使用して適切なアニメーション効果を実現する（必要に応じて）
 -SVG要素の総数は100を超えてはならず、レンダリング効率を確保する
 -実験的または低互換性のSVG機能の使用を避ける
-
+-linearGradientのidは必ずランダムにしてください！！！
 ###互換性要件
 -Chrome、Firefox、Safariなどのメインストリームブラウザに正しく表示されるように設計する必要があります
 -すべてのキーコンテンツが標準viewBoxの範囲内で完全に表示されるようにする
@@ -272,9 +287,11 @@ Please create stunning digital magazine style cards with the vision and aestheti
 
 ###出力要件
 -ブラウザ内のWebページを直接開いたり埋め込むことができる、完全に使用可能なSVGコードを提供します。
+-生成コードは必ず以下の構造に従うこと!!!：
+<!DOCTYPE> → <html> → <head>(5つのメタデータを含む) → <style> → <body>(6つの主要モジュールを含む) → </html>
 -コードがSVG標準に適合し、エラー警告がないことを確認します
--設計理念とキービジュアル要素の簡単な説明
--設計の考え方とSVGの専門知識を十分に示すために、怠ったり見落としたりしないでください。
+-簡単な説明とキービジュアル要素
+-不要懈怠または見落とし、設計の考え方とSVGの専門知識を十分に示すために、怠ったり見落としたりしないでください。
 -COT（創次元チェーン）を使用する方法：まずテーマを分析し、次に設計案を概念化し、最後にSVGコードを生成する
 
 提供されたトピックまたはコンテンツに基づいて、ユニークで注目され、熟練したSVGポスターを作成してください。
@@ -563,16 +580,12 @@ ${content}
 ###出力要件
 -ブラウザ内のWebページを直接開いたり埋め込むことができる、完全に使用可能なSVGコードを提供します。
 -コードがSVG標準に適合し、エラー警告がないことを確認します
--設計理念とキービジュアル要素の簡単な説明
--設計の考え方とSVGの専門知識を十分に示すために、怠ったり見落としたりしないでください。
+-簡単な説明とキービジュアル要素
+-不要懈怠または見落とし、設計の考え方とSVGの専門知識を十分に示すために、怠ったり見落としたりしないでください。
 -COT（創次元チェーン）を使用する方法：まずテーマを分析し、次に設計案を概念化し、最後にSVGコードを生成する
 
 提供されたトピックまたはコンテンツに基づいて、ユニークで注目され、熟練したSVGポスターを作成してください。
-
-処理対象：
-${content}
-
--SVGコードのみを出力し、他のコンテンツは出力しないでください！！！！
+SVGコードのみを出力し、他のコンテンツは出力しないでください！！！！
     `,
   };
   return prompts[lang];
@@ -827,8 +840,8 @@ ${content}
 ###出力要件
 -ブラウザ内のWebページを直接開いたり埋め込むことができる、完全に使用可能なSVGコードを提供します。
 -コードがSVG標準に適合し、エラー警告がないことを確認します
--設計理念とキービジュアル要素の簡単な説明
--設計の考え方とSVGの専門知識を十分に示すために、怠ったり見落としたりしないでください。
+-簡単な説明とキービジュアル要素
+-不要懈怠または見落とし、設計の考え方とSVGの専門知識を十分に示すために、怠ったり見落としたりしないでください。
 -COT（創次元チェーン）を使用する方法：まずテーマを分析し、次に設計案を概念化し、最後にSVGコードを生成する
 
 提供された内容とデザインスタイルに基づいて、独特で注目され、熟練したSVGポスターを作成してください。
@@ -870,7 +883,9 @@ const philosophicalCardPrompt = ({
 主题：${content}
 卡片风格：${style}
 
-直接输出完整的HTML文件，不要输出任何其他内容！！！！`,
+直接输出完整的HTML文件，生成代码必须严格遵循以下架构！！！：
+<!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → </html>
+不要输出任何其他内容！！！！`,
     en: `Translate the theme into Chinese based on user input, and then use concise language within 70 words to break down its deeper meaning. Then create an elegant text card using HTML to represent this theme.
 
 Design requirements:
@@ -888,7 +903,9 @@ Input format:
 Topic: ${content}
 Card Style: ${style}
 
-Directly output the complete HTML file. Do not output any other content!!!!`,
+Directly output the complete HTML file. Generated code must strictly follow this architecture!!!:
+<!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → </html>
+Do not output any other content!!!!`,
     ja: `ユーザー入力に基づいてトピックを英語に翻訳し、100ワード以内の簡潔な言語を使用して深い意味を分解します。次にHTMLを使用して、このトピックを表す優雅なテキストカードを作成します。
 
 設計要件：
@@ -906,8 +923,9 @@ Directly output the complete HTML file. Do not output any other content!!!!`,
 件名：${content}
 カードスタイル：${style}
 
-完全なHTMLファイルを直接出力します。他の内容は出力しないでください！！！！
-`,
+完全なHTMLファイルを直接出力します。生成コードは必ず以下の構造に従うこと!!!：
+<!DOCTYPE> → <html> → <head>(5つのメタデータを含む) → <style> → <body>(6つの主要モジュールを含む) → </html>
+他の内容は出力しないでください！！！！`,
   };
   return prompts[lang];
 };
@@ -943,7 +961,9 @@ Creator(The creator of the motto that the user wishes to display, without modifi
 Location(Position where the user wishes the motto and creator to be displayed on the card): ${textPosition}
 Card Style(Required Card Background Style): ${style}
 
-Directly output the complete HTML file. Do not output any other content!!!!
+Directly output the complete HTML file. Generated code must strictly follow this architecture!!!:
+<!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → </html>
+Do not output any other content!!!!
   `;
 };
 
@@ -955,7 +975,9 @@ const changeStylePrompt = ({
   html: string;
 }) => {
   return `
-  要求：只输出修改后的html代码，不要输出任何其他内容！！！！
+  要求：只输出修改后的html代码，生成代码必须严格遵循以下架构！！！：
+  <!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → </html>
+  不要输出任何其他内容！！！！
   修改为${content}风格的卡片，html代码为：
   ${html}
   `;
