@@ -26,6 +26,10 @@ const extractSvgContent = (content: string): string => {
         svgContent = cleaned;
       }
     }
+    // Check if content starts with "svg" followed by actual SVG content
+    else if (content.trim().startsWith("svg") && content.includes("<svg")) {
+      svgContent = content.trim().substring(3).trim();
+    }
     // Try to extract SVG from JSON
     else {
       try {
@@ -89,6 +93,92 @@ const extractSvgContent = (content: string): string => {
   }
 };
 
+// 为预览卡片优化SVG
+const optimizeSvgForPreview = (svgContent: string, title: string): string => {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${title}</title>
+        <style>
+          html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          svg {
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 800 / 1120;
+          }
+        </style>
+      </head>
+      <body>
+        ${svgContent}
+      </body>
+    </html>
+  `;
+};
+
+// 为放大预览优化SVG
+const optimizeSvgForFullPreview = (
+  svgContent: string,
+  title: string
+): string => {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${title}</title>
+        <style>
+          html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+          }
+          .svg-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          svg {
+            max-width: 100%;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            display: block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          }
+        </style>
+      </head>
+      <body>
+        <div class="svg-container">
+          ${svgContent}
+        </div>
+      </body>
+    </html>
+  `;
+};
+
 // 添加自定义动画的CSS
 const customAnimationStyles = `
   /* Modal 动画 */
@@ -121,47 +211,12 @@ const customAnimationStyles = `
     align-items: center;
     justify-content: center;
     background-color: white;
-    overflow: hidden; /* Prevent overflow */
+    overflow: hidden;
     aspect-ratio: 800 / 1120; /* Poster aspect ratio (A3-like) */
   }
-  
-  .svg-container svg {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    width: 100%; /* Force SVG to respect container width */
-    height: auto; /* Maintain aspect ratio */
-  }
 
-  /* Additional styles for modal SVG - Revised */
-  .modal-svg-container {
-    /* 使用 Flexbox 来居中 SVG 子元素 */
-    display: flex; 
-    align-items: center;
-    justify-content: center;
-    
-    /* 设置较大的默认尺寸 */
-    min-width: 400px;
-    min-height: 600px;
-    
-    /* 保持海报宽高比 */
-    aspect-ratio: 800 / 1120;
-    
-    /* 让容器充满其父级（即滚动区域） */
-    width: 100%;
-    margin: 0 auto;
-  }
-
-  .modal-svg-container svg {
-    /* 关键：确保 SVG 不会超出其容器 */
-    max-width: 100%;
-    max-height: 100%;
-    min-width: 400px; /* 设置最小宽度 */
-    width: 100%; /* 填充容器宽度 */
-    
-    /* 视觉样式 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: white; /* 保留背景色以便看清边界 */
+  .svg-preview-card {
+    position: relative;
   }
 `;
 
@@ -171,15 +226,16 @@ const SvgPreview = ({
   title = "SVG Preview",
 }: SvgPreviewProps) => {
   const [isEnlarged, setIsEnlarged] = useState(false);
-  const [selectedSvg, setSelectedSvg] = useState<string | null>(null);
   const [modalShow, setModalShow] = useState(false);
 
   // Extract SVG content from input
   const svgContent = extractSvgContent(svg);
+  const previewHtml = optimizeSvgForPreview(svgContent, title);
+  const fullPreviewHtml = optimizeSvgForFullPreview(svgContent, title);
 
   // 处理卡片点击
   const handlePreviewClick = () => {
-    setSelectedSvg(svgContent);
+    console.log("预览卡片被点击", svgContent ? "有SVG内容" : "无SVG内容");
     setIsEnlarged(true);
 
     // 延迟显示动画效果
@@ -195,7 +251,6 @@ const SvgPreview = ({
     // 动画结束后才真正关闭弹窗
     setTimeout(() => {
       setIsEnlarged(false);
-      setSelectedSvg(null);
     }, 300);
   };
 
@@ -211,25 +266,35 @@ const SvgPreview = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isEnlarged]);
 
+  // 防止iframe捕获点击事件
+  const divClickHandler = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handlePreviewClick();
+  };
+
   return (
     <>
       <style>{customAnimationStyles}</style>
 
       <div
-        className="flex aspect-[2/3] w-full cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-md"
-        onClick={handlePreviewClick}
+        className="svg-preview-card flex aspect-[2/3] w-full cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-md"
+        onClick={divClickHandler}
       >
         <div className="svg-container flex w-full flex-1 items-center justify-center p-2">
-          <div
-            className="flex h-full w-full items-center justify-center overflow-hidden"
-            dangerouslySetInnerHTML={{ __html: svgContent }}
+          <iframe
+            title={`SVG Preview: ${title}`}
+            className="pointer-events-none h-full w-full border-0"
+            srcDoc={previewHtml}
+            sandbox="allow-same-origin"
+            scrolling="no"
           />
         </div>
         {children}
       </div>
 
       {/* 放大预览的 Modal */}
-      {isEnlarged && selectedSvg && (
+      {isEnlarged && (
         <div
           className={`modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 ${
             modalShow ? "show" : ""
@@ -237,30 +302,34 @@ const SvgPreview = ({
           onClick={handleCloseModal}
         >
           <div
-            className={`modal-content relative flex max-h-[95vh] max-w-[95vw] flex-col rounded-lg bg-white shadow-xl ${
+            className={`modal-content relative flex h-[90vh] w-full max-w-4xl flex-col rounded-lg bg-white shadow-xl ${
               modalShow ? "show" : ""
             }`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal 标题栏 */}
-            <div className="flex flex-shrink-0 items-center justify-between rounded-t-lg border-b border-gray-100 bg-gray-50 px-4 py-2">
-              <h3 className="m-0 text-base font-semibold text-gray-700">
-                {title}
-              </h3>
-              <button
-                className="flex h-8 w-8 items-center justify-center rounded-full border-0 bg-transparent text-xl text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus:outline-none"
-                onClick={handleCloseModal}
-                aria-label="close"
-              >
-                ✕
-              </button>
+            <div className="flex-shrink-0 border-b border-gray-100 bg-gray-50 px-4 py-3">
+              <div className="flex items-center justify-between">
+                <h3 className="m-0 text-base font-semibold text-gray-700">
+                  {title}
+                </h3>
+                <button
+                  className="flex h-8 w-8 items-center justify-center rounded-full border-0 bg-transparent text-xl text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus:outline-none"
+                  onClick={handleCloseModal}
+                  aria-label="关闭"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
             {/* SVG 完整预览 */}
-            <div className="flex-grow overflow-auto p-3">
-              <div
-                className="modal-svg-container"
-                dangerouslySetInnerHTML={{ __html: selectedSvg }}
+            <div className="flex-grow overflow-auto">
+              <iframe
+                title={`SVG Full Preview: ${title}`}
+                className="h-full w-full border-0"
+                srcDoc={fullPreviewHtml}
+                sandbox="allow-same-origin"
               />
             </div>
           </div>

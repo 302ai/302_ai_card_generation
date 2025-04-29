@@ -1,11 +1,6 @@
-import { APICallError, generateText } from "ai";
-import { createAI302 } from "@302ai/ai-sdk";
+import { readStreamableValue } from "ai/rsc";
 import { createScopedLogger } from "@/utils";
-import { env } from "@/env";
-import {
-  posterPromptForRandom,
-  posterPromptForCustomAndTemplate,
-} from "@/constants/prompt";
+import { generateSVG } from "@/services/generate-svg";
 
 const logger = createScopedLogger("gen-svg-card");
 
@@ -26,48 +21,78 @@ export async function POST(request: Request) {
       content: string;
       styleType: "random" | "template" | "custom";
     } = await request.json();
-    const ai302 = createAI302({
+
+    const { output } = await generateSVG({
       apiKey,
-      baseURL: `${env.NEXT_PUBLIC_API_URL}/v1/chat/completions`,
-    });
-    const prompt =
-      styleType === "random"
-        ? posterPromptForRandom({ lang, content })
-        : posterPromptForCustomAndTemplate({
-            lang,
-            content,
-            style,
-          });
-
-    const result = await generateText({
-      model: ai302(model),
-      prompt,
+      model,
+      lang,
+      content,
+      style,
+      styleType,
     });
 
-    let stringSVG = result.text;
+    // Create a transform stream for response
+    const encoder = new TextEncoder();
+    const stream = new TransformStream();
+    const writer = stream.writable.getWriter();
 
-    // Clean SVG string from markdown formatting
-    stringSVG = cleanSvgFromMarkdown(stringSVG);
+    // Process the stream in the background
+    (async () => {
+      try {
+        const reader = await readStreamableValue(output);
+        let chatValue = "";
 
-    return Response.json({ stringSVG });
+        for await (const chunk of reader) {
+          if (chunk && chunk.type === "text-delta" && chunk.textDelta) {
+            chatValue += chunk.textDelta;
+            await writer.write(
+              encoder.encode(JSON.stringify({ chunk: chunk.textDelta }) + "\n")
+            );
+          }
+        }
+
+        // Send finished signal
+        await writer.write(
+          encoder.encode(JSON.stringify({ finished: true }) + "\n")
+        );
+      } catch (error) {
+        console.error("Stream processing error:", error);
+        await writer.write(
+          encoder.encode(JSON.stringify({ error: String(error) }) + "\n")
+        );
+      } finally {
+        writer.close();
+      }
+    })();
+
+    // Return the streaming response
+    return new Response(stream.readable, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
+    });
   } catch (error) {
-    // logger.error(error);
-    if (error instanceof APICallError) {
-      // console.log("APICallError", error);
-
-      const resp = error.responseBody;
-
-      return Response.json(resp, { status: 500 });
-    }
     // Handle different types of errors
-    const errorMessage = "Failed to generate image";
+    const errorMessage = "Failed to generate SVG";
     const errorCode = 500;
 
     if (error instanceof Error) {
       console.log("error", error);
-
-      const resp = (error as any)?.responseBody as any; // You can add specific error code mapping here if needed
-      return Response.json(resp, { status: 500 });
+      return Response.json(
+        {
+          error: {
+            err_code: errorCode,
+            message: error.message || errorMessage,
+            message_cn: "生成图片失败",
+            message_en: "Failed to generate SVG",
+            message_ja: "SVGの生成に失敗しました",
+            type: "SVG_GENERATION_ERROR",
+          },
+        },
+        { status: errorCode }
+      );
     }
 
     return Response.json(
@@ -76,9 +101,9 @@ export async function POST(request: Request) {
           err_code: errorCode,
           message: errorMessage,
           message_cn: "生成图片失败",
-          message_en: "Failed to generate image",
-          message_ja: "画像の生成に失敗しました",
-          type: "IMAGE_GENERATION_ERROR",
+          message_en: "Failed to generate SVG",
+          message_ja: "SVGの生成に失敗しました",
+          type: "SVG_GENERATION_ERROR",
         },
       },
       { status: errorCode }

@@ -64,6 +64,8 @@ import {
 import { RefreshCwIcon } from "lucide-react";
 import ky from "ky";
 import { env } from "@/env";
+import { readStreamableValue } from "ai/rsc";
+import { ErrorToast } from "@/components/ui/errorToast";
 
 const formSchema = z.object({
   knowledgeCard: z.object({
@@ -474,7 +476,6 @@ const LeftPanel = () => {
           content,
         });
         submittingValues = {
-          apiKey: apiKey as string,
           model: knowledgeCard.model as string,
           lang: locale as "zh" | "en" | "ja",
           date: knowledgeCard.date as string,
@@ -486,12 +487,49 @@ const LeftPanel = () => {
         };
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
-        const res = await generateHTML(submittingValues);
-        // Simulate error for testing
-        await updateHistory(historyId, {
-          html: res.html,
-          status: "success",
-        });
+        try {
+          const res = await generateHTML({
+            ...submittingValues,
+            apiKey: apiKey as string,
+          });
+          if (res?.output) {
+            let chatValue = "";
+            for await (const delta of readStreamableValue(res.output)) {
+              if (delta?.type === "text-delta") {
+                chatValue += delta?.textDelta;
+                if (chatValue?.length > 0) {
+                }
+              } else if (delta?.type === "logprobs") {
+                const regex = /```html([\s\S]*?)```/;
+                const match = chatValue.match(regex);
+                const htmlContent = match ? match[1].trim() : "";
+                if (htmlContent) {
+                }
+              }
+            }
+            console.log("chatValue", chatValue, "chat11");
+            await updateHistory(historyId, {
+              html: chatValue,
+              status: "success",
+            });
+          }
+        } catch (error: any) {
+          console.log(error);
+          if (error?.message?.error?.err_code) {
+            toast.error(() => ErrorToast(error.message.error.err_code));
+          } else {
+            toast.error(t("status."));
+          }
+
+          // Make sure to update history status on error
+          if (historyId) {
+            await updateHistory(historyId, {
+              html: "",
+              status: "failed",
+              values: { ...submittingValues, historyId },
+            });
+          }
+        }
       } else if (uiStore.activeCard === "promotional-poster") {
         const { promotionalPoster } = values;
 
@@ -536,7 +574,6 @@ const LeftPanel = () => {
         taskStarted = true;
         setConcurrentTasks((prev) => prev + 1);
         submittingValues = {
-          apiKey: apiKey as string,
           model: promotionalPoster.model as string,
           lang: locale as "zh" | "en" | "ja",
           content: promotionalPoster.content as string,
@@ -554,11 +591,43 @@ const LeftPanel = () => {
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
 
-        const res = await generateSVG(submittingValues);
-        await updateHistory(historyId, {
-          html: res.stringSVG,
-          status: "success",
-        });
+        try {
+          const res = await generateSVG({
+            ...submittingValues,
+            apiKey: apiKey as string,
+          });
+          if (res?.output) {
+            let chatValue = "";
+            for await (const delta of readStreamableValue(res.output)) {
+              if (delta?.type === "text-delta") {
+                chatValue += delta?.textDelta;
+                if (chatValue?.length > 0) {
+                }
+              } else if (delta?.type === "logprobs") {
+                await updateHistory(historyId, {
+                  html: chatValue,
+                  status: "success",
+                });
+              }
+            }
+          }
+        } catch (error: any) {
+          console.log(error);
+          if (error?.message?.error?.err_code) {
+            toast.error(() => ErrorToast(error.message.error.err_code));
+          } else {
+            toast.error(t("status.generating_failed"));
+          }
+
+          // Make sure to update history status on error
+          if (historyId) {
+            await updateHistory(historyId, {
+              html: "",
+              status: "failed",
+              values: { ...submittingValues, historyId },
+            });
+          }
+        }
       } else if (uiStore.activeCard === "philosophical-card") {
         const { philosophicalCard } = values;
 
@@ -603,7 +672,6 @@ const LeftPanel = () => {
         taskStarted = true;
         setConcurrentTasks((prev) => prev + 1);
         submittingValues = {
-          apiKey: apiKey as string,
           model: philosophicalCard.model as string,
           lang: locale as "zh" | "en" | "ja",
           content: philosophicalCard.content as string,
@@ -620,12 +688,49 @@ const LeftPanel = () => {
         });
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
+        try {
+          const res = await generateHTML({
+            ...submittingValues,
+            apiKey: apiKey as string,
+          });
+          if (res?.output) {
+            let chatValue = "";
+            for await (const delta of readStreamableValue(res.output)) {
+              if (delta?.type === "text-delta") {
+                chatValue += delta?.textDelta;
+                if (chatValue?.length > 0) {
+                }
+              } else if (delta?.type === "logprobs") {
+                const regex = /```html([\s\S]*?)```/;
+                const match = chatValue.match(regex);
+                const htmlContent = match ? match[1].trim() : "";
+                if (htmlContent) {
+                }
+              }
+            }
 
-        const res = await genPhilosophicalCard(submittingValues);
-        await updateHistory(historyId, {
-          html: res.html,
-          status: "success",
-        });
+            await updateHistory(historyId, {
+              html: chatValue,
+              status: "success",
+            });
+          }
+        } catch (error: any) {
+          console.log(error);
+          if (error?.message?.error?.err_code) {
+            toast.error(() => ErrorToast(error.message.error.err_code));
+          } else {
+            toast.error(t("toast.generate_error"));
+          }
+
+          // Make sure to update history status on error
+          if (historyId) {
+            await updateHistory(historyId, {
+              html: "",
+              status: "failed",
+              values: { ...submittingValues, historyId },
+            });
+          }
+        }
       } else if (uiStore.activeCard === "quote-reference") {
         const { quoteReference } = values;
 
@@ -677,7 +782,6 @@ const LeftPanel = () => {
         taskStarted = true;
         setConcurrentTasks((prev) => prev + 1);
         submittingValues = {
-          apiKey: apiKey as string,
           model: quoteReference.model as string,
           content: quoteReference.content as string,
           author: quoteReference.author as string,
@@ -694,20 +798,60 @@ const LeftPanel = () => {
         });
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
-        const res = await generateQuoteCard(submittingValues);
-        await updateHistory(historyId, {
-          html: res.html,
-          status: "success",
-        });
+
+        try {
+          const res = await generateHTML({
+            ...submittingValues,
+            apiKey: apiKey as string,
+          });
+          if (res?.output) {
+            let chatValue = "";
+            for await (const delta of readStreamableValue(res.output)) {
+              if (delta?.type === "text-delta") {
+                chatValue += delta?.textDelta;
+                if (chatValue?.length > 0) {
+                }
+              } else if (delta?.type === "logprobs") {
+                const regex = /```html([\s\S]*?)```/;
+                const match = chatValue.match(regex);
+                const htmlContent = match ? match[1].trim() : "";
+                if (htmlContent) {
+                }
+              }
+            }
+
+            await updateHistory(historyId, {
+              html: chatValue,
+              status: "success",
+            });
+          }
+        } catch (error: any) {
+          console.log(error);
+          if (error?.message?.error?.err_code) {
+            toast.error(() => ErrorToast(error.message.error.err_code));
+          } else {
+            toast.error(t("toast.generate_error"));
+          }
+
+          // Make sure to update history status on error
+          if (historyId) {
+            await updateHistory(historyId, {
+              html: "",
+              status: "failed",
+              values: { ...submittingValues, historyId },
+            });
+          }
+        }
       }
     } catch (error) {
       console.error("Generation failed:", error);
       toast.error(t("toast.generation_failed"));
 
-      // If the task has started and we have historyId and update function, update record to failed
-      if (taskStarted && historyId !== undefined && updateStatusFunction) {
+      // If the task has started and we have historyId, update record to failed
+      if (taskStarted && historyId) {
         try {
-          await updateStatusFunction(historyId, {
+          await updateHistory(historyId, {
+            html: "",
             status: "failed",
             values: { ...submittingValues, historyId },
           });
@@ -1243,3 +1387,22 @@ const LeftPanel = () => {
 };
 
 export default LeftPanel;
+
+function cleanSvgFromMarkdown(svgString: string): string {
+  // Remove markdown code blocks (```svg and ```)
+  svgString = svgString.replace(/```svg\n?/g, "").replace(/```\n?/g, "");
+
+  // Ensure the string starts with <svg
+  const svgStartIndex = svgString.indexOf("<svg");
+  if (svgStartIndex > 0) {
+    svgString = svgString.substring(svgStartIndex);
+  }
+
+  // Ensure the string ends properly with </svg>
+  const svgEndIndex = svgString.lastIndexOf("</svg>");
+  if (svgEndIndex !== -1 && svgEndIndex < svgString.length - 6) {
+    svgString = svgString.substring(0, svgEndIndex + 6);
+  }
+
+  return svgString;
+}

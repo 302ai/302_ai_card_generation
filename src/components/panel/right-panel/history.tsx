@@ -25,6 +25,12 @@ import { toast } from "sonner";
 import { generateHTML } from "@/services/gen-html";
 import SvgPreview from "./svg-preview";
 import ChangeStyleModal from "./change-style-modal";
+import { readStreamableValue } from "ai/rsc";
+import { genPhilosophicalCard } from "@/services/gen-philosophical-card";
+import { generateQuoteCard } from "@/services/gen-quote";
+import { generateSVG } from "@/services/generate-svg";
+import { ErrorToast } from "@/components/ui/errorToast";
+
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
   try {
@@ -144,8 +150,17 @@ const History = () => {
     // Check if the content is just an SVG and wrap it if needed
     let processedHtml = html;
     const historyItem = history?.items.find((item) => item.id === id);
+
     // If it's only an SVG, wrap it in a proper HTML document with div
-    if (html.trim().startsWith("<svg") && html.trim().endsWith("</svg>")) {
+    if (
+      (html.trim().startsWith("<svg") || html.trim().startsWith("svg")) &&
+      html.trim().endsWith("</svg>")
+    ) {
+      // If it starts with "svg", remove that prefix first
+      const cleanedHtml = html.trim().startsWith("svg")
+        ? html.trim().substring(3).trim()
+        : html;
+
       processedHtml = `<!DOCTYPE html>
 <html>
 <head>
@@ -153,7 +168,7 @@ const History = () => {
     <title>${historyItem?.content}</title>
 </head>
 <body>
-    <div style="display:flex;justify-content:center">${html}</div>
+    <div style="display:flex;justify-content:center">${cleanedHtml}</div>
 </body>
 </html>`;
     }
@@ -176,6 +191,7 @@ const History = () => {
       formData.append("apiKey", apiKey);
     }
     formData.append("htmlCode", processedHtml);
+    console.log(processedHtml, "processedHtml");
 
     try {
       const loadingToast = toast.loading(t("toast.deploying"));
@@ -207,12 +223,81 @@ const History = () => {
     try {
       setConcurrentTasks((prev) => prev + 1);
       updateHistoryStatus(values.historyId, "pending");
-      const res = await generateHTML(values);
-      updateHistoryStatus(values.historyId, "success");
-      updateHistoryHtml(values.historyId, res.html, "success");
-    } catch (error) {
+
+      // Check the action type to decide which generation function to use
+      if (values.actionType === "knowledge-card") {
+        const res = await generateHTML({
+          ...values,
+          apiKey: apiKey as string,
+        });
+        if (res?.output) {
+          let chatValue = "";
+          for await (const delta of readStreamableValue(res.output)) {
+            if (delta?.type === "text-delta") {
+              chatValue += delta?.textDelta;
+            } else if (delta?.type === "logprobs") {
+              // Process is complete
+              updateHistoryHtml(values.historyId, chatValue, "success");
+            }
+          }
+        }
+      } else if (values.actionType === "promotional-poster") {
+        const res = await generateSVG({
+          ...values,
+          apiKey: apiKey as string,
+        });
+        if (res?.output) {
+          let chatValue = "";
+          for await (const delta of readStreamableValue(res.output)) {
+            if (delta?.type === "text-delta") {
+              chatValue += delta?.textDelta;
+            } else if (delta?.type === "logprobs") {
+              // Clean SVG string from markdown formatting
+              const cleanedSVG = chatValue;
+              updateHistoryHtml(values.historyId, cleanedSVG, "success");
+            }
+          }
+        }
+      } else if (values.actionType === "philosophical-card") {
+        const res = await genPhilosophicalCard({
+          ...values,
+          apiKey: apiKey as string,
+        });
+        if (res?.output) {
+          let chatValue = "";
+          for await (const delta of readStreamableValue(res.output)) {
+            if (delta?.type === "text-delta") {
+              chatValue += delta?.textDelta;
+            } else if (delta?.type === "logprobs") {
+              updateHistoryHtml(values.historyId, chatValue, "success");
+            }
+          }
+        }
+      } else if (values.actionType === "quote-reference") {
+        const res = await generateQuoteCard({
+          ...values,
+          apiKey: apiKey as string,
+        });
+        if (res?.output) {
+          let chatValue = "";
+          for await (const delta of readStreamableValue(res.output)) {
+            if (delta?.type === "text-delta") {
+              chatValue += delta?.textDelta;
+            } else if (delta?.type === "logprobs") {
+              updateHistoryHtml(values.historyId, chatValue, "success");
+            }
+          }
+        }
+      }
+    } catch (error: any) {
       console.error("Retry generation failed:", error);
       updateHistoryStatus(values.historyId, "failed");
+
+      if (error?.message?.error?.err_code) {
+        toast.error(() => ErrorToast(error.message.error.err_code));
+      } else {
+        toast.error(t("generate_error"));
+      }
     } finally {
       setConcurrentTasks((prev) => Math.max(0, prev - 1));
     }
@@ -298,8 +383,11 @@ const History = () => {
           }
 
           // For success state, check content type
+
           const isSvgContent =
-            item.html?.trim().startsWith("<svg") &&
+            (item.html?.trim().startsWith("<svg") ||
+              item.html?.trim().startsWith("```svg") ||
+              item.html?.trim().startsWith("```")) &&
             item.html?.includes("</svg>");
 
           if (isSvgContent) {

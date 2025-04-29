@@ -1,12 +1,6 @@
-import { APICallError, generateText } from "ai";
-import { createAI302 } from "@302ai/ai-sdk";
+import { readStreamableValue } from "ai/rsc";
 import { createScopedLogger } from "@/utils";
-import { env } from "@/env";
-import {
-  quoteReferenceCardPrompt,
-  systemPrompt,
-  userPrompt,
-} from "@/constants/prompt";
+import { generateQuoteCard } from "@/services/gen-quote";
 
 const logger = createScopedLogger("gen-quote-card");
 
@@ -27,75 +21,78 @@ export async function POST(request: Request) {
       author: string;
       textPosition: string;
     } = await request.json();
-    const ai302 = createAI302({
+
+    const { output } = await generateQuoteCard({
       apiKey,
-      baseURL: `${env.NEXT_PUBLIC_API_URL}/v1/chat/completions`,
+      model,
+      content,
+      author,
+      textPosition,
+      style,
     });
 
-    const result = await generateText({
-      model: ai302(model),
-      messages: [
-        {
-          role: "user",
-          content: quoteReferenceCardPrompt({
-            content,
-            author,
-            textPosition,
-            style,
-          }),
-        },
-      ],
+    // Create a transform stream for response
+    const encoder = new TextEncoder();
+    const stream = new TransformStream();
+    const writer = stream.writable.getWriter();
+
+    // Process the stream in the background
+    (async () => {
+      try {
+        const reader = await readStreamableValue(output);
+        let chatValue = "";
+
+        for await (const chunk of reader) {
+          if (chunk && chunk.type === "text-delta" && chunk.textDelta) {
+            chatValue += chunk.textDelta;
+            await writer.write(
+              encoder.encode(JSON.stringify({ chunk: chunk.textDelta }) + "\n")
+            );
+          }
+        }
+
+        // Send finished signal
+        await writer.write(
+          encoder.encode(JSON.stringify({ finished: true }) + "\n")
+        );
+      } catch (error) {
+        console.error("Stream processing error:", error);
+        await writer.write(
+          encoder.encode(JSON.stringify({ error: String(error) }) + "\n")
+        );
+      } finally {
+        writer.close();
+      }
+    })();
+
+    // Return the streaming response
+    return new Response(stream.readable, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
     });
-
-    const stringHTML = result.text;
-    let html;
-
-    try {
-      // First, check if response contains markdown code blocks
-      if (stringHTML.includes("```")) {
-        const cleanedHTML = stringHTML
-          .replace(/```+html/g, "") // Handle any number of backticks followed by html
-          .replace(/```+/g, "") // Handle any number of backticks
-          .trim();
-
-        html = JSON.parse(cleanedHTML);
-      }
-      // Check if it's directly HTML content
-      else if (
-        stringHTML.trim().startsWith("<!DOCTYPE") ||
-        stringHTML.trim().startsWith("<html")
-      ) {
-        html = stringHTML;
-      }
-      // If it's a JSON string
-      else {
-        html = JSON.parse(stringHTML);
-      }
-    } catch (parseError) {
-      logger.error("Failed to parse AI response:", parseError);
-      // Return the raw text if parsing fails
-      html = stringHTML;
-    }
-
-    return Response.json({ html });
   } catch (error) {
-    // logger.error(error);
-    if (error instanceof APICallError) {
-      // console.log("APICallError", error);
-
-      const resp = error.responseBody;
-
-      return Response.json(resp, { status: 500 });
-    }
     // Handle different types of errors
-    const errorMessage = "Failed to generate image";
+    const errorMessage = "Failed to generate quote card";
     const errorCode = 500;
 
     if (error instanceof Error) {
       console.log("error", error);
-
-      const resp = (error as any)?.responseBody as any; // You can add specific error code mapping here if needed
-      return Response.json(resp, { status: 500 });
+      return Response.json(
+        {
+          error: {
+            err_code: errorCode,
+            message: error.message || errorMessage,
+            message_cn: "生成引用卡片失败",
+            message_en: "Failed to generate quote card",
+            message_ja: "引用カードの生成に失敗しました",
+            type: "QUOTE_CARD_GENERATION_ERROR",
+          },
+        },
+        { status: errorCode }
+      );
     }
 
     return Response.json(
@@ -103,10 +100,10 @@ export async function POST(request: Request) {
         error: {
           err_code: errorCode,
           message: errorMessage,
-          message_cn: "生成图片失败",
-          message_en: "Failed to generate image",
-          message_ja: "画像の生成に失敗しました",
-          type: "IMAGE_GENERATION_ERROR",
+          message_cn: "生成引用卡片失败",
+          message_en: "Failed to generate quote card",
+          message_ja: "引用カードの生成に失敗しました",
+          type: "QUOTE_CARD_GENERATION_ERROR",
         },
       },
       { status: errorCode }

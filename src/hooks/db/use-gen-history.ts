@@ -84,6 +84,9 @@ export const useHistory = (page = 1) => {
         .equals(historyId)
         .modify((history: History) => {
           history.status = status;
+          if (status === "pending") {
+            history.createdAt = Date.now();
+          }
         });
     },
     []
