@@ -109,6 +109,7 @@ const LeftPanel = () => {
   const [concurrentTasks, setConcurrentTasks] = useAtom(
     concurrentTaskCountAtom
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { addHistory, updateHistory, updateHistoryStatus } = useHistory();
 
   const locale = useLocale();
@@ -312,6 +313,14 @@ const LeftPanel = () => {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    // Prevent rapid clicks by setting isSubmitting to true
+    setIsSubmitting(true);
+
+    // Set a timeout to re-enable the button after 2 seconds
+    setTimeout(() => {
+      setIsSubmitting(false);
+    }, 2000);
+
     // Check concurrent task limit
     if (concurrentTasks >= MAX_CONCURRENT_TASKS) {
       toast.error(
@@ -719,7 +728,7 @@ const LeftPanel = () => {
           if (error?.message?.error?.err_code) {
             toast.error(() => ErrorToast(error.message.error.err_code));
           } else {
-            toast.error(t("toast.generate_error"));
+            toast.error(t("status.generating_failed"));
           }
 
           // Make sure to update history status on error
@@ -830,7 +839,7 @@ const LeftPanel = () => {
           if (error?.message?.error?.err_code) {
             toast.error(() => ErrorToast(error.message.error.err_code));
           } else {
-            toast.error(t("toast.generate_error"));
+            toast.error(t("status.generating_failed"));
           }
 
           // Make sure to update history status on error
@@ -1377,8 +1386,11 @@ const LeftPanel = () => {
           <Button
             type="submit"
             className="w-full bg-purple-500 py-6 text-lg hover:bg-purple-600 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={isSubmitting}
           >
-            {t("button.generate")}
+            {isSubmitting
+              ? t("button.generating") || "Generating..."
+              : t("button.generate")}
           </Button>
         </form>
       </Form>
