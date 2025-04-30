@@ -196,7 +196,9 @@
     "deploy_failed": "Deploy failed, please try again",
     "deploy_success": "Deploy successfully",
     "deploying": "Deploying...",
-    "qr_code_upload_failed": "QR code upload failed, please try again"
+    "qr_code_upload_failed": "QR code upload failed, please try again",
+    "poster_content_required": "Please enter the poster content",
+    "philosophy_content_required": "Please enter the philosophy content"
   },
   "placeholder": {
     "based_on_input": "Please enter the theme or article, AI generates cards based on the input...",

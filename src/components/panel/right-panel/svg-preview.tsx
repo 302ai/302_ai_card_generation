@@ -11,17 +11,21 @@ const extractSvgContent = (content: string): string => {
   try {
     let svgContent = "";
 
+    // 改进的代码块处理逻辑
+    const processMarkdownBlock = (input: string) => {
+      return input
+        .replace(/```[\s\S]*?\n/g, "") // 匹配任何代码块起始标记
+        .replace(/```/g, "") // 移除所有结束标记
+        .trim();
+    };
+
     // Check if it's already a valid SVG
     if (content.trim().startsWith("<svg") && content.includes("</svg>")) {
       svgContent = content;
     }
     // Check if SVG is wrapped in markdown code blocks
     else if (content.includes("```")) {
-      const cleaned = content
-        .replace(/```+svg/g, "")
-        .replace(/```+/g, "")
-        .trim();
-
+      const cleaned = processMarkdownBlock(content);
       if (cleaned.startsWith("<svg") && cleaned.includes("</svg>")) {
         svgContent = cleaned;
       }

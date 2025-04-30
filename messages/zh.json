@@ -240,7 +240,9 @@
     "deploy_success": "部署成功",
     "deploying": "部署中...",
     "html_updated": "HTML更新成功",
-    "qr_code_upload_failed": "二维码上传失败，请重试"
+    "qr_code_upload_failed": "二维码上传失败，请重试",
+    "poster_content_required": "请输入宣传海报内容",
+    "philosophy_content_required": "请输入哲学内容"
   },
   "select": {
     "not_display": "不展示",

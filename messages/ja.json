@@ -198,7 +198,9 @@
     "deploy_success": "デプロイに成功しました",
     "deploying": "デプロイ中...",
     "html_updated": "HTMLが正常に更新されました",
-    "qr_code_upload_failed": "QRコードのアップロードに失敗しました、再試行してください"
+    "qr_code_upload_failed": "QRコードのアップロードに失敗しました、再試行してください",
+    "poster_content_required": "プロモーションポスターの内容を入力してください",
+    "philosophy_content_required": "哲学の内容を入力してください"
   },
   "placeholder": {
     "based_on_input": "トピックや記事を入力してください。AIは入力に基づいてカードを生成します...",
