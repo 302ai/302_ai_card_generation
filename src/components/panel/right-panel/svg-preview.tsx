@@ -102,25 +102,7 @@ const optimizeSvgForPreview = (svgContent: string, title: string): string => {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${title}</title>
-        <style>
-          html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-          svg {
-            max-width: 100%;
-            max-height: 100%;
-            width: 100%;
-            height: auto;
-            aspect-ratio: 800 / 1120;
-          }
-        </style>
+    
       </head>
       <body>
         ${svgContent}
