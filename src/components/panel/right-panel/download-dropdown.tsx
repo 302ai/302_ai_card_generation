@@ -142,6 +142,7 @@ const DownloadDropdown = ({
           onDownLoadAsSvg(html);
         }}
         className={className}
+        title={t("button.download_svg")}
       >
         <Download className="h-4 w-4 text-green-500 dark:text-green-400" />
       </Button>
@@ -159,6 +160,7 @@ const DownloadDropdown = ({
             e.stopPropagation();
           }}
           className={className}
+          title={t("button.download")}
         >
           <Download className="h-4 w-4 text-green-500 dark:text-green-400" />
         </Button>
@@ -169,6 +171,7 @@ const DownloadDropdown = ({
             e.stopPropagation();
             onDownLoadAsPng(html);
           }}
+          title={t("action.download_as_png")}
         >
           <Image className="mr-2 h-4 w-4" />
           {t("action.download_as_png") || "Download as PNG"}
@@ -178,6 +181,7 @@ const DownloadDropdown = ({
             e.stopPropagation();
             onDownloadAsHtml(html);
           }}
+          title={t("action.download_as_html")}
         >
           <FileCode className="mr-2 h-4 w-4" />
           {t("action.download_as_html") || "Download as HTML"}

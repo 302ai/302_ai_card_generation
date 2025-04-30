@@ -232,7 +232,14 @@
     "generating_limit_reached": "Limit reached ({count}/{limit})",
     "generating": "Generating",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "retry": "Retry",
+    "edit": "Edit",
+    "deploy": "Deploy",
+    "style": "Style",
+    "download": "Download",
+    "download_svg": "Download SVG"
   },
   "select": {
     "not_display": "Not Display",

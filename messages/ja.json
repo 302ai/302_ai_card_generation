@@ -234,7 +234,14 @@
     "generating_limit_reached": "制限に達しました ({count}/{limit})",
     "generating": "生成中",
     "save": "保存",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "retry": "再試行",
+    "edit": "編集",
+    "deploy": "デプロイ",
+    "style": "スタイル",
+    "download": "ダウンロード",
+    "download_svg": "SVGをダウンロード"
   },
   "select": {
     "not_display": "表示しない",

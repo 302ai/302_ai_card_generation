@@ -347,6 +347,7 @@ const History = () => {
                         handleDelete(item.id, item.status);
                       }}
                       className="h-8 w-8"
+                      title={t("button.delete")}
                     >
                       <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                     </Button>
@@ -378,6 +379,7 @@ const History = () => {
                         handleRetry(item.values);
                       }}
                       className="h-8 w-8"
+                      title={t("button.retry")}
                     >
                       <RefreshCw className="h-4 w-4 text-primary" />
                     </Button>
@@ -389,6 +391,7 @@ const History = () => {
                         handleDelete(item.id, item.status);
                       }}
                       className="h-8 w-8"
+                      title={t("button.delete")}
                     >
                       <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                     </Button>
@@ -438,6 +441,7 @@ const History = () => {
                         handleDeploy(item.id, sanitizeHtml(item.html));
                       }}
                       className="ml-1 h-8 w-8"
+                      title={t("button.deploy")}
                     >
                       <RocketIcon className="h-4 w-4 text-blue-500 dark:text-blue-400" />
                     </Button>
@@ -455,6 +459,7 @@ const History = () => {
                         handleDelete(item.id, item.status);
                       }}
                       className="ml-1 h-8 w-8"
+                      title={t("button.delete")}
                     >
                       <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                     </Button>
@@ -494,6 +499,7 @@ const History = () => {
                         handleEditHtml(item.id, sanitizeHtml(item.html));
                       }}
                       className="ml-1 h-8 w-8"
+                      title={t("button.edit")}
                     >
                       <PencilLine className="h-4 w-4 text-blue-500 dark:text-blue-400" />
                     </Button>
@@ -505,6 +511,7 @@ const History = () => {
                         handleDeploy(item.id, sanitizeHtml(item.html));
                       }}
                       className="ml-1 h-8 w-8"
+                      title={t("button.deploy")}
                     >
                       <RocketIcon className="h-4 w-4 text-blue-500 dark:text-blue-400" />
                     </Button>
@@ -519,6 +526,7 @@ const History = () => {
                           setStyleModalOpen(true);
                         }}
                         className="h-8 w-8"
+                        title={t("button.style")}
                       >
                         <WandSparkles className="h-4 w-4 text-purple-500 dark:text-purple-400" />
                       </Button>
@@ -536,7 +544,8 @@ const History = () => {
                         e.stopPropagation();
                         handleDelete(item.id, item.status);
                       }}
-                      className="ml-1 h-8 w-8"
+                      className="h-8 w-8"
+                      title={t("button.delete")}
                     >
                       <Trash className="h-4 w-4 text-red-500 dark:text-red-400" />
                     </Button>

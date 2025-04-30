@@ -960,7 +960,8 @@ Card Style(Required Card Background Style): ${style}
 
 Directly output the complete HTML file. Generated code must strictly follow this architecture!!!:
 <!DOCTYPE> → <html> → <head>(containing 5 metadata items) → <style> → <body>(containing 6 major modules) → <div> → </div> → </body> → </html>
-Do not output any other content!!!!
+-Only output HTML code, do not output any other content!!!!
+
   `;
 };
 
@@ -974,7 +975,7 @@ const changeStylePrompt = ({
   return `
   要求：只输出修改后的html代码，生成代码必须严格遵循以下架构！！！：
   <!DOCTYPE> → <html> → <head>(含5项元数据) → <style> → <body>(含6大模块) → <div> → </div> → </body> → </html>
-  不要输出任何其他内容！！！！
+  只输出html代码，不要输出任何其他内容！！！！
   修改为${content}风格的卡片，html代码为：
   ${html}
   `;
