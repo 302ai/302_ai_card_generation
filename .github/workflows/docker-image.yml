@@ -7,7 +7,7 @@ on:
     branches: ["main", "dev"]
 
 env:
-  DOCKER_IMAGE: proxy302/${{ github.event.repository.name }}
+  DOCKER_IMAGE: proxy302/${{ contains(github.event.repository.name, '_private') && github.event.repository.name | replace('_private', '') || github.event.repository.name }}
   NEXT_PUBLIC_DEFAULT_MODEL_NAME: gpt-4o-mini
   NEXT_PUBLIC_HIDE_BRAND: false
   NEXT_PUBLIC_LOG_LEVEL: info
