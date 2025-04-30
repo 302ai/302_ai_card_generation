@@ -195,7 +195,8 @@
     "date_required": "Please select the date",
     "deploy_failed": "Deploy failed, please try again",
     "deploy_success": "Deploy successfully",
-    "deploying": "Deploying..."
+    "deploying": "Deploying...",
+    "qr_code_upload_failed": "QR code upload failed, please try again"
   },
   "placeholder": {
     "based_on_input": "Please enter the theme or article, AI generates cards based on the input...",

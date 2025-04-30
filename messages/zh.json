@@ -203,8 +203,7 @@
     "change_style": "修改风格",
     "change_style_placeholder": "请输入你想要的风格描述...",
     "generate_new_style": "生成新样式",
-    "upload_qr_code": "点击或拖动图片上传",
-    "edit_html": "编辑HTML"
+    "upload_qr_code": "点击或拖动图片上传"
   },
   "button": {
     "generate": "生成",
@@ -229,10 +228,11 @@
     "change_style_required": "请输入风格描述",
     "qr_code_required": "请输入二维码内容",
     "date_required": "请选择日期",
-    "deploy_failed": "发布失败，请重试",
-    "deploy_success": "发布成功",
-    "deploying": "发布中...",
-    "html_updated": "HTML更新成功"
+    "deploy_failed": "部署失败，请重试",
+    "deploy_success": "部署成功",
+    "deploying": "部署中...",
+    "html_updated": "HTML更新成功",
+    "qr_code_upload_failed": "二维码上传失败，请重试"
   },
   "select": {
     "not_display": "不展示",
