@@ -216,8 +216,8 @@
     "delete": "删除",
     "retry": "重试",
     "edit": "编辑",
-    "deploy": "部署",
-    "style": "样式",
+    "deploy": "一键部署",
+    "style": "修改风格",
     "download": "下载",
     "download_svg": "下载SVG"
   },
