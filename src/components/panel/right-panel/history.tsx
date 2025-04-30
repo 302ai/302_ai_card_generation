@@ -156,25 +156,29 @@ const History = () => {
     const historyItem = history?.items.find((item) => item.id === id);
 
     // If it's only an SVG, wrap it in a proper HTML document with div
-    if (
-      (html.trim().startsWith("<svg") || html.trim().startsWith("svg")) &&
-      html.trim().endsWith("</svg>")
-    ) {
-      // If it starts with "svg", remove that prefix first
-      const cleanedHtml = html.trim().startsWith("svg")
-        ? html.trim().substring(3).trim()
-        : html;
 
-      processedHtml = `<!DOCTYPE html>
+    if (
+      html.includes("<svg") &&
+      html.includes("</svg>") &&
+      !html.includes("<html") &&
+      !html.includes("<!DOCTYPE")
+    ) {
+      // Extract the SVG content
+      const svgMatch = html.match(/<svg[\s\S]*?<\/svg>/);
+      if (svgMatch) {
+        const svgContent = svgMatch[0];
+
+        processedHtml = `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>${historyItem?.content}</title>
 </head>
 <body>
-    <div style="display:flex;justify-content:center">${cleanedHtml}</div>
+    <div style="display:flex;justify-content:center">${svgContent}</div>
 </body>
 </html>`;
+      }
     }
     // If it's HTML but missing charset, try to add it
     else if (
