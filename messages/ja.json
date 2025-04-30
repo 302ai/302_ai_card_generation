@@ -180,9 +180,9 @@
   },
 
   "toast": {
-    "task_limit_reached": "タスク上限({limit})に達しました、後でお試しください",
-    "generation_failed": "生成に失敗しました、もう一度お試しください",
-    "download_failed": "ダウンロードに失敗しました、もう一度お試しください",
+    "task_limit_reached": "タスク制限に達しました({limit})、後でお試しください",
+    "generation_failed": "生成に失敗しました、再試行してください",
+    "download_failed": "ダウンロードに失敗しました、再試行してください",
     "download_success": "ダウンロードに成功しました",
     "author_required": "引用の署名を入力してください",
     "custom_style_required": "カスタムスタイルを入力してください",
@@ -191,14 +191,13 @@
     "text_position_required": "テキスト位置を選択してください",
     "quote_content_required": "引用内容を入力してください",
     "content_required": "内容を入力してください",
-    "change_style_required": "スタイル説明を入力してください",
-    "poster_content_required": "ポスター内容を入力してください",
-    "philosophy_content_required": "哲学テーマを入力してください",
+    "change_style_required": "スタイルの説明を入力してください",
     "qr_code_required": "QRコード内容を入力してください",
     "date_required": "日付を選択してください",
-    "deploy_failed": "デプロイに失敗しました、もう一度お試しください",
+    "deploy_failed": "デプロイに失敗しました、再試行してください",
     "deploy_success": "デプロイに成功しました",
-    "deploying": "デプロイ中..."
+    "deploying": "デプロイ中...",
+    "html_updated": "HTMLが正常に更新されました"
   },
   "placeholder": {
     "based_on_input": "トピックや記事を入力してください。AIは入力に基づいてカードを生成します...",
@@ -218,20 +217,23 @@
     "style_setting": "スタイル設定",
     "quote_signature": "語録署名",
     "text_position": "テキスト位置",
-    "knowledge-card": "知識カードプレビュー",
-    "philosophical-card": "哲理カードプレビュー",
-    "quote-reference": "引用カードプレビュー",
-    "promotional-poster": "宣伝ポスタープレビュー",
-    "change_style": "スタイルを変更する",
-    "change_style_placeholder": "変更したいスタイルを入力してください...",
-    "generate_new_style": "新しいスタイルを生成する",
-    "upload_qr_code": "クリックまたは画像をドラッグしてアップロード"
+    "knowledge-card": "知識カード",
+    "philosophical-card": "哲学カード",
+    "quote-reference": "引用カード",
+    "promotional-poster": "プロモーションポスター",
+    "change_style": "スタイル変更",
+    "change_style_placeholder": "変更したいスタイルの説明を入力してください...",
+    "generate_new_style": "新しいスタイルを生成",
+    "upload_qr_code": "クリックまたはドラッグしてアップロード",
+    "edit_html": "HTMLを編集"
   },
   "button": {
-    "generate": "生成する",
-    "generating_with_count": "生成中({count}/{limit})",
-    "generating_limit_reached": "上限に達しました({count}/{limit})",
-    "generating": "生成中"
+    "generate": "生成",
+    "generating_with_count": "生成中 ({count}/{limit})",
+    "generating_limit_reached": "制限に達しました ({count}/{limit})",
+    "generating": "生成中",
+    "save": "保存",
+    "cancel": "キャンセル"
   },
   "select": {
     "not_display": "表示しない",

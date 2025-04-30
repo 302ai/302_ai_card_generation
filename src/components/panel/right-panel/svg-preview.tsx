@@ -235,7 +235,6 @@ const SvgPreview = ({
 
   // 处理卡片点击
   const handlePreviewClick = () => {
-    console.log("预览卡片被点击", svgContent ? "有SVG内容" : "无SVG内容");
     setIsEnlarged(true);
 
     // 延迟显示动画效果

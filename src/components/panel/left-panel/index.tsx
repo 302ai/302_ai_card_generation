@@ -516,7 +516,6 @@ const LeftPanel = () => {
                 }
               }
             }
-            console.log("chatValue", chatValue, "chat11");
             await updateHistory(historyId, {
               html: chatValue,
               status: "success",

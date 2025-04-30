@@ -8,6 +8,7 @@ import {
   RocketIcon,
   RefreshCw,
   WandSparkles,
+  PencilLine,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import HtmlPreview from "./html-preview";
@@ -30,6 +31,7 @@ import { genPhilosophicalCard } from "@/services/gen-philosophical-card";
 import { generateQuoteCard } from "@/services/gen-quote";
 import { generateSVG } from "@/services/generate-svg";
 import { ErrorToast } from "@/components/ui/errorToast";
+import EditHtmlModal from "./edit-html-modal";
 
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
@@ -97,6 +99,8 @@ const History = () => {
   const [selectedHtml, setSelectedHtml] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [styleModalOpen, setStyleModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [currentEditId, setCurrentEditId] = useState<string | null>(null);
 
   const [concurrentTasks, setConcurrentTasks] = useAtom(
     concurrentTaskCountAtom
@@ -191,7 +195,6 @@ const History = () => {
       formData.append("apiKey", apiKey);
     }
     formData.append("htmlCode", processedHtml);
-    console.log(processedHtml, "processedHtml");
 
     try {
       const loadingToast = toast.loading(t("toast.deploying"));
@@ -300,6 +303,19 @@ const History = () => {
       }
     } finally {
       setConcurrentTasks((prev) => Math.max(0, prev - 1));
+    }
+  };
+
+  const handleEditHtml = (id: string, html: string) => {
+    setCurrentEditId(id);
+    setSelectedHtml(html);
+    setEditModalOpen(true);
+  };
+
+  const handleSaveHtml = (html: string) => {
+    if (currentEditId) {
+      updateHistoryHtml(currentEditId, html, "success");
+      setEditModalOpen(false);
     }
   };
 
@@ -475,6 +491,17 @@ const History = () => {
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
+                        handleEditHtml(item.id, sanitizeHtml(item.html));
+                      }}
+                      className="ml-1 h-8 w-8"
+                    >
+                      <PencilLine className="h-4 w-4 text-blue-500 dark:text-blue-400" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
                         handleDeploy(item.id, sanitizeHtml(item.html));
                       }}
                       className="ml-1 h-8 w-8"
@@ -525,6 +552,12 @@ const History = () => {
           data={{ html: selectedHtml || "" }}
         />
       </div>
+      <EditHtmlModal
+        open={editModalOpen}
+        onOpenChange={setEditModalOpen}
+        html={selectedHtml || ""}
+        onSave={handleSaveHtml}
+      />
     </>
   );
 };

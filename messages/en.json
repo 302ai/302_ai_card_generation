@@ -222,13 +222,16 @@
     "change_style": "Change Style",
     "change_style_placeholder": "Please enter the style description you want to change...",
     "generate_new_style": "Generate New Style",
-    "upload_qr_code": "Click or drag image to upload"
+    "upload_qr_code": "Click or drag image to upload",
+    "edit_html": "Edit HTML"
   },
   "button": {
     "generate": "Generate",
     "generating_with_count": "Generating ({count}/{limit})",
     "generating_limit_reached": "Limit reached ({count}/{limit})",
-    "generating": "Generating"
+    "generating": "Generating",
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "select": {
     "not_display": "Not Display",
