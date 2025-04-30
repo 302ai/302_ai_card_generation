@@ -11,6 +11,7 @@ const QrGenerate = ({ field }: { field: ControllerRenderProps<any, any> }) => {
   const [qrValue, setQrValue] = useState<string>("");
   const qrRef = useRef<SVGSVGElement>(null);
 
+  // Update qrValue when field.value changes (but not on mount)
   useEffect(() => {
     setQrValue(field.value || "");
   }, [field.value]);
@@ -25,7 +26,7 @@ const QrGenerate = ({ field }: { field: ControllerRenderProps<any, any> }) => {
       <Textarea
         placeholder={t("placeholder.input_content")}
         className="h-[100px] w-full"
-        {...field}
+        value={field.value || ""}
         onChange={handleInputChange}
       />
       <div className="flex flex-col items-center gap-4">

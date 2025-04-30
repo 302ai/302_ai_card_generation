@@ -47,7 +47,7 @@ const systemPrompt = ({
       -对主题内容进行抽象和提炼，只显示专栏要点或核心句子引用，为读者提供获得感
       -永远用中文输出，装饰元素可以用法语、英语等语言来表达，以创造一种精致感
       -当日期不为空时，必须使用提供的日期；如果为空，则不会显示日期区域！！！！
-      -当二维码不为空时，必须使用相应的二维码截图地址；如果为空，则不会显示二维码区域！！！！
+      -当二维码不为空或者有链接地址时，必须使用相应的二维码截图地址（这是必须的，不能忽略）!!!!；如果为空，则不会显示二维码区域（这一点也很重要）!!!!
       -不要输出除了HTML之外的任何内容！！！
       
       `,
@@ -87,7 +87,7 @@ const systemPrompt = ({
       -Abstracting and refining the theme content, only displaying column key points or core sentence references, providing readers with a sense of gain
       -Always output in English, decorative elements can be expressed in languages such as French and Chinese to create a sense of delicacy
       -When the date is not empty, the provided date must be used; If it is empty, the date range will not be displayed!!!!
-      -When the QR code is not empty, the corresponding QR code screenshot address must be used; If it is empty, the QR code area will not be displayed!!!!
+      -When the QR code is not empty or there is a link address, the corresponding QR code screenshot address must be used (this is mandatory, cannot be ignored)!!!!; If it is empty, the QR code area will not be displayed (this point is also very important)!!!!
       -Do not output anything other than HTML!!!! 
       
       `,
@@ -128,8 +128,9 @@ const systemPrompt = ({
       -トピックの内容を抽象化し、コラムの要点や核心文の引用だけを表示し、読者に獲得感を提供する
       -いつまでも日本語で出力され、装飾要素はフランス語、英語などの言語で表現され、洗練された感覚を作り出すことができます
       -日付が空でない場合は、指定された日付を使用する必要があります。空の場合、日付領域は表示されません！！！！
-      -2次元コードが空でない場合は、対応する2次元コードスクリーンショットアドレスを使用する必要があります。NULLの場合、QRコード領域は表示されません！！！！
+      -When the QR code is not empty or there is a link address, the corresponding QR code screenshot address must be used (this is mandatory, cannot be ignored)!!!!; If it is empty, the QR code area will not be displayed (this point is also very important)!!!!
       -HTML以外の内容を出力しないでください！！！
+
       
       `,
     },
@@ -171,7 +172,7 @@ const systemPrompt = ({
 -对主题内容进行抽象和提炼，只显示专栏要点或核心句子引用，为读者提供获得感
 -永远用中文输出，装饰元素可以用法语、英语等语言来表达，以创造一种精致感
 -当日期不为空时，必须使用提供的日期；如果为空，则不会显示日期区域！！！！
--当二维码不为空时，必须使用相应的二维码截图地址；如果为空，则不会显示二维码区域！！！！
+-当二维码不为空或者有链接地址时，必须使用相应的二维码截图地址（这是必须的，不能忽略）!!!!；如果为空，则不会显示二维码区域（这一点也很重要）!!!!
 -直接输出HTML结果，不要输出任何解释！！！
 
       
@@ -212,7 +213,7 @@ Output requirements:
 -Abstracting and refining the theme content, only displaying column key points or core sentence references, providing readers with a sense of gain
 -Always output in English, decorative elements can be expressed in languages such as French and Chinese to create a sense of delicacy
 -When the date is not empty, the provided date must be used; If it is empty, the date range will not be displayed!!!!
--When the QR code is not empty, the corresponding QR code screenshot address must be used; If it is empty, the QR code area will not be displayed!!!!
+-When the QR code is not empty or there is a link address, the corresponding QR code screenshot address must be used (this is mandatory, cannot be ignored)!!!!; If it is empty, the QR code area will not be displayed (this point is also very important)!!!!
 
 Please create stunning digital magazine style cards with the vision and aesthetic standards of top international magazine art directors, allowing users to feel that 'this is not just an ordinary information card, but a collectible digital artwork'. Directly output HTML results without further explanation.
       

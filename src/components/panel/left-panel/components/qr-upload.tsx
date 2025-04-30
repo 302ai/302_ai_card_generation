@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Upload } from "lucide-react";
 import { ControllerRenderProps } from "react-hook-form";
@@ -12,6 +12,14 @@ const QrUpload = ({ field }: { field: ControllerRenderProps<any, any> }) => {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const t = useTranslations();
+
+  // Clean up when unmounting
+  useEffect(() => {
+    return () => {
+      setImage(null);
+    };
+  }, []);
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {

@@ -312,6 +312,12 @@ const LeftPanel = () => {
     }));
   };
 
+  // Add effect to reset QR code field when QR type changes
+  useEffect(() => {
+    // Reset QR code field when switching between upload and generate modes
+    form.setValue("knowledgeCard.qrCode", "");
+  }, [formStore.qrType, form]);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Check concurrent task limit
     if (concurrentTasks >= MAX_CONCURRENT_TASKS) {
