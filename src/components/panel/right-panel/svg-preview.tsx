@@ -68,17 +68,23 @@ const extractSvgContent = (content: string): string => {
 
       // Make sure SVG has width and height attributes for proper scaling
       if (!svgContent.includes("width=")) {
-        svgContent = svgContent.replace(/<svg/, '<svg width="100%"');
+        svgContent = svgContent.replace(/<svg\s/, '<svg width="100%" ');
       } else {
-        // Replace any fixed width with 100%
-        svgContent = svgContent.replace(/width="[^"]*"/, 'width="100%"');
+        // Replace any fixed width with 100% only for the root SVG element
+        // Using more specific regex to target only the opening SVG tag
+        svgContent = svgContent.replace(/<svg\s[^>]*?width="[^"]*"/, (match) =>
+          match.replace(/width="[^"]*"/, 'width="100%"')
+        );
       }
 
       if (!svgContent.includes("height=")) {
-        svgContent = svgContent.replace(/<svg/, '<svg height="100%"');
+        svgContent = svgContent.replace(/<svg\s/, '<svg height="100%" ');
       } else {
-        // Replace any fixed height with 100%
-        svgContent = svgContent.replace(/height="[^"]*"/, 'height="100%"');
+        // Replace any fixed height with 100% only for the root SVG element
+        // Using more specific regex to target only the opening SVG tag
+        svgContent = svgContent.replace(/<svg\s[^>]*?height="[^"]*"/, (match) =>
+          match.replace(/height="[^"]*"/, 'height="100%"')
+        );
       }
 
       // Add preserveAspectRatio attribute if not present to maintain poster ratio
