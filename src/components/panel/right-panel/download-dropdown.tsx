@@ -88,8 +88,11 @@ const DownloadDropdown = ({
       // Show toast notification for download start
       const toastId = toast(t("status.downloading"));
 
+      // Clean SVG content - remove "xml" prefix if it exists
+      const cleanedSvgContent = svgContent.replace(/^xml\s*/i, "").trim();
+
       // Create a Blob from the SVG content
-      const blob = new Blob([svgContent], { type: "image/svg+xml" });
+      const blob = new Blob([cleanedSvgContent], { type: "image/svg+xml" });
       const url = URL.createObjectURL(blob);
 
       // 转换为PNG并下载
@@ -99,7 +102,7 @@ const DownloadDropdown = ({
             Authorization: `Bearer ${apiKey}`,
           },
           json: {
-            svgCode: svgContent,
+            svgCode: cleanedSvgContent,
           },
         })
         .json<{
@@ -120,7 +123,9 @@ const DownloadDropdown = ({
 
       // Fallback to direct SVG download if PNG conversion fails
       try {
-        const blob = new Blob([svgContent], { type: "image/svg+xml" });
+        // Clean SVG content again for the fallback
+        const cleanedSvgContent = svgContent.replace(/^xml\s*/i, "").trim();
+        const blob = new Blob([cleanedSvgContent], { type: "image/svg+xml" });
         const url = URL.createObjectURL(blob);
         handleDownload(url, "poster.svg");
         toast.success(t("toast.download_success"));

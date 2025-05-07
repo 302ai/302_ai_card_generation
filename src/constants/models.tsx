@@ -17,15 +17,15 @@ export const MODEL_LIST = [
     name: "claude-3-5-sonnet-20241022",
   },
   {
-    id: "gemini-2.5-pro-exp-03-25",
-    name: "gemini-2.5-pro-exp-03-25",
-  },
-  {
     id: "gpt-4.1",
     name: "gpt-4.1",
   },
   {
     id: "deepseek-chat",
     name: "deepseek-chat",
+  },
+  {
+    id: "gemini-2.5-pro-preview-05-06",
+    name: "gemini-2.5-pro-preview-05-06",
   },
 ] as const;
