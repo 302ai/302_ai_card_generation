@@ -7,6 +7,9 @@ interface ChangeStyleParams {
   apiKey: string;
   content: string;
   html: string;
+  isMulerun: boolean;
+  sessionId: string;
+  agentId: string;
 }
 
 interface GenerateHTMLResult {
@@ -17,6 +20,9 @@ export const generateHTML = async ({
   apiKey,
   content,
   html,
+  isMulerun,
+  sessionId,
+  agentId,
 }: ChangeStyleParams) => {
   try {
     const res = await ky.post("/api/change-style", {
@@ -25,6 +31,9 @@ export const generateHTML = async ({
         apiKey,
         content,
         html,
+        isMulerun,
+        sessionId,
+        agentId,
       },
     });
     return res.json<GenerateHTMLResult>();

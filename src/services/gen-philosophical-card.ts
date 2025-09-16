@@ -10,6 +10,8 @@ import { createAI302 } from "@302ai/ai-sdk";
 import { env } from "@/env";
 import { philosophicalCardPrompt } from "@/constants/prompt";
 import { streamText, TextStreamPart } from "ai";
+import { MODEL_PRICE } from "@/constants/models";
+import { reportMulerunUsage } from "./mulerun-service";
 
 interface GeneratePhilosophicalCardParams {
   apiKey: string;
@@ -17,6 +19,9 @@ interface GeneratePhilosophicalCardParams {
   lang: "zh" | "en" | "ja";
   style: string;
   content: string;
+  isMulerun: boolean;
+  sessionId: string;
+  agentId: string;
 }
 
 type AsyncIterableStream<T> = AsyncIterable<T> & ReadableStream<T>;
@@ -31,6 +36,9 @@ export const genPhilosophicalCard = async ({
   lang,
   style,
   content,
+  isMulerun,
+  sessionId,
+  agentId,
 }: GeneratePhilosophicalCardParams) => {
   const stream = createStreamableValue<{
     type: string;
@@ -72,7 +80,7 @@ export const genPhilosophicalCard = async ({
 
     (async () => {
       try {
-        const { fullStream } = streamText({
+        const { fullStream, usage } = streamText({
           model: ai302(model),
           messages: [
             {
@@ -80,6 +88,23 @@ export const genPhilosophicalCard = async ({
               content: philosophicalCardPrompt({ content, style, lang }),
             },
           ],
+          onFinish: async () => {
+            if (isMulerun && agentId && sessionId) {
+              const { promptTokens, completionTokens } = await usage;
+              const price =
+                MODEL_PRICE[model as keyof typeof MODEL_PRICE].promptTokens *
+                  promptTokens +
+                MODEL_PRICE[model as keyof typeof MODEL_PRICE]
+                  .completionTokens *
+                  completionTokens;
+              await reportMulerunUsage({
+                agentId,
+                sessionId,
+                cost: price,
+                isFinal: false,
+              });
+            }
+          },
         });
         const onGetResult = async (
           fullStream: AsyncIterableStream<TextStreamPart<any>>

@@ -13,6 +13,8 @@ import {
   posterPromptForCustomAndTemplate,
 } from "@/constants/prompt";
 import { streamText, TextStreamPart } from "ai";
+import { reportMulerunUsage } from "./mulerun-service";
+import { MODEL_PRICE } from "@/constants/models";
 
 interface GenerateSVGParams {
   apiKey: string;
@@ -21,6 +23,9 @@ interface GenerateSVGParams {
   content: string;
   style: string;
   styleType: "random" | "template" | "custom";
+  isMulerun: boolean;
+  sessionId: string;
+  agentId: string;
 }
 
 type AsyncIterableStream<T> = AsyncIterable<T> & ReadableStream<T>;
@@ -60,6 +65,9 @@ export const generateSVG = async ({
   content,
   style,
   styleType,
+  isMulerun,
+  sessionId,
+  agentId,
 }: GenerateSVGParams) => {
   console.log({
     content,
@@ -100,7 +108,7 @@ export const generateSVG = async ({
 
     (async () => {
       try {
-        const { fullStream } = streamText({
+        const { fullStream, usage } = streamText({
           system:
             styleType === "random"
               ? posterPromptForRandom({ lang, content })
@@ -116,6 +124,23 @@ export const generateSVG = async ({
               content: style,
             },
           ],
+          onFinish: async () => {
+            if (isMulerun && agentId && sessionId) {
+              const { promptTokens, completionTokens } = await usage;
+              const price =
+                MODEL_PRICE[model as keyof typeof MODEL_PRICE].promptTokens *
+                  promptTokens +
+                MODEL_PRICE[model as keyof typeof MODEL_PRICE]
+                  .completionTokens *
+                  completionTokens;
+              await reportMulerunUsage({
+                agentId,
+                sessionId,
+                cost: price,
+                isFinal: false,
+              });
+            }
+          },
         });
 
         const onGetResult = async (

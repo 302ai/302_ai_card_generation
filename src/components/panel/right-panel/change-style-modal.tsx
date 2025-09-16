@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import HtmlPreview from "./html-preview";
 import { store } from "@/stores";
 import { appConfigAtom } from "@/stores/slices/config_store";
 import { generateHTML } from "@/services/change-style";
@@ -12,6 +11,7 @@ import { useAtom } from "jotai";
 import { toast } from "sonner";
 import { uiStoreAtom } from "@/stores/slices/ui_store";
 import { useHistory } from "@/hooks/db/use-gen-history";
+import { useFromMulerun } from "@/hooks/useMulerun";
 
 interface ChangeStyleModalProps {
   open: boolean;
@@ -28,7 +28,7 @@ const ChangeStyleModal: React.FC<ChangeStyleModalProps> = ({
 }) => {
   const [stylePrompt, setStylePrompt] = useState("");
   const { apiKey } = store.get(appConfigAtom);
-
+  const { isMulerun, sessionId, agentId } = useFromMulerun();
   const { addHistory, updateHistory } = useHistory();
   const t = useTranslations();
   const [uiStore, setUiStore] = useAtom(uiStoreAtom);
@@ -63,6 +63,9 @@ const ChangeStyleModal: React.FC<ChangeStyleModalProps> = ({
         apiKey: apiKey as string,
         content: stylePrompt,
         html: data.html,
+        isMulerun,
+        sessionId,
+        agentId,
       });
 
       // Update history based on active card type

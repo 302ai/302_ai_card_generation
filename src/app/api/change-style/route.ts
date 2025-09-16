@@ -7,6 +7,8 @@ import {
   systemPrompt,
   userPrompt,
 } from "@/constants/prompt";
+import { MODEL_PRICE } from "@/constants/models";
+import { reportMulerunUsage } from "@/services/mulerun-service";
 
 const logger = createScopedLogger("change-style");
 
@@ -17,11 +19,17 @@ export async function POST(request: Request) {
       lang,
       content,
       html,
+      isMulerun,
+      sessionId,
+      agentId,
     }: {
       apiKey: string;
       lang: "zh" | "en" | "ja";
       content: string;
       html: string;
+      isMulerun: boolean;
+      sessionId: string;
+      agentId: string;
     } = await request.json();
     const ai302 = createAI302({
       apiKey,
@@ -37,8 +45,21 @@ export async function POST(request: Request) {
         },
       ],
     });
-
     const stringHTML = result.text;
+    if (isMulerun && agentId && sessionId) {
+      const { promptTokens, completionTokens } = result.usage;
+      const price =
+        MODEL_PRICE["claude-3-7-sonnet-20250219"].promptTokens * promptTokens +
+        MODEL_PRICE["claude-3-7-sonnet-20250219"].completionTokens *
+          completionTokens;
+      await reportMulerunUsage({
+        agentId,
+        sessionId,
+        cost: price,
+        isFinal: false,
+      });
+    }
+
     let newHTML;
 
     try {

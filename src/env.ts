@@ -19,6 +19,8 @@ export const env = createEnv({
     NEXT_PUBLIC_DEFAULT_MODEL_NAME: z.string(),
     NEXT_PUBLIC_DEV_HOST_NAME: z.string().optional(),
     NEXT_PUBLIC_HIDE_BRAND: z.boolean().optional(),
+    NEXT_PUBLIC_MULERUN_URL: z.string(),
+    NEXT_PUBLIC_MULERUN_API_KEY: z.string(),
   },
   // Runtime environment configuration
   runtimeEnv: {
@@ -37,6 +39,8 @@ export const env = createEnv({
     NEXT_PUBLIC_DEFAULT_MODEL_NAME: process.env.NEXT_PUBLIC_DEFAULT_MODEL_NAME,
     NEXT_PUBLIC_DEV_HOST_NAME: process.env.NEXT_PUBLIC_DEV_HOST_NAME,
     NEXT_PUBLIC_HIDE_BRAND: process.env.NEXT_PUBLIC_HIDE_BRAND === "true",
+    NEXT_PUBLIC_MULERUN_URL: process.env.NEXT_PUBLIC_MULERUN_URL,
+    NEXT_PUBLIC_MULERUN_API_KEY: process.env.NEXT_PUBLIC_MULERUN_API_KEY,
   },
   // Handle validation errors
   onValidationError: (error: ZodError) => {

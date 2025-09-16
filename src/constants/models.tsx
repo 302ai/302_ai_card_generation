@@ -29,3 +29,22 @@ export const MODEL_LIST = [
     name: "gemini-2.5-pro-preview-05-06",
   },
 ] as const;
+
+export const MODEL_PRICE = {
+  "claude-3-7-sonnet-20250219": {
+    promptTokens: 3 / 1_000_000,
+    completionTokens: 15 / 1_000_000,
+  },
+  "gpt-4.1": {
+    promptTokens: 2 / 1_000_000,
+    completionTokens: 8 / 1_000_000,
+  },
+  "deepseek-chat": {
+    promptTokens: 0.3 / 1_000_000,
+    completionTokens: 1.2 / 1_000_000,
+  },
+  "gemini-2.5-pro-preview-05-06": {
+    promptTokens: 1.25 / 1_000_000,
+    completionTokens: 10 / 1_000_000,
+  },
+};

@@ -32,6 +32,8 @@ import { generateQuoteCard } from "@/services/gen-quote";
 import { generateSVG } from "@/services/generate-svg";
 import { ErrorToast } from "@/components/ui/errorToast";
 import EditHtmlModal from "./edit-html-modal";
+import { useFromMulerun } from "@/hooks/useMulerun";
+import { reportMulerunUsage } from "@/services/mulerun-service";
 
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
@@ -101,6 +103,7 @@ const History = () => {
   const [styleModalOpen, setStyleModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [currentEditId, setCurrentEditId] = useState<string | null>(null);
+  const { isMulerun, sessionId, agentId } = useFromMulerun();
 
   const [concurrentTasks, setConcurrentTasks] = useAtom(
     concurrentTaskCountAtom
@@ -150,7 +153,13 @@ const History = () => {
     return () => clearInterval(intervalId);
   }, [history?.items, setConcurrentTasks, updateHistoryStatus]);
 
-  const handleDeploy = async (id: string, html: string) => {
+  const handleDeploy = async (
+    id: string,
+    html: string,
+    isMulerun: boolean,
+    sessionId: string,
+    agentId: string
+  ) => {
     // Check if the content is just an SVG and wrap it if needed
     let processedHtml = html;
     const historyItem = history?.items.find((item) => item.id === id);
@@ -199,9 +208,15 @@ const History = () => {
       formData.append("apiKey", apiKey);
     }
     formData.append("htmlCode", processedHtml);
+    if (isMulerun && agentId && sessionId) {
+      formData.append("isMulerun", "true");
+      formData.append("agentId", agentId);
+      formData.append("sessionId", sessionId);
+    }
 
     try {
       const loadingToast = toast.loading(t("toast.deploying"));
+
       const response = await ky.post("/api/deploy-html", {
         body: formData,
       });
@@ -236,6 +251,9 @@ const History = () => {
         const res = await generateHTML({
           ...values,
           apiKey: apiKey as string,
+          isMulerun,
+          sessionId,
+          agentId,
         });
         if (res?.output) {
           let chatValue = "";
@@ -252,6 +270,9 @@ const History = () => {
         const res = await generateSVG({
           ...values,
           apiKey: apiKey as string,
+          isMulerun,
+          sessionId,
+          agentId,
         });
         if (res?.output) {
           let chatValue = "";
@@ -269,6 +290,9 @@ const History = () => {
         const res = await genPhilosophicalCard({
           ...values,
           apiKey: apiKey as string,
+          isMulerun,
+          sessionId,
+          agentId,
         });
         if (res?.output) {
           let chatValue = "";
@@ -284,6 +308,9 @@ const History = () => {
         const res = await generateQuoteCard({
           ...values,
           apiKey: apiKey as string,
+          isMulerun,
+          sessionId,
+          agentId,
         });
         if (res?.output) {
           let chatValue = "";
@@ -442,7 +469,13 @@ const History = () => {
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeploy(item.id, sanitizeHtml(item.html));
+                        handleDeploy(
+                          item.id,
+                          sanitizeHtml(item.html),
+                          isMulerun,
+                          sessionId,
+                          agentId
+                        );
                       }}
                       className="ml-1 h-8 w-8"
                       title={t("button.deploy")}
@@ -512,7 +545,13 @@ const History = () => {
                       size="icon"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeploy(item.id, sanitizeHtml(item.html));
+                        handleDeploy(
+                          item.id,
+                          sanitizeHtml(item.html),
+                          isMulerun,
+                          sessionId,
+                          agentId
+                        );
                       }}
                       className="ml-1 h-8 w-8"
                       title={t("button.deploy")}

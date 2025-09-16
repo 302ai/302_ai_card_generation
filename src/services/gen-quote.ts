@@ -10,6 +10,8 @@ import { createAI302 } from "@302ai/ai-sdk";
 import { env } from "@/env";
 import { quoteReferenceCardPrompt } from "@/constants/prompt";
 import { streamText, TextStreamPart } from "ai";
+import { MODEL_PRICE } from "@/constants/models";
+import { reportMulerunUsage } from "./mulerun-service";
 
 interface GenerateQuoteCardParams {
   apiKey: string;
@@ -18,6 +20,9 @@ interface GenerateQuoteCardParams {
   author: string;
   textPosition: string;
   style: string;
+  isMulerun: boolean;
+  sessionId: string;
+  agentId: string;
 }
 
 type AsyncIterableStream<T> = AsyncIterable<T> & ReadableStream<T>;
@@ -33,6 +38,9 @@ export const generateQuoteCard = async ({
   author,
   textPosition,
   style,
+  isMulerun,
+  sessionId,
+  agentId,
 }: GenerateQuoteCardParams) => {
   const stream = createStreamableValue<{
     type: string;
@@ -67,7 +75,7 @@ export const generateQuoteCard = async ({
 
     (async () => {
       try {
-        const { fullStream } = streamText({
+        const { fullStream, usage } = streamText({
           model: ai302(model),
           messages: [
             {
@@ -80,6 +88,23 @@ export const generateQuoteCard = async ({
               }),
             },
           ],
+          onFinish: async () => {
+            if (isMulerun && agentId && sessionId) {
+              const { promptTokens, completionTokens } = await usage;
+              const price =
+                MODEL_PRICE[model as keyof typeof MODEL_PRICE].promptTokens *
+                  promptTokens +
+                MODEL_PRICE[model as keyof typeof MODEL_PRICE]
+                  .completionTokens *
+                  completionTokens;
+              await reportMulerunUsage({
+                agentId,
+                sessionId,
+                cost: price,
+                isFinal: false,
+              });
+            }
+          },
         });
         const onGetResult = async (
           fullStream: AsyncIterableStream<TextStreamPart<any>>

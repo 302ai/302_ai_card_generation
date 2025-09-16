@@ -66,6 +66,7 @@ import ky from "ky";
 import { env } from "@/env";
 import { readStreamableValue } from "ai/rsc";
 import { ErrorToast } from "@/components/ui/errorToast";
+import { useFromMulerun } from "@/hooks/useMulerun";
 
 const formSchema = z.object({
   knowledgeCard: z.object({
@@ -137,6 +138,8 @@ const LeftPanel = () => {
   });
 
   const { apiKey } = store.get(appConfigAtom);
+
+  const { sessionId, agentId, isMulerun } = useFromMulerun();
 
   // Remove local state for textarea content as we'll use the store
   // Add refs for the textareas to access them for filling with content
@@ -506,6 +509,9 @@ const LeftPanel = () => {
           const res = await generateHTML({
             ...submittingValues,
             apiKey: apiKey as string,
+            isMulerun,
+            sessionId,
+            agentId,
           });
           if (res?.output) {
             let chatValue = "";
@@ -617,6 +623,9 @@ const LeftPanel = () => {
           const res = await generateSVG({
             ...submittingValues,
             apiKey: apiKey as string,
+            isMulerun,
+            sessionId,
+            agentId,
           });
           if (res?.output) {
             let chatValue = "";
@@ -722,6 +731,9 @@ const LeftPanel = () => {
           const res = await genPhilosophicalCard({
             ...submittingValues,
             apiKey: apiKey as string,
+            isMulerun,
+            sessionId,
+            agentId,
           });
           if (res?.output) {
             let chatValue = "";
@@ -841,6 +853,9 @@ const LeftPanel = () => {
           const res = await generateQuoteCard({
             ...submittingValues,
             apiKey: apiKey as string,
+            isMulerun,
+            sessionId,
+            agentId,
           });
           if (res?.output) {
             let chatValue = "";

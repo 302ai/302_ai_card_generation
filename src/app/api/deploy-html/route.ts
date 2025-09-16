@@ -1,3 +1,4 @@
+import { reportMulerunUsage } from "@/services/mulerun-service";
 import ky from "ky";
 import { NextResponse } from "next/server";
 
@@ -8,8 +9,19 @@ export async function POST(req: Request): Promise<Response> {
     const apiKey = formDataParams.get("apiKey") as string;
     const htmlCode = formDataParams.get("htmlCode") as string;
     const validityPeriod = formDataParams.get("validityPeriod") as string;
+    const isMulerun = formDataParams.get("isMulerun") as string;
+    const agentId = formDataParams.get("agentId") as string;
+    const sessionId = formDataParams.get("sessionId") as string;
 
     let url = "";
+    if (isMulerun && agentId && sessionId) {
+      reportMulerunUsage({
+        agentId,
+        sessionId,
+        cost: 0.5,
+        isFinal: false,
+      });
+    }
 
     if (htmlCode) {
       const htmlResult = await webserveHtml({ apiKey, htmlCode });
