@@ -12,6 +12,7 @@ export type History = {
     | "quote-reference"
     | "philosophical-card";
   content: string;
+  sessionId?: string; // For Mulerun session isolation
 };
 
 export type AddHistory = Omit<History, "id" | "createdAt">;

@@ -176,7 +176,9 @@
     "generating": "生成中",
     "generating_failed": "生成失敗",
     "generating_success": "生成成功",
-    "downloading": "ダウンロード中"
+    "downloading": "ダウンロード中",
+    "session_ended": "セッションが終了しました",
+    "session_check_failed": "セッション状態の確認に失敗しました"
   },
 
   "toast": {

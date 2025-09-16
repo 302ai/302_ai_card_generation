@@ -122,16 +122,16 @@ const LeftPanel = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       knowledgeCard: {
-        model: "claude-3-5-sonnet-20241022",
+        model: "claude-3-7-sonnet-20250219",
       },
       promotionalPoster: {
-        model: "claude-3-5-sonnet-20241022",
+        model: "claude-3-7-sonnet-20250219",
       },
       philosophicalCard: {
-        model: "claude-3-5-sonnet-20241022",
+        model: "claude-3-7-sonnet-20250219",
       },
       quoteReference: {
-        model: "claude-3-5-sonnet-20241022",
+        model: "claude-3-7-sonnet-20250219",
         textPosition: "left",
       },
     },
@@ -492,6 +492,7 @@ const LeftPanel = () => {
           type: "html",
           tab: uiStore.activeCard,
           content,
+          sessionId: isMulerun ? sessionId : undefined,
         });
         submittingValues = {
           model: knowledgeCard.model as string,
@@ -515,30 +516,50 @@ const LeftPanel = () => {
           });
           if (res?.output) {
             let chatValue = "";
-            for await (const delta of readStreamableValue(res.output)) {
-              if (delta?.type === "text-delta") {
-                chatValue += delta?.textDelta;
-                if (chatValue?.length > 0) {
-                }
-              } else if (delta?.type === "logprobs") {
-                const regex = /```html([\s\S]*?)```/;
-                const match = chatValue.match(regex);
-                const htmlContent = match ? match[1].trim() : "";
-                if (htmlContent) {
+            try {
+              for await (const delta of readStreamableValue(res.output)) {
+                if (delta?.type === "text-delta") {
+                  chatValue += delta?.textDelta;
+                  if (chatValue?.length > 0) {
+                  }
+                } else if (delta?.type === "logprobs") {
+                  const regex = /```html([\s\S]*?)```/;
+                  const match = chatValue.match(regex);
+                  const htmlContent = match ? match[1].trim() : "";
+                  if (htmlContent) {
+                  }
+                } else if ((delta as any)?.error) {
+                  // Handle stream error
+                  throw new Error(
+                    (delta as any).error.message || "Stream error"
+                  );
                 }
               }
+              await updateHistory(historyId, {
+                html: chatValue,
+                status: "success",
+              });
+            } catch (streamError: any) {
+              console.log("Stream error:", streamError);
+              await updateHistory(historyId, {
+                status: "failed",
+              });
+              // Re-throw to be caught by outer catch
+              throw streamError;
             }
-            await updateHistory(historyId, {
-              html: chatValue,
-              status: "success",
-            });
           }
         } catch (error: any) {
           console.log(error);
           if (error?.message?.error?.err_code) {
             toast.error(() => ErrorToast(error.message.error.err_code));
+          } else if (
+            error?.message &&
+            typeof error.message === "string" &&
+            error.message.startsWith("status.")
+          ) {
+            toast.error(t(error.message));
           } else {
-            toast.error(t("status."));
+            toast.error(t("status.generating_failed"));
           }
 
           // Make sure to update history status on error
@@ -615,6 +636,7 @@ const LeftPanel = () => {
           type: "svg",
           tab: uiStore.activeCard,
           content: promotionalPoster.content as string,
+          sessionId: isMulerun ? sessionId : undefined,
         });
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
@@ -629,23 +651,43 @@ const LeftPanel = () => {
           });
           if (res?.output) {
             let chatValue = "";
-            for await (const delta of readStreamableValue(res.output)) {
-              if (delta?.type === "text-delta") {
-                chatValue += delta?.textDelta;
-                if (chatValue?.length > 0) {
+            try {
+              for await (const delta of readStreamableValue(res.output)) {
+                if (delta?.type === "text-delta") {
+                  chatValue += delta?.textDelta;
+                  if (chatValue?.length > 0) {
+                  }
+                } else if (delta?.type === "logprobs") {
+                  await updateHistory(historyId, {
+                    html: chatValue,
+                    status: "success",
+                  });
+                } else if ((delta as any)?.error) {
+                  // Handle stream error
+                  throw new Error(
+                    (delta as any).error.message || "Stream error"
+                  );
                 }
-              } else if (delta?.type === "logprobs") {
-                await updateHistory(historyId, {
-                  html: chatValue,
-                  status: "success",
-                });
               }
+            } catch (streamError: any) {
+              console.log("Stream error:", streamError);
+              await updateHistory(historyId, {
+                status: "failed",
+              });
+              // Re-throw to be caught by outer catch
+              throw streamError;
             }
           }
         } catch (error: any) {
           console.log(error);
           if (error?.message?.error?.err_code) {
             toast.error(() => ErrorToast(error.message.error.err_code));
+          } else if (
+            error?.message &&
+            typeof error.message === "string" &&
+            error.message.startsWith("status.")
+          ) {
+            toast.error(t(error.message));
           } else {
             toast.error(t("status.generating_failed"));
           }
@@ -724,6 +766,7 @@ const LeftPanel = () => {
           type: "html",
           tab: uiStore.activeCard,
           content: philosophicalCard.content as string,
+          sessionId: isMulerun ? sessionId : undefined,
         });
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
@@ -760,6 +803,12 @@ const LeftPanel = () => {
           console.log(error);
           if (error?.message?.error?.err_code) {
             toast.error(() => ErrorToast(error.message.error.err_code));
+          } else if (
+            error?.message &&
+            typeof error.message === "string" &&
+            error.message.startsWith("status.")
+          ) {
+            toast.error(t(error.message));
           } else {
             toast.error(t("status.generating_failed"));
           }
@@ -845,6 +894,7 @@ const LeftPanel = () => {
           type: "html",
           tab: uiStore.activeCard,
           content: quoteReference.content as string,
+          sessionId: isMulerun ? sessionId : undefined,
         });
         updateStatusFunction = async (id, data) =>
           await updateHistory(id, { ...data, html: "" });
@@ -882,6 +932,12 @@ const LeftPanel = () => {
           console.log(error);
           if (error?.message?.error?.err_code) {
             toast.error(() => ErrorToast(error.message.error.err_code));
+          } else if (
+            error?.message &&
+            typeof error.message === "string" &&
+            error.message.startsWith("status.")
+          ) {
+            toast.error(t(error.message));
           } else {
             toast.error(t("status.generating_failed"));
           }

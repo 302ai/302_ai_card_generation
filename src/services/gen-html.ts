@@ -13,6 +13,7 @@ import { systemPrompt } from "@/constants/prompt";
 import { streamText, TextStreamPart } from "ai";
 import { reportMulerunUsage } from "./mulerun-service";
 import { MODEL_PRICE } from "@/constants/models";
+import { isSessionRunning } from "./mulerun-session-detector";
 
 interface GenerateHTMLParams {
   apiKey: string;
@@ -52,6 +53,21 @@ export const generateHTML = async ({
     textDelta?: string;
     logprobs?: LanguageModelV1LogProbs;
   }>({ type: "text-delta", textDelta: "" });
+
+  // Check Mulerun session status before proceeding
+  if (isMulerun && sessionId) {
+    try {
+      const isRunning = await isSessionRunning(sessionId);
+      if (!isRunning) {
+        stream.error({ message: "status.session_ended" });
+        return { output: stream.value };
+      }
+    } catch (error) {
+      stream.error({ message: "status.session_check_failed" });
+      return { output: stream.value };
+    }
+  }
+
   try {
     const ai302 = createAI302({
       apiKey,
@@ -98,13 +114,16 @@ export const generateHTML = async ({
                 MODEL_PRICE[model as keyof typeof MODEL_PRICE]
                   .completionTokens *
                   completionTokens;
-
-              await reportMulerunUsage({
-                agentId,
-                sessionId,
-                cost: price,
-                isFinal: false,
-              });
+              try {
+                await reportMulerunUsage({
+                  agentId,
+                  sessionId,
+                  cost: price,
+                  isFinal: false,
+                });
+              } catch (error) {
+                throw error;
+              }
             }
           },
         });

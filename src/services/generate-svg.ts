@@ -15,6 +15,7 @@ import {
 import { streamText, TextStreamPart } from "ai";
 import { reportMulerunUsage } from "./mulerun-service";
 import { MODEL_PRICE } from "@/constants/models";
+import { isSessionRunning } from "./mulerun-session-detector";
 
 interface GenerateSVGParams {
   apiKey: string;
@@ -80,6 +81,21 @@ export const generateSVG = async ({
     textDelta?: string;
     logprobs?: LanguageModelV1LogProbs;
   }>({ type: "text-delta", textDelta: "" });
+
+  // Check Mulerun session status before proceeding
+  if (isMulerun && sessionId) {
+    try {
+      const isRunning = await isSessionRunning(sessionId);
+      if (!isRunning) {
+        stream.error({ message: "status.session_ended" });
+        return { output: stream.value };
+      }
+    } catch (error) {
+      stream.error({ message: "status.session_check_failed" });
+      return { output: stream.value };
+    }
+  }
+
   try {
     const ai302 = createAI302({
       apiKey,

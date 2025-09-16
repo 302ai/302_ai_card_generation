@@ -163,7 +163,9 @@
     "generating": "生成中",
     "generating_failed": "生成失败",
     "generating_success": "生成成功",
-    "downloading": "下载中"
+    "downloading": "下载中",
+    "session_ended": "会话已结束",
+    "session_check_failed": "检查会话状态失败"
   },
   "home": {
     "header": {

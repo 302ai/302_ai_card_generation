@@ -52,12 +52,16 @@ export async function POST(request: Request) {
         MODEL_PRICE["claude-3-7-sonnet-20250219"].promptTokens * promptTokens +
         MODEL_PRICE["claude-3-7-sonnet-20250219"].completionTokens *
           completionTokens;
-      await reportMulerunUsage({
-        agentId,
-        sessionId,
-        cost: price,
-        isFinal: false,
-      });
+      try {
+        await reportMulerunUsage({
+          agentId,
+          sessionId,
+          cost: price,
+          isFinal: false,
+        });
+      } catch (error) {
+        throw error;
+      }
     }
 
     let newHTML;

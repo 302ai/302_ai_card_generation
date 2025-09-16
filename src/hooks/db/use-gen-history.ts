@@ -9,37 +9,59 @@ import { AddHistory } from "@/db/types";
 const logger = createScopedLogger("use-gen-history");
 const PAGE_SIZE = 99999;
 
-export const useHistory = (page = 1) => {
+export const useHistory = (page = 1, sessionId?: string) => {
   const offset = (page - 1) * PAGE_SIZE;
 
   const genHistory = useLiveQuery(async () => {
-    const genHistory = await db.history
-      .orderBy("createdAt")
-      .reverse()
-      .offset(offset)
-      .limit(PAGE_SIZE)
-      .toArray();
-    return genHistory;
-  }, [page]);
+    const query = db.history.orderBy("createdAt").reverse();
+
+    // Filter by sessionId if provided (for Mulerun), otherwise show records without sessionId
+    if (sessionId) {
+      const allItems = await query.toArray();
+      const filteredItems = allItems.filter(
+        (item) => item.sessionId === sessionId
+      );
+      return filteredItems.slice(offset, offset + PAGE_SIZE);
+    } else {
+      const allItems = await query.toArray();
+      const filteredItems = allItems.filter((item) => !item.sessionId);
+      return filteredItems.slice(offset, offset + PAGE_SIZE);
+    }
+  }, [page, sessionId]);
 
   const history = useLiveQuery(async () => {
-    const [items, total] = await Promise.all([
-      db.history
-        .orderBy("createdAt")
-        .reverse()
-        .offset(offset)
-        .limit(PAGE_SIZE)
-        .toArray(),
-      db.history.count(),
-    ]);
+    const query = db.history.orderBy("createdAt").reverse();
 
-    return {
-      items,
-      total,
-      totalPages: Math.ceil(total / PAGE_SIZE),
-      currentPage: page,
-    };
-  }, [page]);
+    if (sessionId) {
+      // For Mulerun: show only records with matching sessionId
+      const allItems = await query.toArray();
+      const filteredItems = allItems.filter(
+        (item) => item.sessionId === sessionId
+      );
+      const total = filteredItems.length;
+      const items = filteredItems.slice(offset, offset + PAGE_SIZE);
+
+      return {
+        items,
+        total,
+        totalPages: Math.ceil(total / PAGE_SIZE),
+        currentPage: page,
+      };
+    } else {
+      // For normal mode: show only records without sessionId
+      const allItems = await query.toArray();
+      const filteredItems = allItems.filter((item) => !item.sessionId);
+      const total = filteredItems.length;
+      const items = filteredItems.slice(offset, offset + PAGE_SIZE);
+
+      return {
+        items,
+        total,
+        totalPages: Math.ceil(total / PAGE_SIZE),
+        currentPage: page,
+      };
+    }
+  }, [page, sessionId]);
 
   const addHistory = useCallback(async (history: AddHistory) => {
     const id = crypto.randomUUID();

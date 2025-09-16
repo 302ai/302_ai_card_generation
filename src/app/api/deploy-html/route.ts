@@ -15,12 +15,16 @@ export async function POST(req: Request): Promise<Response> {
 
     let url = "";
     if (isMulerun && agentId && sessionId) {
-      reportMulerunUsage({
-        agentId,
-        sessionId,
-        cost: 0.5,
-        isFinal: false,
-      });
+      try {
+        reportMulerunUsage({
+          agentId,
+          sessionId,
+          cost: 0.5,
+          isFinal: false,
+        });
+      } catch (error) {
+        throw error;
+      }
     }
 
     if (htmlCode) {

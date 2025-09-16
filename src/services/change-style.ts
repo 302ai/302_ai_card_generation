@@ -2,6 +2,7 @@ import ky, { HTTPError } from "ky";
 import { emitter } from "@/utils/mitt";
 import { store, languageAtom } from "@/stores";
 import { langToCountry } from "@/utils/302";
+import { isSessionRunning } from "./mulerun-session-detector";
 
 interface ChangeStyleParams {
   apiKey: string;
@@ -24,6 +25,18 @@ export const generateHTML = async ({
   sessionId,
   agentId,
 }: ChangeStyleParams) => {
+  // Check Mulerun session status before proceeding
+  if (isMulerun && sessionId) {
+    try {
+      const isRunning = await isSessionRunning(sessionId);
+      if (!isRunning) {
+        throw new Error("status.session_ended");
+      }
+    } catch (error) {
+      throw new Error("status.session_check_failed");
+    }
+  }
+
   try {
     const res = await ky.post("/api/change-style", {
       timeout: 300000,

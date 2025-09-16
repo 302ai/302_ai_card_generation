@@ -57,6 +57,7 @@ const ChangeStyleModal: React.FC<ChangeStyleModalProps> = ({
         type: "html",
         tab: uiStore.activeCard,
         content: stylePrompt,
+        sessionId: isMulerun ? sessionId : undefined,
       });
       onOpenChange(false);
       const res = await generateHTML({

@@ -11,6 +11,11 @@ class HistoryDB extends Dexie {
       history:
         "id, html, status, createdAt, image, url, values,type,tab,content",
     });
+    // Add sessionId to the schema in version 2
+    this.version(2).stores({
+      history:
+        "id, html, status, createdAt, image, url, values,type,tab,content,sessionId",
+    });
   }
 }
 

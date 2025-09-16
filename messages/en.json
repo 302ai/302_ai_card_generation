@@ -163,7 +163,9 @@
     "generating": "Generating",
     "generating_failed": "Generating failed",
     "generating_success": "Generating success",
-    "downloading": "Downloading"
+    "downloading": "Downloading",
+    "session_ended": "Session has ended",
+    "session_check_failed": "Failed to check session status"
   },
   "home": {
     "header": {

@@ -12,6 +12,7 @@ import { quoteReferenceCardPrompt } from "@/constants/prompt";
 import { streamText, TextStreamPart } from "ai";
 import { MODEL_PRICE } from "@/constants/models";
 import { reportMulerunUsage } from "./mulerun-service";
+import { isSessionRunning } from "./mulerun-session-detector";
 
 interface GenerateQuoteCardParams {
   apiKey: string;
@@ -47,6 +48,21 @@ export const generateQuoteCard = async ({
     textDelta?: string;
     logprobs?: LanguageModelV1LogProbs;
   }>({ type: "text-delta", textDelta: "" });
+
+  // Check Mulerun session status before proceeding
+  if (isMulerun && sessionId) {
+    try {
+      const isRunning = await isSessionRunning(sessionId);
+      if (!isRunning) {
+        stream.error({ message: "status.session_ended" });
+        return { output: stream.value };
+      }
+    } catch (error) {
+      stream.error({ message: "status.session_check_failed" });
+      return { output: stream.value };
+    }
+  }
+
   try {
     const ai302 = createAI302({
       apiKey,

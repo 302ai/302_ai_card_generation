@@ -33,7 +33,6 @@ import { generateSVG } from "@/services/generate-svg";
 import { ErrorToast } from "@/components/ui/errorToast";
 import EditHtmlModal from "./edit-html-modal";
 import { useFromMulerun } from "@/hooks/useMulerun";
-import { reportMulerunUsage } from "@/services/mulerun-service";
 
 // Utility function to properly sanitize and clean HTML content
 const sanitizeHtml = (htmlContent: string): string => {
@@ -90,20 +89,20 @@ const sanitizeHtml = (htmlContent: string): string => {
 };
 
 const History = () => {
+  const { isMulerun, sessionId, agentId } = useFromMulerun();
   const {
     history,
     deleteHistory,
     updateHistoryStatus,
     updateHistoryUrl,
     updateHistoryHtml,
-  } = useHistory();
+  } = useHistory(1, isMulerun ? sessionId : undefined);
   const [isEnlarged, setIsEnlarged] = useState(false);
   const [selectedHtml, setSelectedHtml] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [styleModalOpen, setStyleModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [currentEditId, setCurrentEditId] = useState<string | null>(null);
-  const { isMulerun, sessionId, agentId } = useFromMulerun();
 
   const [concurrentTasks, setConcurrentTasks] = useAtom(
     concurrentTaskCountAtom
@@ -209,7 +208,7 @@ const History = () => {
     }
     formData.append("htmlCode", processedHtml);
     if (isMulerun && agentId && sessionId) {
-      formData.append("isMulerun", "true");
+      formData.append("isMulerun", isMulerun.toString());
       formData.append("agentId", agentId);
       formData.append("sessionId", sessionId);
     }
@@ -257,13 +256,23 @@ const History = () => {
         });
         if (res?.output) {
           let chatValue = "";
-          for await (const delta of readStreamableValue(res.output)) {
-            if (delta?.type === "text-delta") {
-              chatValue += delta?.textDelta;
-            } else if (delta?.type === "logprobs") {
-              // Process is complete
-              updateHistoryHtml(values.historyId, chatValue, "success");
+          try {
+            for await (const delta of readStreamableValue(res.output)) {
+              if (delta?.type === "text-delta") {
+                chatValue += delta?.textDelta;
+              } else if (delta?.type === "logprobs") {
+                // Process is complete
+                updateHistoryHtml(values.historyId, chatValue, "success");
+              } else if ((delta as any)?.error) {
+                // Handle stream error
+                throw new Error((delta as any).error.message || "Stream error");
+              }
             }
+          } catch (streamError: any) {
+            console.log("Stream error:", streamError);
+            updateHistoryStatus(values.historyId, "failed");
+            // Re-throw to be caught by outer catch
+            throw streamError;
           }
         }
       } else if (values.actionType === "promotional-poster") {
@@ -329,8 +338,14 @@ const History = () => {
 
       if (error?.message?.error?.err_code) {
         toast.error(() => ErrorToast(error.message.error.err_code));
+      } else if (
+        error?.message &&
+        typeof error.message === "string" &&
+        error.message.startsWith("status.")
+      ) {
+        toast.error(t(error.message));
       } else {
-        toast.error(t("generate_error"));
+        toast.error(t("status.generating_failed"));
       }
     } finally {
       setConcurrentTasks((prev) => Math.max(0, prev - 1));
